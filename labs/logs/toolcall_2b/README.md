@@ -1,0 +1,284 @@
+# agent-trace tool-call eval — suite, runner, scorer
+
+This directory implements the pre-registered plan at
+`claudius-maximus/state/reports/2026-09-06-TOOLCALL-EVAL-PLAN.md` (sections
+2-5): a 60-item deterministic suite of CALC/LOOKUP tool-call prompts, a
+runner that turns each item into one AEGIS-TRACE receipt (`gen` then
+`verify`, same mechanism as `demo/agent-trace/run.sh`), and a scorer that
+reports Wilson-interval rates per the plan's metrics.
+
+**Nothing is measured yet.** This directory is the harness, committed before
+any run. `suite.tsv` and `smoke.tsv` are generated files (see below); no
+receipts, summaries, or rate numbers are checked in.
+
+## Files
+
+- `gen_suite.py` — deterministic item generator (stdlib only, seed
+  `20260906`). Writes `suite.tsv` (60 items) and `smoke.tsv` (10 items: 2
+  each from the 5 largest buckets). Re-run any time; output is
+  byte-identical run to run. `--bucket chain --table <path> --out <path>`
+  writes only the 6-item "chain" bucket (see 'Chain items' below) to its own
+  file instead of touching `suite.tsv`/`smoke.tsv`.
+- `suite.tsv` / `smoke.tsv` — generated TSVs, header:
+  `item_id bucket prompt_template_id prompt_text expected_tool expected_input expected_output notes`.
+  `prompt_text` newlines are escaped as the two-byte sequence `\n` (backslash-n)
+  because TSV rows are one-per-line; `run_suite.sh` reverses this escaping
+  before writing the prompt to a file for `gen`.
+- `test_calc_semantics.py` — stdlib `unittest` checking the suite's Python
+  CALC implementation against the Rust tool's vectors.
+- `run_suite.sh` — runs one TSV of items through `agent_trace gen` +
+  `agent_trace verify`, writes `<outdir>/summary.tsv`, `<outdir>/RUN.txt`,
+  `<outdir>/timing.tsv`, and per-item receipts/prompts. Resumable.
+- `score.py` — reads a `summary.tsv` and prints per-bucket / overall rates
+- `check_verbatim.py` — receipt-only detector for shot-copied or key-snapped
+  tool arguments (step-0 argument must appear verbatim in the last `Q:` line
+  of the receipt's own prompt); `test_check_verbatim.py` is its unittest
+  with Wilson 95% intervals, plus the plan's pre-registered red flags.
+
+## Generating the suite
+
+```
+cd demo/agent-trace/eval
+python3 gen_suite.py
+```
+
+Prints the sha256 of `suite.tsv` and `smoke.tsv`. Run twice to confirm
+byte-identical output (the script does not depend on anything but stdlib
+`random.Random(20260906)` and a fixed generation order).
+
+## Running the smoke suite
+
+Uses the same artifact-path convention as `demo/agent-trace/run.sh`
+(`AEGIS_ARTIFACTS=<dir>` with `MODEL.SAF`/`EMBED.BIN`/`VOCAB.BIN` inside it,
+or the three `AEGIS_MODEL`/`AEGIS_EMBED`/`AEGIS_VOCAB` env vars individually).
+
+In-repo M7 tinybit model (never emits a tool call within N=24 tokens — that
+is expected and fine for a mechanism smoke test, not a rate measurement):
+
+```
+AGENT_TRACE_BIN=/path/to/aegis-linux/target/release/examples/agent_trace \
+  ./run_suite.sh smoke.tsv /tmp/eval-smoke-m7
+```
+
+2B artifacts (note: the 2B artifact directory does NOT follow the
+`MODEL.SAF`/`EMBED.BIN`/`VOCAB.BIN` naming `AEGIS_ARTIFACTS` expects — its
+files are named `aegis_pruned_model.cis.safetensors`, `embed.bin`,
+`vocab.bin` — so override the three individual variables, not
+`AEGIS_ARTIFACTS`):
+
+```
+AEGIS_MODEL=~/aefinity-artifacts/bitnet2b-2b-artifacts/aegis_pruned_model.cis.safetensors \
+AEGIS_EMBED=~/aefinity-artifacts/bitnet2b-2b-artifacts/embed.bin \
+AEGIS_VOCAB=~/aefinity-artifacts/bitnet2b-2b-artifacts/vocab.bin \
+AGENT_TRACE_BIN=/path/to/aegis-linux/target/release/examples/agent_trace \
+  ./run_suite.sh smoke.tsv /tmp/eval-smoke-2b
+```
+
+`--template T3` runs the unclosed-`CALC(` ablation instead of the default T1
+prompts: the item's prompt is rewritten to end with an unclosed `CALC(` (or
+`LOOKUP(` for a table item) opener instead of a fully-formed call, so the
+model only has to transcribe the arguments and closing paren. The
+`agent_trace` scanner recognizes this: when a step's running prompt (trailing
+whitespace trimmed) itself ends with `CALC(` or `LOOKUP(`, that opener is
+carried as a scan prefix over the step's newly decoded text, so a
+continuation like `758 + 927).` still closes and scores the call natively
+(no shot-copied-argument workaround needed). A prompt with no trailing
+opener scans exactly as before. `--limit N` caps how many not-yet-done items
+are run this invocation (the run is resumable — items already in
+`summary.tsv` are skipped on a re-run).
+
+## Optional per-item TPM attestation (`--attest`)
+
+```
+./run_suite.sh smoke.tsv /tmp/eval-smoke --attest
+```
+
+With `--attest`, after each item's receipt is generated and verified, the
+runner also calls `demo/agent-trace/run.sh attest <receipt> <outdir>/attest/<item_id>`
+— the same TPM-quote mechanism used by the single-episode demo (see
+`demo/edge-receipt/attest.sh`). Per `attest.sh`'s own doc comment, the quote's
+qualifying data (nonce) is the item's **full** `trace-chain` receipt digest
+(all 64 hex chars / 32 bytes), not a truncated prefix, so the quote binds the
+entire receipt, not just part of it.
+
+What is recorded:
+
+- `<outdir>/attest/<item_id>/` — one directory per item, holding whatever
+  `attest.sh quote` writes there (`ATTEST.txt`, `ak.pem`, `quote.msg`,
+  `quote.sig`, `quote.pcrs`, etc — see `demo/edge-receipt/README.md`/
+  `attest.sh` for the field list).
+- `<outdir>/receipts/<item_id>.attest.out` / `.attest.err` — the `run.sh
+  attest` call's stdout/stderr for that item.
+- `<outdir>/attest.tsv` — `item_id`, `attest_rc` for every attested item
+  (`attest_rc` is `0` on success, a nonzero exit code on failure, or `skip`
+  if the item had no receipt to attest because `gen` itself failed).
+- `<outdir>/summary.tsv` gains an eleventh `attest_rc` column, holding the
+  same value as `attest.tsv` for that item — added **only** when `--attest`
+  is given; without the flag `summary.tsv`'s ten-column layout (and
+  `RUN.txt`/`timing.tsv`) is unchanged from a run without this option, so
+  `score.py` (which reads columns by name) keeps working either way.
+- `<outdir>/RUN.txt` gains three lines, written/refreshed once the whole
+  run's items have been processed (safe to run this more than once against
+  the same `<outdir>`, e.g. on a resumed run):
+  `attest-requested yes`, `attest-count N` (items attested, `skip`s
+  included), `attest-fail M` (items whose `attest_rc` was neither `0` nor
+  absent — i.e. a nonzero exit code; `skip` counts as a fail here since no
+  attestation was produced). These three lines are never written when
+  `--attest` is not given.
+
+Resuming into an outdir whose `summary.tsv` was already started with a
+different `--attest` setting (10-column file but `--attest` given now, or
+vice versa) is refused: `run_suite.sh` compares the existing header against
+the one this invocation would use, and exits 2 with a one-line message
+naming the outdir and both headers, before touching anything in `<outdir>`.
+
+An attest failure (missing TPM, `attest.sh` erroring, etc) is independent of
+`agent_trace verify` and never changes an item's `verify_result` column —
+attestation is an optional, additional check layered on top of a receipt
+that already verified (or didn't) on its own.
+
+## Scoring
+
+```
+python3 score.py /tmp/eval-smoke-m7/summary.tsv
+```
+
+Works on a partial `summary.tsv` (fewer rows than the suite/smoke file).
+
+## Verbatim-argument check (receipt-only)
+
+```
+python3 check_verbatim.py /tmp/eval-smoke-m7/receipts /tmp/eval-smoke-m7/summary.tsv
+```
+
+Flags every receipt whose step-0 tool argument is not a verbatim substring of
+the last `Q:` line of the receipt's prompt. It reads nothing but the receipt,
+so a verifier can apply it without the suite or the model. On EVAL-60 T1 (2B,
+2026-09-06) it flagged the three lookup near-miss items where the model snapped
+the key to a real one (`p-100` -> `LOOKUP(P-100)`, `Q-205` -> `LOOKUP(P-205)`,
+`part.local` -> `LOOKUP(P-100)`) and the distractor it answered by copying a
+shot (`two + two` -> `CALC(2 + 2)`), with zero false positives on the 47
+correct calls. It is a report, not a gate: exit status is always 0.
+
+Known gap: only step 0 is checked. K>1 receipts record the initial prompt
+only, so a step-1 argument copied from a shot (EVAL-60 T1 `mixed_02`) is not
+visible to this rule until the receipt carries per-step queries.
+
+## Chain items
+
+The "mixed" bucket's second step is never forced (see the deviation below)
+and, when it does fire, its content is fully determined by a few-shot
+example already sitting in the *initial* prompt — so a step-2 argument that
+matches is not distinguishable from the model having copied a shot. The
+"chain" bucket exists to give `agent_trace`'s per-step verbatim rule
+(`verbatim_ok_for` in `aegis-linux/examples/agent_trace.rs`) a genuine
+positive case: a step-2 argument that can *only* have come from external
+text appended after step 1 ran, never from the initial prompt.
+
+Each of the 6 `chain_01`..`chain_06` items' initial prompt few-shots two
+LOOKUPs on keys (`P-402`, `P-403`) that are never a chain target or a
+superseded key, then asks about one "superseded" row (`P-901`..`P-906`,
+added in `demo/agent-trace/tables/chain.tsv`) whose value text is exactly
+`Superseded, see part <real key>`. After `agent_trace` runs the step-1
+LOOKUP, it appends `\nTOOL[lookup]=Superseded, see part <real key>\n` to the
+running prompt and keeps decoding (see `tool_result_text`) — so the *only*
+place the real key appears, for the rest of the episode, is that appended
+tool-result text. If the model's step-2 LOOKUP names that key, its argument
+is verbatim-traceable to a prior tool result, not a prompt shot — the
+positive case the WARNING-only verbatim rule is meant to distinguish from a
+shot-copy or key-snap.
+
+`chain.tsv` is `demo.tsv`'s 10 rows unchanged, plus the 6 `P-90x` rows
+above — a **different file with a different sha256** from `demo.tsv`. Since
+`run_suite.sh --suite-sha256`/`--table` fold the table's own sha256 into
+every receipt's trace genesis, a receipt generated against `chain.tsv`
+cannot verify against `demo.tsv` (or vice versa) even for the same key —
+chain-run receipts and demo-run receipts are not interchangeable.
+
+Chain items are **not** part of the default 60-item `suite.tsv`/`smoke.tsv`
+(`gen_suite.py`'s default invocation is unchanged and still produces
+byte-identical output) — generate and run them separately:
+
+```
+python3 gen_suite.py --bucket chain --table ../tables/chain.tsv --out chain.tsv
+./run_suite.sh chain.tsv /tmp/eval-chain --table ../tables/chain.tsv --bin /path/to/agent_trace
+python3 score.py /tmp/eval-chain/summary.tsv
+```
+
+`score.py` scores "chain" exactly like "mixed": both are K=2 buckets whose
+`tool_expected`/`tool_observed`/`arg_match`/`output_match` are comma-joined
+step-1,step-2 values (see 'Caveat: comma-joined fields' below); `score.py`
+itself is bucket-name-agnostic, so it needs no chain-specific code.
+
+## Deviations from the plan (logged, not silent)
+
+- **`//` operator does not exist.** Plan section 2 lists CALC hard-bucket
+  ops as `+ - * //`. `agent_trace.rs`'s `find_calc` grammar only supports
+  `+ - * / %` (see its module doc comment and `eval_calc`). `gen_suite.py`
+  uses `/` (truncating toward zero, matching `i64::checked_div`) and `%`
+  (remainder with the sign of the dividend, matching `i64::checked_rem`)
+  instead of the plan's non-existent `//`.
+- **Suite-hash folding into the receipt — DONE.** Plan section 5 noted that
+  folding the eval item-suite's own sha256 into the cryptographic trace
+  chain (the way `table-sha256` is folded for LOOKUP items) "if... turns
+  out to need a code change, that change is a NEEDS item for alice-aegis,
+  not something done inside this plan." That code change has since landed:
+  `agent_trace gen`/`verify` accept an optional `--suite-sha256 <64hex>`
+  that folds the given 32 bytes into the trace genesis after the table
+  slot, under its own domain tag (the pre-existing table fold is
+  byte-for-byte unchanged, so archived table-bound receipts keep
+  verifying) and records
+  a `suite-sha256 <64hex>` receipt header. `run_suite.sh` passes
+  `--suite-sha256 $(sha256sum "$ITEMS")` to every `gen` and `verify` call,
+  so every receipt this harness produces now binds the suite file's hash
+  into its own cryptographic chain — a receipt generated under a different
+  suite file will not verify unless the same hash is supplied or embedded,
+  for CALC-only items as well as LOOKUP items. `RUN.txt`'s `suite-sha256`
+  line remains as the human-readable out-of-band record.
+- **Mixed-item (K=2) column conventions.** The plan's summary/suite TSV
+  formats do not define how a 2-step mixed item's `expected_tool`/
+  `tool_observed`/`arg_match`/`output_match` should represent two steps in
+  one row. This harness comma-joins step-1,step-2 values (e.g.
+  `expected_tool` = `CALC,LOOKUP`) in both `suite.tsv` and `run_suite.sh`'s
+  `summary.tsv`. `arg_match`/`output_match` are single booleans (true only
+  if *both* steps match); a finer per-step breakdown was judged unnecessary
+  for a 3-item bucket.
+- **Mixed items' second step is not forced.** `replay_episode` (the shared
+  gen/verify core) only lets the model's own continuation, plus the fixed
+  `TOOL[<name>]=<output>` text `agent_trace.rs` appends after step 1,
+  determine what step 2 sees. This harness cannot and does not force the
+  model into asking the second (LOOKUP or CALC) question — it primes both a
+  CALC and a LOOKUP few-shot example in the initial prompt and reports
+  whatever step 2 actually does. A mixed item where step 2 never asks the
+  intended second question is a legitimate model-behavior finding, not a
+  suite bug.
+- **`well-formed rate` operationalization in `score.py`.** The plan defines
+  well-formed as "fraction of emitted calls that parse under the existing
+  scanner grammar... without the malformed/ambiguous failure modes already
+  fixed in review." This harness has no independent access to the model's
+  raw un-scanned decode text (only the receipt's already-scanned
+  `tool=`/`in=`/`out=` fields), so `score.py` treats "well-formed" as
+  "the scanner recognized *some* call" (`tool_observed` != `NONE` for a
+  tool-expected item) — a proxy for the scanner's own accept decision, not
+  a re-implementation of the grammar. `calc-error` (parsed but a
+  runtime `div-by-zero`/`overflow`) counts as well-formed and as the
+  correct tool, but not necessarily correct-argument/output (those still
+  compare literal strings).
+
+## What `RUN.txt` records
+
+One header written once per `<outdir>`, before the first item: the suite
+file's path and sha256, the table file's path and sha256, the three
+artifact file sha256s, the `agent_trace` binary's sha256, `N`, the
+`--template` in effect, `hostname`, and a UTC start timestamp. This is
+provenance for the run as a whole; per-item reproducibility comes from each
+item's own receipt file plus `agent_trace verify`, independent of this
+report's summary numbers (plan section 5).
+
+## Caveat: comma-joined fields
+
+For mixed (K=2) items the `expected_tool`, `expected_input`, `expected_output`
+columns in the suite and the `tool_observed`, `arg_match`, `output_match`
+columns in `summary.tsv` are the two steps' values joined with a comma. Table
+values themselves may contain commas, so these fields are compared as whole
+strings and must not be split on `,` by any future consumer.

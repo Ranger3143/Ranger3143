@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<title>ALICE Mission Control</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a console. One column of instrument panels on a navy field; the boot-screen palette carried onto the web. */
+:root {
+  --bg: #0a0e1a; --panel: #111a2e; --panel-2: #0d1526; --edge: #24314f;
+  --accent: #38e1ff; --accent-dim: #186f80; --amber: #ffb020; --green: #4ade80; --red: #ff5c5c;
+  --fg: #e6eaf2; --muted: #8a97b5; --ink: #050810;
+  --display: "Rajdhani", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f2f5fa; --panel: #ffffff; --panel-2: #e9eef7; --edge: #cfd8e8;
+    --accent: #0a7f99; --accent-dim: #bfe6f0; --amber: #a86400; --green: #1d7f47; --red: #bf2e2e;
+    --fg: #121a2e; --muted: #5a6680; --ink: #ffffff;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f2f5fa; --panel: #ffffff; --panel-2: #e9eef7; --edge: #cfd8e8;
+  --accent: #0a7f99; --accent-dim: #bfe6f0; --amber: #a86400; --green: #1d7f47; --red: #bf2e2e;
+  --fg: #121a2e; --muted: #5a6680; --ink: #ffffff;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 1100px; margin: 0 auto; padding-inline: 20px; padding-block: 0 56px; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.05; }
+h1 { font-size: clamp(2.3rem, 6vw, 4.2rem); font-weight: 700; letter-spacing: 0.01em; }
+h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); font-weight: 600; }
+h3 { font-size: 1.15rem; font-weight: 600; color: var(--accent); letter-spacing: 0.04em; text-transform: uppercase; }
+p { margin: 0; max-width: 68ch; }
+.eyebrow { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* header */
+.masthead { display: flex; align-items: center; gap: 18px; padding-block: 22px 18px; border-bottom: 3px solid var(--accent); margin-bottom: 36px; }
+.emblem { width: 44px; height: 44px; flex: 0 0 44px; position: relative; }
+.emblem::before { content: ""; position: absolute; inset: 4px; background: var(--accent); transform: rotate(45deg); }
+.emblem::after { content: ""; position: absolute; inset: 15px; background: var(--bg); transform: rotate(45deg); }
+.masthead .name { font-family: var(--display); font-size: 1.6rem; font-weight: 700; letter-spacing: 0.22em; }
+.masthead .tag { color: var(--muted); font-size: 0.85rem; }
+.badge { margin-left: auto; font-family: var(--display); font-weight: 700; letter-spacing: 0.08em; background: var(--accent); color: var(--ink); padding: 6px 12px; font-size: 0.95rem; white-space: nowrap; }
+
+/* hero */
+.hero { display: grid; gap: 22px; margin-bottom: 44px; }
+.lede { font-size: 1.15rem; color: var(--fg); max-width: 62ch; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.8rem; padding: 6px 10px; border: 1px solid var(--edge); background: var(--panel); }
+.chip .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: 0 0 9px; }
+.chip.ok .dot { background: var(--green); } .chip.warn .dot { background: var(--amber); } .chip.bad .dot { background: var(--red); } .chip.run .dot { background: var(--accent); }
+
+/* sections */
+section { margin-bottom: 48px; }
+.sec-head { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.panel { background: var(--panel); border: 1px solid var(--edge); border-top: 2px solid var(--edge); padding: 18px; min-width: 0; }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.note { color: var(--muted); font-size: 0.9rem; }
+
+/* chain of trust */
+.chain { display: grid; gap: 0; }
+.step { display: grid; grid-template-columns: 54px 1fr; gap: 14px; padding-block: 16px; border-bottom: 1px solid var(--edge); }
+.step:last-child { border-bottom: 0; }
+.step .pcr { font-family: var(--display); font-weight: 700; font-size: 1.05rem; color: var(--accent); line-height: 1.2; }
+.step .pcr small { display: block; font-family: var(--mono); font-weight: 400; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; }
+.step h4 { margin: 0 0 4px; font-family: var(--display); font-size: 1.15rem; font-weight: 600; }
+.step p { font-size: 0.95rem; }
+.val { display: flex; align-items: center; gap: 8px; margin-top: 8px; min-width: 0; }
+.val code { font-family: var(--mono); font-size: 0.78rem; background: var(--panel-2); border: 1px solid var(--edge); padding: 4px 8px; overflow-x: auto; white-space: nowrap; flex: 1 1 auto; min-width: 0; color: var(--fg); }
+.copy { font-family: var(--mono); font-size: 0.72rem; border: 1px solid var(--edge); background: transparent; color: var(--muted); padding: 4px 8px; cursor: pointer; flex: 0 0 auto; }
+.copy:hover, .copy:focus-visible { color: var(--accent); border-color: var(--accent); outline: none; }
+.verdict { font-family: var(--mono); font-size: 0.8rem; color: var(--green); }
+.verdict::before { content: "\25A0  "; }
+
+/* gallery */
+.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+figure { margin: 0; background: var(--panel); border: 1px solid var(--edge); padding: 10px; min-width: 0; }
+figure img { display: block; width: 100%; height: auto; max-width: 100%; border: 1px solid var(--edge); }
+figcaption { font-size: 0.85rem; color: var(--muted); padding-top: 8px; }
+figcaption b { color: var(--fg); font-weight: 600; }
+figure.wide { grid-column: 1 / -1; }
+
+/* tables */
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--edge); vertical-align: top; }
+th { font-family: var(--mono); font-weight: 500; font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+td code { font-family: var(--mono); font-size: 0.82rem; }
+
+/* bars */
+.bars { display: grid; gap: 10px; }
+.bar { display: grid; grid-template-columns: 150px 1fr 64px; gap: 10px; align-items: center; font-size: 0.9rem; }
+.bar .track { position: relative; height: 18px; background: var(--panel-2); border: 1px solid var(--edge); min-width: 0; }
+.bar .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); }
+.bar .fill.base { background: var(--edge); }
+.bar .tick { position: absolute; top: -4px; bottom: -4px; width: 1px; background: var(--amber); }
+.bar .ci { position: absolute; top: 50%; height: 2px; background: var(--fg); transform: translateY(-50%); opacity: 0.8; }
+.bar .ci::before, .bar .ci::after { content: ""; position: absolute; top: -4px; width: 1px; height: 10px; background: var(--fg); }
+.bar .ci::before { left: 0; } .bar .ci::after { right: 0; }
+.bar .v { font-family: var(--mono); font-size: 0.82rem; text-align: right; }
+.axis { display: grid; grid-template-columns: 150px 1fr 64px; gap: 10px; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+.axis .ticks { display: flex; justify-content: space-between; }
+.flag { display: inline-block; font-family: var(--mono); font-size: 0.74rem; color: var(--red); border: 1px solid var(--red); padding: 2px 7px; margin: 4px 6px 0 0; }
+
+/* next */
+.next { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.next .panel h4 { margin: 8px 0 6px; font-family: var(--display); font-size: 1.1rem; font-weight: 600; }
+.next .panel p { font-size: 0.9rem; color: var(--muted); }
+.status { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.status.done { color: var(--green); } .status.run { color: var(--accent); } .status.plan { color: var(--amber); }
+
+footer { border-top: 1px solid var(--edge); padding-top: 18px; color: var(--muted); font-size: 0.85rem; display: grid; gap: 8px; }
+footer code { font-family: var(--mono); font-size: 0.8rem; color: var(--fg); }
+@media (max-width: 560px) {
+  .bar, .axis { grid-template-columns: 1fr; gap: 4px; }
+  .bar .v { text-align: left; }
+  .axis .ticks { order: 2; }
+  .step { grid-template-columns: 1fr; gap: 6px; }
+  .badge { font-size: 0.8rem; padding: 5px 9px; }
+  .masthead .tag { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { .bar .fill { transition: width 0.4s ease-out; } }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="emblem" aria-hidden="true"></div>
+    <div>
+      <div class="name">A.L.I.C.E.</div>
+      <div class="tag">Aegis Lightweight Inference Core Engine · no operating system · bit-exact · TPM-attested</div>
+    </div>
+    <div class="badge">MISSION CONTROL · 2026-10-06</div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Aefinity AI Inc. · edge-AI research sprint · every value below is read from a log in the repository</div>
+    <h1>The machine signs what the model said.</h1>
+    <p class="lede">ALICE boots a language model with no operating system underneath, decodes with integer-exact semantics that reproduce bit for bit on any CPU, and hands you a receipt the machine's own TPM has signed over the firmware, the engine binary, the model bytes and the transcript. Today the receipt was minted on screen, verified on a second boot, and checked again on a Linux host with OpenSSL.</p>
+    <div class="chips" aria-label="verification status">
+      <span class="chip ok"><span class="dot"></span>TPM2_Quote · ECDSA P-256 · OpenSSL Verified OK</span>
+      <span class="chip ok"><span class="dot"></span>Receipt replay · 64 steps · full logit chain · PASS</span>
+      <span class="chip ok"><span class="dot"></span>Minted receipt == golden fixture · byte-identical</span>
+      <span class="chip ok"><span class="dot"></span>PCR 12/13 replayed from event log · PASS</span>
+      <span class="chip warn"><span class="dot"></span>Environment: QEMU + swtpm · correctness only · no iron yet</span>
+    </div>
+  </section>
+
+  <section id="chain">
+    <div class="sec-head">
+      <h3>Chain of trust</h3>
+      <h2>Five links, as they ran in the mint boot</h2>
+      <p class="note">Values are from <span class="mono">labs/logs/dashboard/mint/ATTEST.TXT</span> and <span class="mono">RECEIPT.TXT</span>. PCR 4 is identical in the verify boot because the same binary ran; PCR 12 differs there by exactly one extra event, the receipt file itself.</p>
+    </div>
+    <div class="panel chain">
+      <div class="step">
+        <div class="pcr">PCR 4<small>FIRMWARE</small></div>
+        <div>
+          <h4>OVMF measured the engine binary before running it</h4>
+          <p>EV_EFI_BOOT_SERVICES_APPLICATION over <span class="mono">BOOTX64.EFI</span>. Same binary, same PCR 4, in both boots.</p>
+          <div class="val"><code id="v1">00518abd1a378c155fad873aa14d280f8a2433fdd215abeb0e90d8b99991c3aa</code><button class="copy" data-for="v1">copy</button></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="pcr">PCR 12<small>PAYLOAD</small></div>
+        <div>
+          <h4>The engine measured the model bytes into the TPM</h4>
+          <p>Three EV_IPL events: <span class="mono">MODEL.SAF</span> 2 797 632 B, <span class="mono">EMBED.BIN</span> 6 291 456 B, <span class="mono">VOCAB.BIN</span> 163 954 B, each with its SHA-256 in the event data.</p>
+          <div class="val"><code id="v2">b0b2eb6b5db2f200c5db9245c55dcdd6fc5d2c45d950e5dae82779a658e5ee8c</code><button class="copy" data-for="v2">copy</button></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="pcr">PCR 13<small>RECEIPT</small></div>
+        <div>
+          <h4>The decode produced a witness receipt and committed it</h4>
+          <p>64 greedy tokens from "Once upon a time" under CIS-1 FullInt. CIS digest <span class="mono">67e8c0a96abc04e1</span>; SHA-256 chain over every token id and every full integer logit vector:</p>
+          <div class="val"><code id="v3">aee25b770bd7b22eea2ea8476bbd949881d58a98d6dc3085c7cc94d322b1961b</code><button class="copy" data-for="v3">copy</button></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="pcr">QUOTE<small>TPM2_QUOTE</small></div>
+        <div>
+          <h4>The TPM signed PCR 4, 12 and 13 with the receipt as qualifying data</h4>
+          <p>ECC P-256 attestation key, owner hierarchy. <span class="mono">extraData</span> = SHA-256 of the receipt bytes. First quote returned TPM_RC_RETRY and was resent (retry 1), a behaviour the EFI protocol does not hide.</p>
+          <div class="val"><code id="v4">528e205e04882437269fb1fbc6181ba0f2f6fddc120ba25f93c0e5bf233fbaaf</code><button class="copy" data-for="v4">copy</button></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="pcr">HOST<small>VERIFIER</small></div>
+        <div>
+          <h4>A Linux host checked all of it independently</h4>
+          <p><span class="mono">attest_verify.py</span>: PCR 12 and 13 replayed from the event log equal the values read back; pcrDigest matches; signature verifies with OpenSSL; a tampered attest is rejected. <span class="mono">cis_witness verify</span>: the receipt replays bit for bit against the artifacts.</p>
+          <div class="verdict" style="margin-top:8px">ATTEST VERIFY PASS · QUOTE VERIFY PASS · RECEIPT VERIFY PASS · minted RECEIPT.TXT == tests/golden/witness_v1_m7_once64.receipt</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screens">
+    <div class="sec-head">
+      <h3>Live from the unikernel</h3>
+      <h2>What a person standing at the machine sees</h2>
+      <p class="note">GOP framebuffer, 1920x1440, drawn by 300 lines of no_std Rust. Every panel value is read from CPUID, file bytes, SHA-256s and TPM PCRs. The token stream is a display-only observer that runs after the chain fold, which is why the minted receipt is byte-identical to the golden fixture.</p>
+    </div>
+    <div class="gallery">
+      <figure class="wide"><img src="img/04_mint_done.png" alt="ALICE dashboard, mint receipt mode, DONE: transcript shows the prompt, the generated story and the full witness receipt; the attestation panel shows TPM present, PCR 4, 12 and 13, a signed TPM2_Quote, the receipt digest and chain and the verdict MINTED." width="1920" height="1440"><figcaption><b>Mint boot, DONE.</b> Prompt and output on the right with the full witness receipt below it; PCR 4/12/13, the signed quote and the receipt digest and chain on the left; the footer bar has walked BOOT to DONE.</figcaption></figure>
+      <figure><img src="img/05_verify_pass.png" alt="ALICE dashboard, verify receipt mode: transcript shows 3/3 artifact hashes match, receipt and local digests equal, VERIFY PASS; attestation panel shows four payload events and VERDICT PASS." width="1920" height="1440"><figcaption><b>Verify boot.</b> The receipt from the mint boot is on the volume; this machine replays all 64 steps' full logit vectors bit for bit and reports PASS, then quotes PCR 4/12/13 again.</figcaption></figure>
+      <figure><img src="img/02_decoding.png" alt="ALICE dashboard during decode: the OUTPUT line is being streamed token by token and the footer reads token 32 of 64, CIS-1 FullInt, argmax." width="1920" height="1440"><figcaption><b>During decode.</b> Tokens appear as the integer engine produces them; the footer counts them. Nothing here is a timing claim.</figcaption></figure>
+      <figure><img src="img/01_loading.png" alt="ALICE dashboard at the LOAD stage: machine panel filled from CPUID, payload sizes listed, transcript reading EMBED.BIN." width="1920" height="1440"><figcaption><b>Loading.</b> MACHINE from CPUID (vendor, family, ISA flags, kernel level, hypervisor bit, "OS: none"); PAYLOAD sizes before the hashes exist.</figcaption></figure>
+      <figure><img src="img/00_before.png" alt="The previous ALICE screen: white text on black, a plain transcript at 2048 by 2048 pixels." width="2048" height="2048"><figcaption><b>Before.</b> The same information as a transcript on the firmware text console, in a 2048x2048 mode QEMU picked for us.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="exact">
+    <div class="sec-head">
+      <h3>Bit-exact</h3>
+      <h2>One digest, five microarchitectures, any thread count</h2>
+      <p class="note">CIS-1 pins integer semantics, so a decode is a number, not an impression. The BitNet-2B digest below was reproduced in this sprint from independently re-derived artifacts (different file bytes, same values) on AVX-512/VNNI-class silicon, and again with 1, 2 and 4 worker threads.</p>
+    </div>
+    <div class="grid-2">
+      <div class="panel tbl">
+        <table>
+          <thead><tr><th>Where</th><th>ISA path</th><th>2B decode digest</th></tr></thead>
+          <tbody>
+            <tr><td>Intel i5-10210U (crosvm)</td><td>AVX2</td><td><code>cab11400d737ac4a</code></td></tr>
+            <tr><td>GitHub aarch64 runner</td><td>NEON</td><td><code>cab11400d737ac4a</code></td></tr>
+            <tr><td>Celeron N4020</td><td>scalar</td><td><code>cab11400d737ac4a</code></td></tr>
+            <tr><td>Dell i5-5200U, bare metal kit</td><td>AVX2</td><td><code>cab11400d737ac4a</code></td></tr>
+            <tr><td><b>Sapphire Rapids class VM, this sprint</b></td><td>AVX2 · <b>AVX-512 VNNI</b></td><td><code>cab11400d737ac4a</code></td></tr>
+          </tbody>
+        </table>
+        <p class="note" style="margin-top:10px">CIS selftest digest <span class="mono">76985613c965f643</span> also matched (spec Tier-2 pin). Source: labs/LAB-02, labs/LAB-03.</p>
+      </div>
+      <div class="panel tbl">
+        <table>
+          <thead><tr><th>Threads</th><th class="num">decode speed-up</th><th>digest, every repeat</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td class="num">1.00x</td><td><code>cab11400d737ac4a</code></td></tr>
+            <tr><td>2</td><td class="num">1.51x</td><td><code>cab11400d737ac4a</code></td></tr>
+            <tr><td>4</td><td class="num">2.00x</td><td><code>cab11400d737ac4a</code></td></tr>
+          </tbody>
+        </table>
+        <p class="note" style="margin-top:10px">Row-parallel integer dispatch is bit-identical by construction: rows are independent integer dot products. Ratios from same-process interleaved runs on the VM (env=vm); absolute tokens per second are in labs/LAB-05 and are not product numbers.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kernel">
+    <div class="sec-head">
+      <h3>Kernel at the roofline</h3>
+      <h2>The first CIS-1 kernel for VNNI silicon, and why it stops at 1.15x from DRAM</h2>
+      <p class="note">Median per-call ratio of the new AVX-512 VNNI kernel against the AVX2 incumbent, same process, interleaved, bit-identical outputs on every shape (labs/LAB-03). The amber tick is 1.00x. When weights stream from DRAM the integer decode already runs near this VM's single-core read bandwidth, so the remaining levers are cores and bytes per token, not instructions.</p>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="eyebrow" style="margin-bottom:10px">Cache-resident (weights in L2/L3)</div>
+        <div class="bars">
+          <div class="bar"><span>q/o 2560x2560</span><div class="track"><div class="fill" style="width:87.3%"></div><div class="tick" style="left:66.7%"></div></div><span class="v">1.31x</span></div>
+          <div class="bar"><span>k/v 640x2560</span><div class="track"><div class="fill" style="width:90.7%"></div><div class="tick" style="left:66.7%"></div></div><span class="v">1.36x</span></div>
+          <div class="bar"><span>gate/up 6912x2560</span><div class="track"><div class="fill" style="width:86.7%"></div><div class="tick" style="left:66.7%"></div></div><span class="v">1.30x</span></div>
+          <div class="bar"><span>down 2560x6912</span><div class="track"><div class="fill" style="width:87.3%"></div><div class="tick" style="left:66.7%"></div></div><span class="v">1.31x</span></div>
+        </div>
+        <div class="axis"><span></span><div class="ticks"><span>0</span><span>0.5x</span><span>1.0x</span><span>1.5x</span></div><span></span></div>
+      </div>
+      <div class="panel">
+        <div class="eyebrow" style="margin-bottom:10px">Streaming 256 MB of weights from DRAM</div>
+        <div class="bars">
+          <div class="bar"><span>q/o 2560x2560</span><div class="track"><div class="fill" style="width:76.7%"></div><div class="tick" style="left:66.7%"></div></div><span class="v">1.15x</span></div>
+          <div class="bar"><span>k/v 640x2560</span><div class="track"><div class="fill" style="width:74.0%"></div><div class="tick" style="left:66.7%"></div></div><span class="v">1.11x</span></div>
+          <div class="bar"><span>gate/up 6912x2560</span><div class="track"><div class="fill" style="width:76.7%"></div><div class="tick" style="left:66.7%"></div></div><span class="v">1.15x</span></div>
+          <div class="bar"><span>down 2560x6912</span><div class="track"><div class="fill" style="width:74.7%"></div><div class="tick" style="left:66.7%"></div></div><span class="v">1.12x</span></div>
+        </div>
+        <div class="axis"><span></span><div class="ticks"><span>0</span><span>0.5x</span><span>1.0x</span><span>1.5x</span></div><span></span></div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px">Negative result kept: a 4-row-blocked VNNI variant was slower than the 1-row kernel and stays behind a toggle. Bar scale: full track = 1.5x.</p>
+  </section>
+
+  <section id="tools">
+    <div class="sec-head">
+      <h3>Tool-call baseline</h3>
+      <h2>BitNet-2B on the receipt-gated gateway: the number the next model has to beat</h2>
+      <p class="note">60 pre-registered items through the unchanged <span class="mono">agent_trace</span> suite (labs/LAB-07). Bars show the correct-argument rate per bucket; whiskers are the Wilson 95% interval from <span class="mono">score.py</span>. Every one of the 60 trace receipts verified, including the misses: the receipt records what the model did, right or wrong.</p>
+    </div>
+    <div class="panel">
+      <div class="bars">
+        <div class="bar"><span>calc_easy (n=15)</span><div class="track"><div class="fill" style="width:100%"></div><div class="ci" style="left:79.6%;width:20.4%"></div></div><span class="v">15/15</span></div>
+        <div class="bar"><span>lookup_hit (n=8)</span><div class="track"><div class="fill" style="width:100%"></div><div class="ci" style="left:67.6%;width:32.4%"></div></div><span class="v">8/8</span></div>
+        <div class="bar"><span>lookup_miss (n=5)</span><div class="track"><div class="fill" style="width:80%"></div><div class="ci" style="left:37.6%;width:58.8%"></div></div><span class="v">4/5</span></div>
+        <div class="bar"><span>calc_hard (n=15)</span><div class="track"><div class="fill" style="width:73.3%"></div><div class="ci" style="left:48.1%;width:41.0%"></div></div><span class="v">11/15</span></div>
+        <div class="bar"><span>calc_overflow (n=8)</span><div class="track"><div class="fill" style="width:62.5%"></div><div class="ci" style="left:30.6%;width:55.7%"></div></div><span class="v">5/8</span></div>
+        <div class="bar"><span>lookup_near_miss (n=4)</span><div class="track"><div class="fill" style="width:50%"></div><div class="ci" style="left:15.0%;width:70.0%"></div></div><span class="v">2/4</span></div>
+        <div class="bar"><span>mixed, two tools (n=3)</span><div class="track"><div class="fill" style="width:0%"></div><div class="ci" style="left:0%;width:56.2%"></div></div><span class="v">0/3</span></div>
+        <div class="bar"><span><b>overall (n=58)</b></span><div class="track"><div class="fill" style="width:77.6%"></div><div class="ci" style="left:65.3%;width:21.1%"></div></div><span class="v"><b>45/58</b></span></div>
+      </div>
+      <div class="axis"><span></span><div class="ticks"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div><span></span></div>
+      <div style="margin-top:12px">
+        <span class="flag">red flag · calc_hard lower bound 48.1% &lt; 50%</span>
+        <span class="flag">red flag · calc_overflow lower bound 30.6% &lt; 50%</span>
+      </div>
+      <p class="note" style="margin-top:12px">Call rate 50/58 (86.2%), correct tool 49/58 (84.5%). Hard and overflow arithmetic fail mostly by not calling the tool at all; when the 2B does call, the argument is right. Distractor set (n=2) is too small to grade no-tool precision. Receipt verify 60/60.</p>
+    </div>
+  </section>
+
+  <section id="next">
+    <div class="sec-head">
+      <h3>Flight plan</h3>
+      <h2>What is moving now</h2>
+    </div>
+    <div class="next">
+      <div class="panel"><span class="status run">in progress</span><h4>ALICE-Next edge model plan</h4><p>Research sweep on ternary pretraining, distillation, tool-use training and calibrated abstention; then a design panel and a training/distillation plan with provenance, eval gates and air-gapped vs connected variants. Lands in <span class="mono">model/</span>.</p></div>
+      <div class="panel"><span class="status run">in progress</span><h4>"Nobody has done this yet", verified</h4><p>Every first-of-kind claim from the briefs gets a prior-art hunt and a repo-evidence check before it is listed. Lands as <span class="mono">NOBODY-HAS-DONE-THIS.md</span>.</p></div>
+      <div class="panel"><span class="status done">done today</span><h4>Boot dashboard</h4><p>GOP panels, live token stream, attestation view, receipt summary; receipts unchanged (byte-identical to golden). labs/LAB-06.</p></div>
+      <div class="panel"><span class="status done">done today</span><h4>Attested receipts, end to end</h4><p>Mint and verify boots under QEMU + swtpm, TPM2_Quote over PCR 4/12/13, host verification with OpenSSL. labs/LAB-04, LAB-06.</p></div>
+      <div class="panel"><span class="status plan">next on iron</span><h4>Physical TPM run</h4><p>Dell / HP / Acer kit with their discrete or firmware TPMs; EK-certified attestation key; Secure Boot on with a signed .efi.</p></div>
+      <div class="panel"><span class="status plan">dates</span><h4>Funding windows</h4><p>DoW SBIR Release 6 opens 2026-10-21; NSF 26-510 due 2026-11-04. The lab logs are the evidence package.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <div><b>Rule A.</b> Every run here was on a QEMU/TCG guest or a 4-vCPU cloud VM. No absolute performance figure on this page is a product number; ratios from same-process interleaved runs and bit-identity results are the admissible outputs.</div>
+    <div><b>Rule B.</b> Every digest, PCR value and rate above traces to a file: <code>labs/logs/dashboard/</code>, <code>labs/logs/toolcall_2b/</code>, <code>labs/logs/vnni_vs_avx2_*.log</code>, <code>labs/logs/cis_decode_timed_threads_run1.log</code>, <code>labs/logs/repack_*.log</code>.</div>
+    <div>Source of this page: <code>docs/mission-control/page.html</code> on branch <code>claude/keen-cray-6odygo</code> of the Ranger3143 repository.</div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  function fallback(el) {
+    try { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); } catch (e) {}
+  }
+  var buttons = document.querySelectorAll('.copy');
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener('click', function (ev) {
+      var btn = ev.currentTarget; var el = document.getElementById(btn.getAttribute('data-for')); if (!el) return;
+      var text = el.textContent;
+      var done = function () { btn.textContent = 'copied'; setTimeout(function () { btn.textContent = 'copy'; }, 1400); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { fallback(el); done(); });
+      } else { fallback(el); done(); }
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

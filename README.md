@@ -17,18 +17,26 @@
 | 7 | **Four research briefs** (edge pain points; AI-OS prior art and Rust OS landscape; standards/funding/newsworthiness; ternary kernel SOTA + roofline) and a synthesis naming the white space and ranking three candidate standards. | `research/01..05` |
 | 8 | **Spec draft:** Attested Inference Receipt — TPM measured-boot profile (AIR-TPM v0) + Model Boot Manifest, positioned against the IETF AIR v1 individual draft (Nitro/TDX only). | `spec/AIR-TPM-PROFILE-v0.md` |
 | 9 | **Design:** Aefinity OS v2 — an attested, AI-operated machine for headless fleets and user workstations, with the code-type recommendation (`no_std` Rust firmware sentinel + immutable Linux body + Rust supervisor + Cedar policy + microVM/Wasm tool sandboxes), and the ALICE next-level roadmap with gates. | `design/AEFINITY-OS-v2-architecture.md`, `design/ALICE-NEXT-LEVEL-roadmap.md` |
+| 10 | **A.L.I.C.E. boot dashboard** — the unikernel now draws a GOP dashboard (MACHINE / PAYLOAD / ATTESTATION panels, live token stream, footer stage bar, mode badge) from CPUID, file hashes and TPM PCRs; receipts unchanged (the RECEIPT.TXT minted on screen is byte-identical to the golden fixture). Mint and verify boots under QEMU+swtpm both exit 33; host verifier passes on both ATTEST.TXT files. | `labs/LAB-06-alice-boot-dashboard.md`, `labs/screenshots/dashboard/`, `labs/logs/dashboard/`, `patches/0002-*.patch` |
+| 11 | **Tool-call baseline of BitNet-2B on the receipt-gated gateway** (60 pre-registered items, unchanged harness): correct-argument 45/58 = 77.6% overall, 100% on easy arithmetic and table hits, 73%/62% call rate on hard/overflow arithmetic, 0/3 on two-tool items; two pre-registered red flags tripped; **60/60 trace receipts verified**, misses included. This is the number ALICE-Next must beat. | `labs/LAB-07-toolcall-baseline-bitnet2b.md`, `labs/logs/toolcall_2b/` |
+| 12 | **Mission Control** — one page with the attested receipt chain as it ran (copyable PCR/quote values), the dashboard screens, the digest table, kernel ratio bars, the tool-call baseline and the flight plan. Published privately at https://claude.ai/artifact/WTgGXZGsYWT3m7tidfNtCL (owner-only until shared). | `docs/mission-control/` (`page.html` is the published source; `index.html` is the standalone copy) |
+| 13 | **ALICE-Next brief** — the requirements and acceptance gates for the edge model that replaces BitNet-2B in ALICE: ternary, ≤ 300–500 MB packed, tool expert, conversational, knows what it doesn't know; air-gapped and connected variants with the snapshot-based fact-check protocol; frozen eval gates. Design-panel output follows in `model/01-…`. | `model/00-ALICE-NEXT-brief.md` |
 
 Rule A (alice-aegis `CLAUDE.md`): the machine here is a 4-vCPU KVM cloud container (`labs/FINGERPRINT.txt`); **no absolute performance figure in this repository is a product number**. Ratios from same-process interleaved runs and bit-identity results are the admissible outputs; iron re-measurement is step 1 of the roadmap.
 
 ## Layout
 ```
 research/   01 edge pain points · 02 AI-OS prior art + Rust OS landscape · 03 standards, funding, newsworthiness · 04 ternary kernel SOTA + roofline · 05 SYNTHESIS
-labs/       LAB-02 digest reproduction · LAB-03 VNNI kernel · LAB-04 TPM-attested receipts · LAB-05 multicore · FINGERPRINT.txt
-labs/logs/  raw logs (bench, membw, timed decode, QEMU runs incl. ATTEST.TXT/BOOTLOG.TXT/RECEIPT.TXT/swtpm.log, regression tests)
-labs/tools/ boot.sh (QEMU/OVMF + swtpm harness, real FAT image), attest_verify.py (host verifier), fingerprint.sh, chain*.sh
+labs/       LAB-02 digest reproduction · LAB-03 VNNI kernel · LAB-04 TPM-attested receipts · LAB-05 multicore · LAB-06 boot dashboard · LAB-07 tool-call baseline · FINGERPRINT.txt
+labs/screenshots/dashboard/  before/after frames of the A.L.I.C.E. GOP dashboard (QEMU screendumps)
+labs/logs/  raw logs (bench, membw, timed decode, QEMU runs incl. ATTEST.TXT/BOOTLOG.TXT/RECEIPT.TXT/swtpm.log, regression tests, dashboard/ mint+verify runs + host_verification.txt, toolcall_2b/ summary+receipts+SCORE)
+labs/tools/ boot.sh (QEMU/OVMF + swtpm harness, real FAT image), boot_shot.sh + ppm2png.py (QMP screendumps), attest_verify.py (host verifier), fingerprint.sh, chain*.sh
 spec/       AIR-TPM-PROFILE-v0.md
 design/     AEFINITY-OS-v2-architecture.md · ALICE-NEXT-LEVEL-roadmap.md
 patches/    0001-*.patch — the alice-aegis lab branch (`lab/vnni-cis1` on top of main 3e3f465): cis_vnni, parallel CIS dispatch, attest.rs, verifier mint, tpm2min dep, repack fix, benches/tests/examples
+            0002-*.patch — the A.L.I.C.E. boot dashboard (gop.rs viewport+primitives, console.rs, ui.rs, verifier.rs replay_with, main.rs hooks)
+docs/       mission-control/ — the Mission Control page (page.html = artifact source, index.html = standalone, img/)
+model/      00-ALICE-NEXT-brief.md — requirements + gates for the replacement edge model (design-panel output follows)
 tpm2min/    the TPM 2.0 wire-format crate (also inside the patch)
 tpm2lab/    swtpm end-to-end lab for tpm2min (RESULT.md, CLI, independent verifier, artefacts)
 ```
@@ -36,7 +44,7 @@ tpm2lab/    swtpm end-to-end lab for tpm2min (RESULT.md, CLI, independent verifi
 ## Reproduce
 ```bash
 # 1. ALICE lab branch
-git clone https://github.com/Aefinity-AI/alice-aegis && cd alice-aegis && git checkout 3e3f465 -b lab/vnni-cis1 && git am ../patches/0001-*.patch
+git clone https://github.com/Aefinity-AI/alice-aegis && cd alice-aegis && git checkout 3e3f465 -b lab/vnni-cis1 && git am ../patches/000*.patch
 cd aegis-core && cargo test --release --test cis_vnni_equivalence && cargo build --release --bin vnni_vs_avx2 && ./target/release/vnni_vs_avx2 11 20 256
 # 2. 2B artifacts (needs microsoft/bitnet-b1.58-2B-4T model.safetensors + tokenizer.json + config.json)
 python3 aegis-forge/repack_ternary.py <ckpt_dir> <out> --source-packing hf1bitllm --llama3-prune   # auto -> multiply
