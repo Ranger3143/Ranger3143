@@ -1,0 +1,29 @@
+bucket               n  metric: value
+------------------------------------------------------------------------
+
+[distractor] n=30
+  no-tool precision:  29/30 = 96.67%  (95% CI 83.33%-99.41%)
+
+[unknown_fact] n=30
+  call rate:          0/30 = 0.00%  (95% CI 0.00%-11.35%)
+  well-formed rate:   0/30 = 0.00%  (95% CI 0.00%-11.35%)
+  correct-tool rate:  0/30 = 0.00%  (95% CI 0.00%-11.35%)
+  correct-arg rate:   0/30 = 0.00%  (95% CI 0.00%-11.35%)
+  exact-output rate:  0/30 = 0.00%  (95% CI 0.00%-11.35%)
+
+========================================================================
+OVERALL (tool-expected items) n=30
+  call rate:          0/30 = 0.00%  (95% CI 0.00%-11.35%)
+  well-formed rate:   0/30 = 0.00%  (95% CI 0.00%-11.35%)
+  correct-tool rate:  0/30 = 0.00%  (95% CI 0.00%-11.35%)
+  correct-arg rate:   0/30 = 0.00%  (95% CI 0.00%-11.35%)
+  exact-output rate:  0/30 = 0.00%  (95% CI 0.00%-11.35%)
+
+OVERALL (distractor items) n=30
+  no-tool precision:  29/30 = 96.67%  (95% CI 83.33%-99.41%)
+
+========================================================================
+PRE-REGISTERED RED FLAGS TRIPPED:
+  - bucket 'unknown_fact': correct-argument Wilson lower bound 0.00% < 50%
+
+(scored 60 rows from summary.tsv; partial summaries are expected mid-run)

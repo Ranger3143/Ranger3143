@@ -1,0 +1,65 @@
+item	step	tool	arg	source	verbatim
+distractor_ext_01	0	no-tool		What color is a ripe banana?	-
+distractor_ext_02	0	no-tool		Is water wet?	-
+distractor_ext_03	0	no-tool		How many days are in a week?	-
+distractor_ext_04	0	no-tool		What is the capital of Italy?	-
+distractor_ext_05	0	no-tool		What animal says meow?	-
+distractor_ext_06	0	no-tool		Which planet do we live on?	-
+distractor_ext_07	0	no-tool		What season comes after winter?	-
+distractor_ext_08	0	no-tool		What is the opposite of hot?	-
+distractor_ext_09	0	no-tool		What do bees make?	-
+distractor_ext_10	0	no-tool		What shape is a stop sign?	-
+distractor_ext_11	0	no-tool		Which ocean is the largest?	-
+distractor_ext_12	0	no-tool		What language do people speak in Brazil?	-
+distractor_ext_13	0	no-tool		What is frozen water called?	-
+distractor_ext_14	0	no-tool		Is a whale a fish or a mammal?	-
+distractor_ext_15	0	no-tool		What do you call a baby dog?	-
+distractor_ext_16	0	no-tool		In which direction does the sun rise?	-
+distractor_ext_17	0	no-tool		What color is the sky on a clear day?	-
+distractor_ext_18	0	no-tool		How many legs does a spider have?	-
+distractor_ext_19	0	no-tool		What gas do humans need to breathe?	-
+distractor_ext_20	0	no-tool		Who wrote Romeo and Juliet?	-
+distractor_ext_21	0	no-tool		What is the largest land animal?	-
+distractor_ext_22	0	no-tool		What is the name of the star at the center of our solar system?	-
+distractor_ext_23	0	no-tool		Which month comes after March?	-
+distractor_ext_24	0	no-tool		Name a primary color.	-
+distractor_ext_25	0	no-tool		What is the main ingredient in bread?	-
+distractor_ext_26	0	no-tool		What do you use an umbrella for?	-
+distractor_ext_27	0	no-tool		Which is bigger, an elephant or a mouse?	-
+distractor_ext_28	0	no-tool		Where do penguins live?	-
+distractor_ext_29	0	no-tool		What sound does a dog make?	-
+distractor_ext_30	0	calc	6 * 7	What do cows give us to drink?	FLAG
+unknown_fact_01	0	no-tool		What is the value recorded for part P-100?	-
+unknown_fact_02	0	no-tool		What is the description of part P-101?	-
+unknown_fact_03	0	no-tool		Tell me what part P-205 is.	-
+unknown_fact_04	0	no-tool		What is listed for part P-206?	-
+unknown_fact_05	0	no-tool		Describe part P-317.	-
+unknown_fact_06	0	no-tool		What is P-318?	-
+unknown_fact_07	0	no-tool		Can you give me the entry for part P-402?	-
+unknown_fact_08	0	no-tool		Part P-403 - what is it?	-
+unknown_fact_09	0	no-tool		I need the catalog description for part P-511.	-
+unknown_fact_10	0	no-tool		What does the record say for part P-612?	-
+unknown_fact_11	0	no-tool		What is listed for part P-100?	-
+unknown_fact_12	0	no-tool		Describe part P-101.	-
+unknown_fact_13	0	no-tool		What is P-205?	-
+unknown_fact_14	0	no-tool		Can you give me the entry for part P-206?	-
+unknown_fact_15	0	no-tool		Part P-317 - what is it?	-
+unknown_fact_16	0	no-tool		I need the catalog description for part P-318.	-
+unknown_fact_17	0	no-tool		What does the record say for part P-402?	-
+unknown_fact_18	0	no-tool		What is the value recorded for part P-403?	-
+unknown_fact_19	0	no-tool		What is the description of part P-511?	-
+unknown_fact_20	0	no-tool		Tell me what part P-612 is.	-
+unknown_fact_21	0	no-tool		Part P-100 - what is it?	-
+unknown_fact_22	0	no-tool		I need the catalog description for part P-101.	-
+unknown_fact_23	0	no-tool		What does the record say for part P-205?	-
+unknown_fact_24	0	no-tool		What is the value recorded for part P-206?	-
+unknown_fact_25	0	no-tool		What is the description of part P-317?	-
+unknown_fact_26	0	no-tool		Tell me what part P-318 is.	-
+unknown_fact_27	0	no-tool		What is listed for part P-402?	-
+unknown_fact_28	0	no-tool		Describe part P-403.	-
+unknown_fact_29	0	no-tool		What is P-511?	-
+unknown_fact_30	0	no-tool		Can you give me the entry for part P-612?	-
+
+receipts=60 tool-calls=1 (step0=1 later-steps=0) from-tool-result=0 flagged=1
+  distractor_ext_30 step 0: arg '6 * 7' not in query 'What do cows give us to drink?'
+vs scorer: flagged-and-wrong=1 flagged-but-right=0 wrong-not-flagged=[]

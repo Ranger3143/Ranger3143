@@ -303,13 +303,15 @@ footer code { font-family: var(--mono); font-size: 0.8rem; color: var(--fg); }
         <div class="bar"><span>lookup_near_miss (n=4)</span><div class="track"><div class="fill" style="width:50%"></div><div class="ci" style="left:15.0%;width:70.0%"></div></div><span class="v">2/4</span></div>
         <div class="bar"><span>mixed, two tools (n=3)</span><div class="track"><div class="fill" style="width:0%"></div><div class="ci" style="left:0%;width:56.2%"></div></div><span class="v">0/3</span></div>
         <div class="bar"><span><b>overall (n=58)</b></span><div class="track"><div class="fill" style="width:77.6%"></div><div class="ci" style="left:65.3%;width:21.1%"></div></div><span class="v"><b>45/58</b></span></div>
+        <div class="bar"><span>unknown_fact, decides to LOOKUP (n=30)</span><div class="track"><div class="fill" style="width:0%"></div><div class="ci" style="left:0%;width:11.4%"></div></div><span class="v">0/30</span></div>
+        <div class="bar"><span>distractor, stays quiet (n=30)</span><div class="track"><div class="fill" style="width:96.7%"></div><div class="ci" style="left:83.3%;width:16.1%"></div></div><span class="v">29/30</span></div>
       </div>
       <div class="axis"><span></span><div class="ticks"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div><span></span></div>
       <div style="margin-top:12px">
         <span class="flag">red flag · calc_hard lower bound 48.1% &lt; 50%</span>
         <span class="flag">red flag · calc_overflow lower bound 30.6% &lt; 50%</span>
       </div>
-      <p class="note" style="margin-top:12px">Call rate 50/58 (86.2%), correct tool 49/58 (84.5%). Hard and overflow arithmetic fail mostly by not calling the tool at all; when the 2B does call, the argument is right. Distractor set (n=2) is too small to grade no-tool precision. Receipt verify 60/60.</p>
+      <p class="note" style="margin-top:12px">Call rate 50/58 (86.2%), correct tool 49/58 (84.5%). Hard and overflow arithmetic fail mostly by not calling the tool at all; when the 2B does call, the argument is right. The two bottom rows are the extended run (labs/LAB-07 §7): asked for a value that sits in the table, with no LOOKUP opener and a calculator-only prompt, the 2B never looks it up and invents a fluent answer 26 times out of 30 ("The value recorded for part P-100 is 100."); on 30 general-knowledge distractors it stays quiet 29 times. Receipts verified 120/120 across both runs. A control run with LOOKUP examples in the prompt is in progress.</p>
     </div>
   </section>
 

@@ -63,3 +63,21 @@ AGENT_TRACE_BIN=../../../aegis-linux/target/release/examples/agent_trace ./run_s
 python3 -I score.py <outdir>/summary.tsv
 ```
 `labs/logs/toolcall_2b/` holds `RUN.txt`, `summary.tsv`, `timing.tsv`, `SCORE.txt`, `run_suite.log`, `prompts/`, `receipts/` and copies of `suite.tsv`, `run_suite.sh`, `score.py`, `README.md` as used.
+
+## 7. Amendment (2026-10-06, same day) — `unknown_fact` and enlarged `distractor` buckets under template T1
+Run by a delegated agent on the same artifacts and binary (`labs/logs/toolcall_2b_ext/RESULT.md`; suite `ext_suite.tsv` sha256 `c9491dff7539802cd306cb5a5e835798eaf88a8300c620a6267af5d6c13d8f88`; generator `gen_suite_ext.py` reproduces the original `suite.tsv` byte-for-byte in default mode). 30 `unknown_fact` items ask for the value of a key that *is* in the table, with no `A: LOOKUP(` opener, so the model must decide to look it up; 30 new `distractor` items are general-knowledge questions that need no tool.
+
+| Measurement | k/n | Wilson 95% |
+|---|---|---|
+| `unknown_fact`: called LOOKUP with the exact key | **0/30** | 0.0–11.4% |
+| `unknown_fact`: called LOOKUP at all | 0/30 | 0.0–11.4% |
+| `unknown_fact`: no call, inline answer (invented; 0/26 contained the table value) | 26/30 | 70.3–94.7% |
+| `unknown_fact`: no call, abstained (phrase list fixed before reading; 7/30 with a post-hoc extension, reported separately) | 4/30 | 5.3–29.7% |
+| `distractor`: no-tool precision | **29/30** | 83.3–99.4% |
+| trace receipts verified | 60/60 | — |
+
+What the misses look like: "The value recorded for part P-100 is 100.", "Part P-206 is listed for the 2000-2001 model year.", "P-511 is a code used in the United States for the 511th District…" — fluent, specific, and wrong. Four times the model said it had no access to the catalog. The single distractor miss copied the third few-shot call verbatim (`CALC(6 * 7)` for "What do cows give us to drink?"), which `check_verbatim.py` flags.
+
+Caveats recorded by the run: template T1's three shots are all `CALC(…)` and nothing names a lookup tool, so 0/30 cannot separate "will not call" from "was never shown LOOKUP" (the original `lookup_hit` bucket used template T2, which carries LOOKUP shots); the table has only 10 keys, used 3× each with 3 phrasings; only the first 24 decoded tokens are seen; distractors are scanned for `CALC(` only (a plain-text search found no `LOOKUP(`/`FILE-READ(` either); abstain vs inline is a phrase heuristic over text reconstructed from receipt token ids with a Python port of the decoder, validated against 52/52 receipts that recorded a call. **A T2 run (LOOKUP shots on other keys, same questions) is queued and will be appended as §8.**
+
+Gate implication for `model/00-ALICE-NEXT-brief.md` §4: the `unknown_fact ≥ 90%` gate starts from **0%** and the no-tool-precision gate from **96.7%** (n=30).
