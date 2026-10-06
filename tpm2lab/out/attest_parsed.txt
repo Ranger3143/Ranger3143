@@ -1,0 +1,11 @@
+magic=0xff544347
+type=0x8018
+qualifiedSigner=000bd4effa622a863b0f9a00c8c334bed4eaa1a3b04f5d1430bb7312dc0931c9eb36
+extraData=87dec0093756f2a90bc609bcfc0e35e33613add96a53f02e015f7dcf4fa2ffbd
+clock=1629
+resetCount=488510588
+restartCount=2814775803
+safe=true
+firmwareVersion=0xf4a4fb241eb6d362
+pcrSelect=sha256:[4, 12]
+pcrDigest=196488b0829f4a0aa90e93b03bf3f367023e8addb226ebf609f238c88d22ebb1

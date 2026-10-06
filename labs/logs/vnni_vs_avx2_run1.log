@@ -1,0 +1,10 @@
+VNNI_VS_AVX2 cpu="Intel(R) Xeon(R) Processor @ 2.10GHz" env=vm vnni_level="AVX-512 VNNI (zmm)" rounds=11 calls_per_round=20
+shape(out x in)  kernel  median_us/call  GMAC/s  ratio(avx2/vnni)  bitexact
+q/o 2560x2560        avx2       121.6   53.90   1.000  true
+q/o 2560x2560        vnni        92.9   70.53   1.309  true
+k/v 640x2560         avx2        30.5   53.67   1.000  true
+k/v 640x2560         vnni        22.4   73.12   1.362  true
+gate/up 6912x2560    avx2       332.9   53.16   1.000  true
+gate/up 6912x2560    vnni       256.1   69.11   1.300  true
+down 2560x6912       avx2       332.2   53.26   1.000  true
+down 2560x6912       vnni       253.9   69.69   1.308  true

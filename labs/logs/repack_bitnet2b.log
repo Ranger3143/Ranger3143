@@ -1,0 +1,36 @@
+WARNING: 64 merges involve token id 0 ('!'); the engine loader (aegis-core/src/tokenizer.rs) currently DROPS merges containing id 0, so those pairs tokenize differently from the reference stack. Run the T2d tokenization-parity gate before trusting any cross-stack number.
+VOCAB.BIN: 50256 tokens, 110042 merges
+EMBED.BIN: 257310720 bytes (50256 x 2560 BF16)
+layer 0: repacked
+layer 1: repacked
+layer 2: repacked
+layer 3: repacked
+layer 4: repacked
+layer 5: repacked
+layer 6: repacked
+layer 7: repacked
+layer 8: repacked
+layer 9: repacked
+layer 10: repacked
+layer 11: repacked
+layer 12: repacked
+layer 13: repacked
+layer 14: repacked
+layer 15: repacked
+layer 16: repacked
+layer 17: repacked
+layer 18: repacked
+layer 19: repacked
+layer 20: repacked
+layer 21: repacked
+layer 22: repacked
+layer 23: repacked
+layer 24: repacked
+layer 25: repacked
+layer 26: repacked
+layer 27: repacked
+layer 28: repacked
+layer 29: repacked
+WARNING: unrecognized chat_template jinja; storing 'none' — pass --chat-template explicitly if the engine should wrap prompts
+MODEL.SAF: 541 tensors, 521953186 bytes
+Repack complete. Next gates: loader asserts (cargo test), reference parity (tests/reference_parity.rs), then G4a PPL agreement.

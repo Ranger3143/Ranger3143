@@ -1,0 +1,26 @@
+PASS TPM2_Startup(CLEAR) -- rc=0x100 TPM_RC_INITIALIZE: already started by swtpm --flags startup-clear (expected)
+PASS TPM2_PCR_Extend PCR12 <- sha256(AEGIS-TEST)
+PASS TPM2_PCR_Read returned 2 digests for sha256:4,12 -- count=2
+PASS PCR12 == SHA256(0x00*32 || sha256(AEGIS-TEST)) (fresh TPM state)
+PASS CreatePrimary handle is transient -- 0x80000000
+PASS outPublic echoes template (ECC/P-256/ECDSA-SHA256/attrs 0x00050072)
+PASS name == 0x000B || SHA256(TPMT_PUBLIC)
+PASS Quote signature is ECDSA/SHA256
+PASS attest.magic == 0xff544347 && type == TPM_ST_ATTEST_QUOTE
+PASS attest.extraData == qualifyingData
+PASS attest.pcrSelect == sha256:4,12
+PASS attest.pcrDigest == SHA256(PCR4 || PCR12) -- pcrDigest=196488b0829f4a0aa90e93b03bf3f367023e8addb226ebf609f238c88d22ebb1
+PASS attest.qualifiedSigner == 0x000B || SHA256(TPM_RH_OWNER || name)
+PASS tpm2_pcrread values == our TPM2_PCR_Read values
+PASS tpm2_readpublic -f pem == our DER->PEM of (x,y)
+PASS tpm2_readpublic -o (TPM2B_PUBLIC) == our raw TPM2B_PUBLIC bytes -- 90 bytes
+PASS tpm2_checkquote (our pub.pem, attest.bin, sig_tss.bin, pcr.bin) -- sig: 3044022076ecc25a3a2b36f4691a4c00d9cc066de10b36a49fd940406b09e264be0b051c02205833206613d87495095cd4835dd4c595a34451b8748cb7c64e8456935e601338
+PASS tpm2_checkquote with tpm2_readpublic's PEM
+PASS tpm2_checkquote rejects wrong qualifying data (negative control)
+PASS openssl dgst -sha256 -verify pub.pem -signature sig.der attest.bin -- Verified OK
+PASS openssl rejects tampered attest (negative control) -- Verification failure
+PASS openssl parses pub.pem as P-256 public key
+PASS python3 verify_quote.py (independent parser + cryptography ECDSA) -- python verifier overall: PASS
+PASS TPM2_FlushContext(handle) -- 0x80000000
+PASS second FlushContext fails (handle gone) -- Err(TpmRc(459))
+overall: PASS

@@ -1,0 +1,25 @@
+# membw: buffer 1024 MB, 5 passes, up to 4 threads
+# method: 4 independent accumulators (a dependent chain measures LATENCY,
+#         not bandwidth); buffer pre-faulted; wall clock via Instant.
+# NOTE: a single-thread figure is NOT the machine ceiling. Both are printed.
+
+label,threads,pass,bytes_read,secs,GB_per_s,checksum
+seq_read,1,0,1073741824,0.164122,6.542,9ca2d60fac000001
+seq_read,1,1,1073741824,0.162819,6.595,9ca2d60fac000001
+seq_read,1,2,1073741824,0.163767,6.557,9ca2d60fac000001
+seq_read,1,3,1073741824,0.159457,6.734,9ca2d60fac000001
+seq_read,1,4,1073741824,0.162357,6.613,9ca2d60fac000001
+seq_read,4,0,1073741824,0.051226,20.961,9ca2d60fac000001
+seq_read,4,1,1073741824,0.044544,24.105,9ca2d60fac000001
+seq_read,4,2,1073741824,0.050088,21.437,9ca2d60fac000001
+seq_read,4,3,1073741824,0.044923,23.902,9ca2d60fac000001
+seq_read,4,4,1073741824,0.042943,25.004,9ca2d60fac000001
+ternary_stream,1,0,1073741824,1.285321,0.835,1.86e2
+ternary_stream,1,1,1073741824,1.259569,0.852,1.86e2
+ternary_stream,1,2,1073741824,1.280382,0.839,1.86e2
+ternary_stream,1,3,1073741824,1.302782,0.824,1.86e2
+ternary_stream,1,4,1073741824,1.301877,0.825,1.86e2
+
+==== SUMMARY (best of 5 passes; report ALL THREE or none) ====
+
+

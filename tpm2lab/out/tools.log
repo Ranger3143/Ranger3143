@@ -1,0 +1,144 @@
+$ tpm2_pcrread -T swtpm:host=127.0.0.1,port=2321 -o pcr.bin sha256:4,12
+  sha256:
+    4 : 0x0000000000000000000000000000000000000000000000000000000000000000
+    12: 0x2381CDF857B374837390C8CD2AC6A432902A1354C3147BB842552679D7FB64BE
+(exit exit status: 0)
+
+$ tpm2_readpublic -T swtpm:host=127.0.0.1,port=2321 -c 0x80000000 -f pem -o pub_tools.pem
+name: 000b2ee06dbad745ddda383f5f5ea01f85f443dd2d56e119bb4b0c09c66d366b1138
+qualified name: 000bd4effa622a863b0f9a00c8c334bed4eaa1a3b04f5d1430bb7312dc0931c9eb36
+name-alg:
+  value: sha256
+  raw: 0xb
+attributes:
+  value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|sign
+  raw: 0x50072
+type:
+  value: ecc
+  raw: 0x23
+curve-id:
+  value: NIST p256
+  raw: 0x3
+kdfa-alg:
+  value: null
+  raw: 0x10
+kdfa-halg:
+  value: (null)
+  raw: 0x0
+scheme:
+  value: ecdsa
+  raw: 0x18
+scheme-halg:
+  value: sha256
+  raw: 0xb
+sym-alg:
+  value: null
+  raw: 0x10
+sym-mode:
+  value: (null)
+  raw: 0x0
+sym-keybits: 0
+x: 74e294adaeca35b57625a76f72a9f98d732ad5459420fa505ce06d8a0fadae33
+y: cbf2ecf5db834740243a32f4858ddfe2beb1f2e66681428f752817c17f0689f1
+(exit exit status: 0)
+
+$ tpm2_readpublic -T swtpm:host=127.0.0.1,port=2321 -c 0x80000000 -o pub_tools.tpm2b
+name: 000b2ee06dbad745ddda383f5f5ea01f85f443dd2d56e119bb4b0c09c66d366b1138
+qualified name: 000bd4effa622a863b0f9a00c8c334bed4eaa1a3b04f5d1430bb7312dc0931c9eb36
+name-alg:
+  value: sha256
+  raw: 0xb
+attributes:
+  value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|sign
+  raw: 0x50072
+type:
+  value: ecc
+  raw: 0x23
+curve-id:
+  value: NIST p256
+  raw: 0x3
+kdfa-alg:
+  value: null
+  raw: 0x10
+kdfa-halg:
+  value: (null)
+  raw: 0x0
+scheme:
+  value: ecdsa
+  raw: 0x18
+scheme-halg:
+  value: sha256
+  raw: 0xb
+sym-alg:
+  value: null
+  raw: 0x10
+sym-mode:
+  value: (null)
+  raw: 0x0
+sym-keybits: 0
+x: 74e294adaeca35b57625a76f72a9f98d732ad5459420fa505ce06d8a0fadae33
+y: cbf2ecf5db834740243a32f4858ddfe2beb1f2e66681428f752817c17f0689f1
+(exit exit status: 0)
+
+$ tpm2_checkquote -u pub.pem -g sha256 -m attest.bin -s sig_tss.bin -f pcr.bin -l sha256:4,12 -q 87dec0093756f2a90bc609bcfc0e35e33613add96a53f02e015f7dcf4fa2ffbd
+pcrs:
+  sha256:
+    4 : 0x0000000000000000000000000000000000000000000000000000000000000000
+    12: 0x2381CDF857B374837390C8CD2AC6A432902A1354C3147BB842552679D7FB64BE
+sig: 3044022076ecc25a3a2b36f4691a4c00d9cc066de10b36a49fd940406b09e264be0b051c02205833206613d87495095cd4835dd4c595a34451b8748cb7c64e8456935e601338
+(exit exit status: 0)
+
+$ tpm2_checkquote -u pub_tools.pem -g sha256 -m attest.bin -s sig_tss.bin -f pcr.bin -l sha256:4,12 -q 87dec0093756f2a90bc609bcfc0e35e33613add96a53f02e015f7dcf4fa2ffbd
+pcrs:
+  sha256:
+    4 : 0x0000000000000000000000000000000000000000000000000000000000000000
+    12: 0x2381CDF857B374837390C8CD2AC6A432902A1354C3147BB842552679D7FB64BE
+sig: 3044022076ecc25a3a2b36f4691a4c00d9cc066de10b36a49fd940406b09e264be0b051c02205833206613d87495095cd4835dd4c595a34451b8748cb7c64e8456935e601338
+(exit exit status: 0)
+
+$ tpm2_checkquote -u pub.pem -g sha256 -m attest.bin -s sig_tss.bin -f pcr.bin -l sha256:4,12 -q 8810ad581e59f2bc3928b261707a71308f7e139eb04820366dc4d5c18d980225
+pcrs:
+  sha256:
+    4 : 0x0000000000000000000000000000000000000000000000000000000000000000
+    12: 0x2381CDF857B374837390C8CD2AC6A432902A1354C3147BB842552679D7FB64BE
+sig: 3044022076ecc25a3a2b36f4691a4c00d9cc066de10b36a49fd940406b09e264be0b051c02205833206613d87495095cd4835dd4c595a34451b8748cb7c64e8456935e601338
+ERROR: Error validating nonce from quote
+ERROR: Verify signature failed!
+ERROR: Unable to run tpm2_checkquote
+(exit exit status: 1)
+
+$ openssl dgst -sha256 -verify pub.pem -signature sig.der attest.bin
+Verified OK
+(exit exit status: 0)
+
+$ openssl dgst -sha256 -verify pub.pem -signature sig.der attest_tampered.bin
+Verification failure
+(exit exit status: 1)
+
+$ openssl ec -pubin -in pub.pem -noout -text
+Public-Key: (256 bit)
+pub:
+    04:74:e2:94:ad:ae:ca:35:b5:76:25:a7:6f:72:a9:
+    f9:8d:73:2a:d5:45:94:20:fa:50:5c:e0:6d:8a:0f:
+    ad:ae:33:cb:f2:ec:f5:db:83:47:40:24:3a:32:f4:
+    85:8d:df:e2:be:b1:f2:e6:66:81:42:8f:75:28:17:
+    c1:7f:06:89:f1
+ASN1 OID: prime256v1
+NIST CURVE: P-256
+read EC key
+(exit exit status: 0)
+
+$ python3 -I /tmp/claude-0/-home-user-Ranger3143/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/tpm2lab/verify_quote.py pub.pem attest.bin sig_rs.hex qualifying.hex pcr4.hex pcr12.hex name.hex
+python verifier: curve=secp256r1 key_size=256
+  clock=1629 reset=488510588 restart=2814775803 safe=1 fw=0xf4a4fb241eb6d362
+  [PASS] magic == 0xff544347
+  [PASS] type == TPM_ST_ATTEST_QUOTE
+  [PASS] extraData == qualifyingData
+  [PASS] pcrSelect == [(sha256, [4, 12])]
+  [PASS] pcrDigest == sha256(PCR4||PCR12)
+  [PASS] qualifiedSigner == 000b||sha256(TPM_RH_OWNER||name)
+  [PASS] ECDSA-P256/SHA256 signature over TPMS_ATTEST verifies
+  [PASS] tampered attest is rejected
+python verifier overall: PASS
+(exit exit status: 0)
+

@@ -1,0 +1,18 @@
+=== AEGIS_THREADS=1 ===
+CIS_DECODE_TIMED cpu="Intel(R) Xeon(R) Processor @ 2.10GHz" env=vm threads=1 vnni="AVX-512 VNNI (zmm)" layers=30 hidden=2560 vocab=50256 prompt_toks=4 max_new=64 repeats=3
+rep=0 prefill_s=0.445 decode_s=10.696 tok_per_s=5.983 digest=cab11400d737ac4a
+rep=1 prefill_s=0.443 decode_s=10.095 tok_per_s=6.340 digest=cab11400d737ac4a
+rep=2 prefill_s=0.443 decode_s=10.203 tok_per_s=6.273 digest=cab11400d737ac4a
+CIS_DECODE_TIMED_SUMMARY threads=1 median_decode_s=10.203 median_tok_per_s=6.273 digest=cab11400d737ac4a digests_identical_across_repeats=true (env=vm; ratios only)
+=== AEGIS_THREADS=2 ===
+CIS_DECODE_TIMED cpu="Intel(R) Xeon(R) Processor @ 2.10GHz" env=vm threads=2 vnni="AVX-512 VNNI (zmm)" layers=30 hidden=2560 vocab=50256 prompt_toks=4 max_new=64 repeats=3
+rep=0 prefill_s=0.299 decode_s=6.724 tok_per_s=9.518 digest=cab11400d737ac4a
+rep=1 prefill_s=0.295 decode_s=6.760 tok_per_s=9.468 digest=cab11400d737ac4a
+rep=2 prefill_s=0.285 decode_s=6.903 tok_per_s=9.272 digest=cab11400d737ac4a
+CIS_DECODE_TIMED_SUMMARY threads=2 median_decode_s=6.760 median_tok_per_s=9.468 digest=cab11400d737ac4a digests_identical_across_repeats=true (env=vm; ratios only)
+=== AEGIS_THREADS=4 ===
+CIS_DECODE_TIMED cpu="Intel(R) Xeon(R) Processor @ 2.10GHz" env=vm threads=4 vnni="AVX-512 VNNI (zmm)" layers=30 hidden=2560 vocab=50256 prompt_toks=4 max_new=64 repeats=3
+rep=0 prefill_s=0.234 decode_s=5.114 tok_per_s=12.515 digest=cab11400d737ac4a
+rep=1 prefill_s=0.241 decode_s=5.055 tok_per_s=12.662 digest=cab11400d737ac4a
+rep=2 prefill_s=0.241 decode_s=5.192 tok_per_s=12.326 digest=cab11400d737ac4a
+CIS_DECODE_TIMED_SUMMARY threads=4 median_decode_s=5.114 median_tok_per_s=12.515 digest=cab11400d737ac4a digests_identical_across_repeats=true (env=vm; ratios only)

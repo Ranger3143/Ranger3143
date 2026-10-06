@@ -1,0 +1,16 @@
+pcr12: replayed 1406ed092930d96ae3c953fb19d3bcd6.. tpm 1406ed092930d96ae3c953fb19d3bcd6.. PASS (4 events)
+pcr13: replayed ddf1429924df2070fc00f418022b67ec.. tpm ddf1429924df2070fc00f418022b67ec.. PASS (1 events)
+eventlog pcr=12 sha256=e78773e3a5793b15.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=2797632 sha256=23c
+eventlog pcr=12 sha256=ab898c2555a5a145.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=6291456 sha256=375
+eventlog pcr=12 sha256=3dbed3afc000109f.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=163954 sha256=5a1d
+eventlog pcr=12 sha256=c2a032c607271139.. PASS :: AEGIS-MEASURE v0 artifact=RECEIPT.TXT bytes=672 sha256=528e2
+eventlog pcr=13 sha256=e8eacb7be04425d4.. PASS :: AEGIS-RECEIPT v0 mode=verify steps=64 cis-digest=67e8c0a96ab
+pcr4 (firmware measurement of BOOTX64.EFI): 510f20cedbbc305700537e772e428d2c1394953141681fd3e2824a44131de78c ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=012d24262c0d73817b8735cbe3b208f1d96a0bc760059be0dac4680d7a24b71e data=hex:18300e7e00000000009a0600000000000000004001000000500000000000000002010c00d041030a00000000010
+artifact MODEL.SAF: local sha256 23cfad0a3c7de2b6.. PASS
+artifact EMBED.BIN: local sha256 3752cd5ca2e39593.. PASS
+artifact VOCAB.BIN: local sha256 5a1d79caf517084a.. PASS
+receipt chain aee25b770bd7b22e.. bound in PCR13 line: PASS
+ATTEST VERIFY PASS

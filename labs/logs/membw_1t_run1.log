@@ -1,0 +1,12 @@
+
+  CAVEAT ON ARM 3: this is a SCALAR LUT walk, not the AVX2 kernel
+  (aegis_core::ops::ternary_matvec_serial). It is therefore a LOWER
+  BOUND on the engine's streaming rate, not the engine's rate. Compare
+  it to the technical report's 'achieved' bandwidth row, which is itself
+  a derivation from a cycle count and an unstated nominal clock.
+
+  The decode roofline must divide by the TERNARY figure, not the peak.
+  Quoting a single-thread peak as 'the machine bandwidth ceiling' both
+  understates the machine and overstates the kernel's share of it.
+  This run is one machine, one buffer size, one pattern. It replaces an
+  unsourced number with a measured one; it does not make it a ceiling.

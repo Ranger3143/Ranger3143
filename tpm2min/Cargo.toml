@@ -1,0 +1,11 @@
+[package]
+name = "tpm2min"
+version = "0.1.0"
+edition = "2021"
+description = "Dependency-free no_std marshalling/parsing of a minimal set of TPM 2.0 commands (Startup, PCR_Read, PCR_Extend, CreatePrimary, Quote, FlushContext)"
+license = "MIT OR Apache-2.0"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]

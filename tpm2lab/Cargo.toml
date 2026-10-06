@@ -1,0 +1,7 @@
+[workspace]
+resolver = "2"
+members = ["tpm2min", "tpm2min-cli"]
+
+[profile.release]
+opt-level = 2
+debug = false

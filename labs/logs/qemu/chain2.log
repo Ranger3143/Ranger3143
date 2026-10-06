@@ -1,0 +1,114 @@
+=== timed decode done; building unikernel with quote ===
+    --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_infer.rs:1560:13
+ --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/sampler.rs:3:5
+   --> src/main.rs:429:5
+    --> src/main.rs:2018:5
+    --> src/main.rs:2035:5
+    --> src/main.rs:2025:13
+   --> src/main.rs:273:21
+   --> src/main.rs:297:21
+   --> src/main.rs:307:17
+   --> src/main.rs:316:13
+   --> src/main.rs:347:29
+   --> src/main.rs:369:25
+   --> src/main.rs:390:17
+  --> src/allocator.rs:42:9
+  --> src/allocator.rs:41:5
+  --> src/allocator.rs:47:13
+  --> src/allocator.rs:45:5
+  --> src/allocator.rs:76:17
+  --> src/allocator.rs:69:5
+  --> src/allocator.rs:76:35
+  --> src/cpu.rs:29:5
+  --> src/cpu.rs:26:1
+  --> src/cpu.rs:35:5
+  --> src/cpu.rs:34:1
+  --> src/cpu.rs:64:5
+  --> src/cpu.rs:68:5
+   --> src/cpu.rs:126:5
+   --> src/cpu.rs:152:13
+   --> src/cpu.rs:166:15
+   --> src/cpu.rs:190:17
+7cad979de5406988e7853a032f2f0531fdbbc5c04930b1d1feefe556727440e8  target/x86_64-uefi-hardfloat/release/aegis-uefi.efi
+=== QEMU: TPM + RECEIPT (verify, attested, quote) ===
+qemu_exit=33 wall_s=34 (33 = unikernel success signal; Rule A: no perf meaning)
+--- BOOTLOG.TXT (tail) ---
+==== A.L.I.C.E. BOOT ====
+STAGE 1: boot volume opened, AVX enable attempted
+STAGE 2: sizes OK model=2797632 embed=6291456 vocab=163954
+STAGE 3: tensor memory allocated
+H3 buffers: MODEL.SAF=0x100000+2797632 EMBED.BIN=0x1780000+6291456 VOCAB.BIN=0x3AC000+163954
+STAGE 4a: MODEL.SAF loaded
+STAGE 4b: EMBED.BIN loaded
+STAGE 4c: VOCAB.BIN loaded
+STAGE 4d: RECEIPT.TXT loaded — verifier mode armed
+STAGE 5: working heap online
+TPM: EFI_TCG2_PROTOCOL present — measuring payload into PCR 12
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=2797632 sha256=23cfad0a3c7de2b676e176755f0848cd2cad8e71e2cdffea3d903a232c96e973
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=6291456 sha256=3752cd5ca2e39593cdf0910968f8ff629d79417f253e33e1a1c4faa0ce33848e
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=163954 sha256=5a1d79caf517084a73de5e5379d2995e61f23afaada91822da12ecb4ad7fcd8a
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=RECEIPT.TXT bytes=672 sha256=528e205e04882437269fb1fbc6181ba0f2f6fddc120ba25f93c0e5bf233fbaaf
+CPUID: vendor=AuthenticAMD brand="QEMU TCG CPU version 2.5+" family=6 model=6 stepping=3 feats=<avx2:1,fma:1,sse2:1>
+STAGE V: witness verify PASS — VERIFY PASS — this machine reproduced all 64 decode steps' full logit vectors bit-for-bit, with no OS underneath
+TPM: pcr 4 510f20cedbbc305700537e772e428d2c1394953141681fd3e2824a44131de78c
+TPM: pcr 12 1406ed092930d96ae3c953fb19d3bcd681624750bf43a2dacc4020bf71dd2276
+TPM: pcr 13 ddf1429924df2070fc00f418022b67ec512edfbe129c780226e04aad4f39d67c
+TPM: quote-retries 1
+STAGE A: ATTEST.TXT written=true
+=== QEMU: TPM + MINT (mint, attested, quote) ===
+qemu_exit=33 wall_s=34 (33 = unikernel success signal; Rule A: no perf meaning)
+--- BOOTLOG.TXT (tail) ---
+==== A.L.I.C.E. BOOT ====
+STAGE 1: boot volume opened, AVX enable attempted
+STAGE 2: sizes OK model=2797632 embed=6291456 vocab=163954
+STAGE 3: tensor memory allocated
+H3 buffers: MODEL.SAF=0x100000+2797632 EMBED.BIN=0x1780000+6291456 VOCAB.BIN=0x3AC000+163954
+STAGE 4a: MODEL.SAF loaded
+STAGE 4b: EMBED.BIN loaded
+STAGE 4c: VOCAB.BIN loaded
+STAGE 4e: MINT.TXT loaded — receipt mint mode armed
+STAGE 5: working heap online
+TPM: EFI_TCG2_PROTOCOL present — measuring payload into PCR 12
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=2797632 sha256=23cfad0a3c7de2b676e176755f0848cd2cad8e71e2cdffea3d903a232c96e973
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=6291456 sha256=3752cd5ca2e39593cdf0910968f8ff629d79417f253e33e1a1c4faa0ce33848e
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=163954 sha256=5a1d79caf517084a73de5e5379d2995e61f23afaada91822da12ecb4ad7fcd8a
+STAGE M: minted receipt steps=64 cis-digest=67e8c0a96abc04e1 written=true
+TPM: pcr 4 510f20cedbbc305700537e772e428d2c1394953141681fd3e2824a44131de78c
+TPM: pcr 12 b0b2eb6b5db2f200c5db9245c55dcdd6fc5d2c45d950e5dae82779a658e5ee8c
+TPM: pcr 13 6b838ff9d3792ad8f1f3dfe23c5044a3da3b423afee0bb0a00c214102d1ba444
+TPM: quote-retries 1
+STAGE A: ATTEST.TXT written=true
+=== attest_verify run_attest_verify2 ===
+pcr12: replayed 1406ed092930d96ae3c953fb19d3bcd6.. tpm 1406ed092930d96ae3c953fb19d3bcd6.. PASS (4 events)
+pcr13: replayed ddf1429924df2070fc00f418022b67ec.. tpm ddf1429924df2070fc00f418022b67ec.. PASS (1 events)
+eventlog pcr=12 sha256=e78773e3a5793b15.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=2797632 sha256=23c
+eventlog pcr=12 sha256=ab898c2555a5a145.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=6291456 sha256=375
+eventlog pcr=12 sha256=3dbed3afc000109f.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=163954 sha256=5a1d
+eventlog pcr=12 sha256=c2a032c607271139.. PASS :: AEGIS-MEASURE v0 artifact=RECEIPT.TXT bytes=672 sha256=528e2
+eventlog pcr=13 sha256=e8eacb7be04425d4.. PASS :: AEGIS-RECEIPT v0 mode=verify steps=64 cis-digest=67e8c0a96ab
+pcr4 (firmware measurement of BOOTX64.EFI): 510f20cedbbc305700537e772e428d2c1394953141681fd3e2824a44131de78c ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=012d24262c0d73817b8735cbe3b208f1d96a0bc760059be0dac4680d7a24b71e data=hex:18300e7e00000000009a0600000000000000004001000000500000000000000002010c00d041030a00000000010
+artifact MODEL.SAF: local sha256 23cfad0a3c7de2b6.. PASS
+artifact EMBED.BIN: local sha256 3752cd5ca2e39593.. PASS
+artifact VOCAB.BIN: local sha256 5a1d79caf517084a.. PASS
+receipt chain aee25b770bd7b22e.. bound in PCR13 line: PASS
+ATTEST VERIFY PASS
+=== attest_verify run_attest_mint2 ===
+pcr12: replayed b0b2eb6b5db2f200c5db9245c55dcdd6.. tpm b0b2eb6b5db2f200c5db9245c55dcdd6.. PASS (3 events)
+pcr13: replayed 6b838ff9d3792ad8f1f3dfe23c5044a3.. tpm 6b838ff9d3792ad8f1f3dfe23c5044a3.. PASS (1 events)
+eventlog pcr=12 sha256=e78773e3a5793b15.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=2797632 sha256=23c
+eventlog pcr=12 sha256=ab898c2555a5a145.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=6291456 sha256=375
+eventlog pcr=12 sha256=3dbed3afc000109f.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=163954 sha256=5a1d
+eventlog pcr=13 sha256=4996522f72c4d826.. PASS :: AEGIS-RECEIPT v0 mode=mint steps=64 cis-digest=67e8c0a96abc0
+pcr4 (firmware measurement of BOOTX64.EFI): 510f20cedbbc305700537e772e428d2c1394953141681fd3e2824a44131de78c ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=012d24262c0d73817b8735cbe3b208f1d96a0bc760059be0dac4680d7a24b71e data=hex:18600e7e00000000009a0600000000000000004001000000500000000000000002010c00d041030a00000000010
+artifact MODEL.SAF: local sha256 23cfad0a3c7de2b6.. PASS
+artifact EMBED.BIN: local sha256 3752cd5ca2e39593.. PASS
+artifact VOCAB.BIN: local sha256 5a1d79caf517084a.. PASS
+receipt chain aee25b770bd7b22e.. bound in PCR13 line: PASS
+ATTEST VERIFY PASS
+CHAIN2_DONE

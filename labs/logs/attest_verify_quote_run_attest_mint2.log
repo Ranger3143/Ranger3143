@@ -1,0 +1,9 @@
+ATTEST VERIFY PASS
+quote attest magic=ff544347 type=8018 PASS
+quote extraData == qualifying (528e205e04882437..): PASS
+quote qualifying == SHA-256(RECEIPT.TXT): PASS
+quote pcrDigest over PCRs [4, 12, 13] == SHA-256(PCR values read back): PASS
+quote ECDSA-P256/SHA-256 signature over TPMS_ATTEST (openssl): Verified OK PASS
+quote tampered attest rejected: PASS
+quote pub-x e060c0051dde53ba.. clockInfo/firmwareVersion present; signer qualifiedName len 34
+QUOTE VERIFY PASS

@@ -1,0 +1,4757 @@
+From a7991b865b9dc6143873f58af6f13b5067735123 Mon Sep 17 00:00:00 2001
+From: "Claude (Aefinity lab session)" <noreply@anthropic.com>
+Date: Tue, 6 Oct 2026 14:11:58 +0000
+Subject: [PATCH] lab: CIS-1 VNNI kernel, row-parallel integer decode,
+ TPM-attested receipts, repack scale fix
+
+aegis-core
+- cis_vnni.rs: AVX-512 VNNI (zmm) and AVX-VNNI (ymm) ternary matvec for CIS-1,
+  byte-identical to cis::ternary_matvec_i8 (tests/cis_vnni_equivalence.rs);
+  CPUID/XGETBV probe (no_std); falls back to cis_avx2 then scalar; same 2-bit
+  container and traffic. 1-row default; 4-row-blocked variant behind
+  set_force_r4 (measured slower on first silicon, kept for iron A/B).
+- cis_infer.rs: tmv_dispatch routes x86_64 through cis_vnni; under `parallel`
+  the CIS matvecs and the LM head split output rows across the existing pool
+  (bit-identical by construction: rows are independent integer dots).
+- benches/vnni_vs_avx2.rs: same-process interleaved 3-arm A/B with a
+  DRAM-streaming mode (rotates distinct weight copies).
+
+aegis-linux
+- examples/cis_decode_timed.rs: cis_decode plus decode-loop timing, CPU named
+  from CPUID, env=vm flagged, digest printed per repeat (Rule A: ratios only).
+
+aegis-uefi
+- attest.rs (AEGIS-ATTEST v0): measure MODEL.SAF/EMBED.BIN/VOCAB.BIN
+  (+RECEIPT.TXT) into TPM PCR 12 and the CIS-1 witness chain + verdict into
+  PCR 13 via EFI_TCG2_PROTOCOL (EV_IPL events, replayable from the log);
+  TPM2_PCR_Read of PCR 4/12/13; TCG2 event-log excerpt; TPM2_CreatePrimary
+  (ECC P-256) + TPM2_Quote over PCR 4,12,13 with qualifyingData =
+  SHA-256(RECEIPT.TXT), resend on TPM_RC_RETRY; ATTEST.TXT report.
+- verifier.rs: factor replay()/render_receipt() so the unikernel can MINT a
+  witness v1 receipt (MINT.TXT: max_new + prompt) with the same arithmetic
+  the Linux cis_witness uses; Verdict carries chain/cis_digest/steps.
+- main.rs: TPM measurement after STAGE 5, mint mode, ATTEST.TXT, whole-file
+  writer. No TPM = logged finding, behaviour otherwise unchanged.
+- tpm2min (path dep): no_std, no-alloc, forbid(unsafe_code), zero-dependency
+  TPM 2.0 wire format (Startup, PCR_Read, PCR_Extend, CreatePrimary, Quote,
+  FlushContext); quotes verified against swtpm with tpm2-tools, OpenSSL and an
+  independent parser.
+
+aegis-forge
+- repack_ternary.py: --scale-convention {auto,reciprocal,multiply}. The
+  shipped reciprocal convention is right for transformers BitLinear
+  (Falcon-E, HF1BitLLM) and WRONG for Microsoft's offline-quantized packed
+  BitNet checkpoint (AutoBitLinear multiplies); auto sniffs
+  quantization_config.quant_method == "bitnet". With it the repack of
+  microsoft/bitnet-b1.58-2B-4T reproduces CIS_DECODE digest cab11400d737ac4a.
+
+Lab evidence (QEMU/OVMF + swtpm, correctness only; VM timing ratios only) is
+recorded outside this repository in the session's lab logs.
+---
+ aegis-core/Cargo.toml                    |   4 +
+ aegis-core/benches/vnni_vs_avx2.rs       | 176 ++++++
+ aegis-core/src/cis_infer.rs              | 140 ++++-
+ aegis-core/src/cis_vnni.rs               | 431 +++++++++++++
+ aegis-core/src/lib.rs                    |   4 +
+ aegis-core/tests/cis_vnni_equivalence.rs |  88 +++
+ aegis-forge/repack_ternary.py            |  70 ++-
+ aegis-linux/examples/cis_decode_timed.rs | 122 ++++
+ aegis-uefi/Cargo.lock                    |   5 +
+ aegis-uefi/Cargo.toml                    |   1 +
+ aegis-uefi/src/attest.rs                 | 449 ++++++++++++++
+ aegis-uefi/src/main.rs                   | 230 +++++++
+ aegis-uefi/src/verifier.rs               | 256 ++++----
+ tpm2min/Cargo.toml                       |  11 +
+ tpm2min/src/cmd.rs                       | 389 ++++++++++++
+ tpm2min/src/consts.rs                    | 150 +++++
+ tpm2min/src/der.rs                       | 107 ++++
+ tpm2min/src/error.rs                     |  86 +++
+ tpm2min/src/lib.rs                       |  68 +++
+ tpm2min/src/pcr.rs                       | 250 ++++++++
+ tpm2min/src/rsp.rs                       | 745 +++++++++++++++++++++++
+ tpm2min/src/sha256.rs                    | 274 +++++++++
+ tpm2min/src/wire.rs                      | 286 +++++++++
+ 23 files changed, 4205 insertions(+), 137 deletions(-)
+ create mode 100644 aegis-core/benches/vnni_vs_avx2.rs
+ create mode 100644 aegis-core/src/cis_vnni.rs
+ create mode 100644 aegis-core/tests/cis_vnni_equivalence.rs
+ create mode 100644 aegis-linux/examples/cis_decode_timed.rs
+ create mode 100644 aegis-uefi/src/attest.rs
+ create mode 100644 tpm2min/Cargo.toml
+ create mode 100644 tpm2min/src/cmd.rs
+ create mode 100644 tpm2min/src/consts.rs
+ create mode 100644 tpm2min/src/der.rs
+ create mode 100644 tpm2min/src/error.rs
+ create mode 100644 tpm2min/src/lib.rs
+ create mode 100644 tpm2min/src/pcr.rs
+ create mode 100644 tpm2min/src/rsp.rs
+ create mode 100644 tpm2min/src/sha256.rs
+ create mode 100644 tpm2min/src/wire.rs
+
+diff --git a/aegis-core/Cargo.toml b/aegis-core/Cargo.toml
+index a79aea2..c965efe 100644
+--- a/aegis-core/Cargo.toml
++++ b/aegis-core/Cargo.toml
+@@ -93,3 +93,7 @@ path = "benches/colskip_vs_incumbent.rs"
+ [[bin]]
+ name = "cis_vs_float"
+ path = "benches/cis_vs_float.rs"
++
++[[bin]]
++name = "vnni_vs_avx2"
++path = "benches/vnni_vs_avx2.rs"
+diff --git a/aegis-core/benches/vnni_vs_avx2.rs b/aegis-core/benches/vnni_vs_avx2.rs
+new file mode 100644
+index 0000000..88e01fb
+--- /dev/null
++++ b/aegis-core/benches/vnni_vs_avx2.rs
+@@ -0,0 +1,176 @@
++//! vnni_vs_avx2 — same-process, interleaved A/B of the CIS-1 integer ternary
++//! matvec: incumbent AVX2 v3b (`cis_avx2::ternary_matvec_i8_avx2`) vs the VNNI
++//! kernel (`cis_vnni::ternary_matvec_i8_vnni`, zmm or ymm by capability), on
++//! the BitNet-2B-4T shapes. Bit-identity to the scalar reference is asserted on
++//! every shape before any timing is taken; a mismatch aborts the run.
++//!
++//! Rule A: the machine is named from CPUID and flagged `env=vm` when the
++//! hypervisor bit is set. Absolute figures from a VM are NOT a ceiling and are
++//! not to be quoted as such; the RATIO between two kernels measured
++//! interleaved in the same process on the same data is the robust output.
++//!
++//! Usage: vnni_vs_avx2 [rounds=11] [calls_per_round=20] [stream_mb=0]
++//!   stream_mb > 0: allocate enough DISTINCT copies of each weight matrix to
++//!   cover stream_mb megabytes and rotate through them call by call, so every
++//!   call streams its weights from DRAM the way a decode step does (a single
++//!   resident matrix of 1.6-4.4 MB would otherwise sit in L2/L3 and flatter
++//!   the compute side). Arms: avx2 (incumbent v3b), vnni (default dispatch:
++//!   1-row zmm, or ymm on AVX-VNNI parts), vnni-r4 (4-row-blocked zmm, forced).
++use aegis_core::cis::ternary_matvec_i8;
++use aegis_core::cis_avx2::ternary_matvec_i8_avx2;
++use aegis_core::cis_vnni::{set_force_r4, ternary_matvec_i8_vnni, vnni_level_name};
++use std::time::Instant;
++
++fn lcg(state: &mut u64) -> u64 {
++    *state = state
++        .wrapping_mul(6364136223846793005)
++        .wrapping_add(1442695040888963407);
++    *state
++}
++
++fn cpu_brand() -> String {
++    let mut s = String::new();
++    for leaf in 0x8000_0002u32..=0x8000_0004 {
++        let r = unsafe { core::arch::x86_64::__cpuid(leaf) };
++        for v in [r.eax, r.ebx, r.ecx, r.edx] {
++            s.push_str(&String::from_utf8_lossy(&v.to_le_bytes()));
++        }
++    }
++    s.trim_matches(char::from(0)).trim().to_string()
++}
++
++fn hypervisor() -> bool {
++    let r = unsafe { core::arch::x86_64::__cpuid(1) };
++    (r.ecx >> 31) & 1 == 1
++}
++
++fn median(v: &mut [f64]) -> f64 {
++    v.sort_by(|a, b| a.partial_cmp(b).unwrap());
++    v[v.len() / 2]
++}
++
++fn main() {
++    let args: Vec<String> = std::env::args().collect();
++    let rounds: usize = args.get(1).and_then(|s| s.parse().ok()).unwrap_or(11);
++    let calls: usize = args.get(2).and_then(|s| s.parse().ok()).unwrap_or(20);
++    let stream_mb: usize = args.get(3).and_then(|s| s.parse().ok()).unwrap_or(0);
++    println!(
++        "VNNI_VS_AVX2 cpu=\"{}\" env={} vnni_level=\"{}\" rounds={} calls_per_round={} stream_mb={}",
++        cpu_brand(),
++        if hypervisor() { "vm" } else { "iron" },
++        vnni_level_name(),
++        rounds,
++        calls,
++        stream_mb
++    );
++    println!(
++        "shape(out x in)  kernel   median_us/call  GMAC/s  weightGB/s  ratio(vs avx2)  bitexact"
++    );
++
++    let shapes = [
++        ("q/o 2560x2560", 2560usize, 2560usize),
++        ("k/v 640x2560", 640, 2560),
++        ("gate/up 6912x2560", 6912, 2560),
++        ("down 2560x6912", 2560, 6912),
++    ];
++    let mut st = 0x0DD5_EED0_1234_5678u64;
++    for (name, dim_out, dim_in) in shapes {
++        let n_bytes = dim_in / 4;
++        let mut input = vec![0i8; dim_in];
++        for x in input.iter_mut() {
++            *x = (((lcg(&mut st) >> 40) % 255) as i32 - 127) as i8;
++        }
++        // Realistic ternary distribution: ~42% zeros (BitNet-2B-4T census), rest +-1.
++        let bytes_per = dim_out * n_bytes;
++        let copies = if stream_mb == 0 {
++            1
++        } else {
++            ((stream_mb << 20) / bytes_per).max(2)
++        };
++        let mut ws: Vec<Vec<u8>> = Vec::with_capacity(copies);
++        for _ in 0..copies {
++            let mut w = vec![0u8; bytes_per];
++            for b in w.iter_mut() {
++                let mut byte = 0u8;
++                for k in 0..4 {
++                    let r = lcg(&mut st) % 100;
++                    let code = if r < 42 {
++                        0
++                    } else if r < 71 {
++                        1
++                    } else {
++                        2
++                    };
++                    byte |= code << (2 * k);
++                }
++                *b = byte;
++            }
++            ws.push(w);
++        }
++        let mut reference = vec![0i32; dim_out];
++        let mut out_a = vec![0i32; dim_out];
++        let mut out_v = vec![0i32; dim_out];
++        let mut out_1 = vec![0i32; dim_out];
++        let mut exact = true;
++        for w in &ws {
++            ternary_matvec_i8(&mut reference, &input, w, dim_out, dim_in);
++            ternary_matvec_i8_avx2(&mut out_a, &input, w, dim_out, dim_in);
++            ternary_matvec_i8_vnni(&mut out_v, &input, w, dim_out, dim_in);
++            set_force_r4(true);
++            ternary_matvec_i8_vnni(&mut out_1, &input, w, dim_out, dim_in);
++            set_force_r4(false);
++            exact &= reference == out_a && reference == out_v && reference == out_1;
++        }
++        if !exact {
++            eprintln!("BIT-EXACTNESS FAILURE on {name}: aborting before any timing");
++            std::process::exit(1);
++        }
++        // Arms: 0 = avx2, 1 = vnni-r1, 2 = vnni (default dispatch).
++        let run_arm =
++            |arm: usize, w: &[u8], out_a: &mut [i32], out_1: &mut [i32], out_v: &mut [i32]| {
++                match arm {
++                    0 => ternary_matvec_i8_avx2(out_a, &input, w, dim_out, dim_in),
++                    1 => ternary_matvec_i8_vnni(out_1, &input, w, dim_out, dim_in),
++                    _ => {
++                        set_force_r4(true);
++                        ternary_matvec_i8_vnni(out_v, &input, w, dim_out, dim_in);
++                        set_force_r4(false);
++                    }
++                }
++            };
++        // Warm-up (first-touch), excluded.
++        for arm in 0..3 {
++            run_arm(arm, &ws[0], &mut out_a, &mut out_1, &mut out_v);
++        }
++        let mut t = [
++            Vec::with_capacity(rounds),
++            Vec::with_capacity(rounds),
++            Vec::with_capacity(rounds),
++        ];
++        let mut wi = 0usize;
++        for r in 0..rounds {
++            // Rotate arm order every round so drift/turbo bias cancels.
++            let order = [[0, 1, 2], [1, 2, 0], [2, 0, 1]][r % 3];
++            for &arm in &order {
++                let t0 = Instant::now();
++                for _ in 0..calls {
++                    wi = (wi + 1) % copies;
++                    run_arm(arm, &ws[wi], &mut out_a, &mut out_1, &mut out_v);
++                }
++                t[arm].push(t0.elapsed().as_secs_f64() * 1e6 / calls as f64);
++            }
++        }
++        let m: Vec<f64> = t.iter_mut().map(|v| median(v)).collect();
++        let macs = (dim_out * dim_in) as f64;
++        for (arm, label) in ["avx2", "vnni", "vnni-r4"].iter().enumerate() {
++            println!(
++                "{name:<20} {label:<8} {:>10.1}  {:>6.2}  {:>8.2}  {:>6.3}  {}",
++                m[arm],
++                macs / m[arm] / 1e3,
++                bytes_per as f64 / m[arm] / 1e3,
++                m[0] / m[arm],
++                exact
++            );
++        }
++    }
++}
+diff --git a/aegis-core/src/cis_infer.rs b/aegis-core/src/cis_infer.rs
+index c4ec1e0..47c4b4e 100644
+--- a/aegis-core/src/cis_infer.rs
++++ b/aegis-core/src/cis_infer.rs
+@@ -1194,7 +1194,43 @@ impl<'m, 'a> CisEngine<'m, 'a> {
+             not(feature = "scalar_only")
+         ))]
+         {
+-            crate::cis_avx2::ternary_matvec_i8_avx2(output, input, weights_packed, dim_out, dim_in);
++            // VNNI (AVX-512 VNNI zmm / AVX-VNNI ymm) when the CPU has it, else
++            // the AVX2 v3b kernel, else the scalar reference — all three are
++            // byte-identical to `cis::ternary_matvec_i8` (tests/cis_vnni_equivalence.rs,
++            // tests/cis_avx2_equivalence.rs), so the dispatch choice can never
++            // change a digest; it only changes how fast the same bits appear.
++            //
++            // Row-parallel under the `parallel` feature (std only): output rows
++            // are independent dot products, so splitting them across workers
++            // changes NOTHING about the arithmetic — not even the summation
++            // order within a row. Bit-identity holds by construction, which is
++            // the property the f32 path can only assert by test. Each worker
++            // deinterleaves the (shared, read-only) activations itself; that is
++            // O(dim_in) against its O(rows x dim_in) of work.
++            #[cfg(feature = "parallel")]
++            {
++                let pool = crate::pool::global();
++                if pool.workers() > 1 && dim_out * dim_in >= CIS_PARALLEL_MIN_MACS && dim_out >= 8 {
++                    let n_bytes = dim_in / 4;
++                    let out_base = CisOutPtr(output.as_mut_ptr());
++                    pool.broadcast(|id, n| {
++                        let (row0, rows) = cis_row_split(dim_out, id, n);
++                        if rows == 0 {
++                            return;
++                        }
++                        // SAFETY: row ranges are disjoint across workers, so no
++                        // two threads ever touch the same output element; the
++                        // dispatcher blocks until every worker returns.
++                        let chunk = unsafe {
++                            core::slice::from_raw_parts_mut(out_base.get().add(row0), rows)
++                        };
++                        let w = &weights_packed[row0 * n_bytes..(row0 + rows) * n_bytes];
++                        crate::cis_vnni::ternary_matvec_i8_vnni(chunk, input, w, rows, dim_in);
++                    });
++                    return;
++                }
++            }
++            crate::cis_vnni::ternary_matvec_i8_vnni(output, input, weights_packed, dim_out, dim_in);
+         }
+         #[cfg(target_arch = "aarch64")]
+         {
+@@ -2177,16 +2213,45 @@ impl<'m, 'a> CisEngine<'m, 'a> {
+             )
+         });
+         timed_phase!(self.phase_cycles, crate::phase_timers::Phase::LmHead, {
+-            for (j, l) in self.logits[..vocab].iter_mut().enumerate() {
+-                *l = match self.model.head_planes_row(j, hidden) {
+-                    Some((hi, lo)) => {
+-                        Self::lmhead_dot_dispatch_planes(&self.codes[..hidden], hi, lo)
+-                    }
+-                    None => Self::lmhead_dot_dispatch(
+-                        &self.codes[..hidden],
+-                        self.model.head_row(j, hidden),
+-                    ),
+-                };
++            // Each vocab row is an independent exact dot; the row split across
++            // workers is bit-identical by construction (see tmv_dispatch).
++            #[cfg(feature = "parallel")]
++            let done_parallel = {
++                let pool = crate::pool::global();
++                if pool.workers() > 1 && vocab >= 1024 {
++                    let codes = &self.codes[..hidden];
++                    let model = &self.model;
++                    let base = CisLogitPtr(self.logits.as_mut_ptr());
++                    pool.broadcast(|id, n| {
++                        let (row0, rows) = cis_row_split(vocab, id, n);
++                        for j in row0..row0 + rows {
++                            let v = match model.head_planes_row(j, hidden) {
++                                Some((hi, lo)) => Self::lmhead_dot_dispatch_planes(codes, hi, lo),
++                                None => Self::lmhead_dot_dispatch(codes, model.head_row(j, hidden)),
++                            };
++                            // SAFETY: row ranges are disjoint across workers.
++                            unsafe { *base.get().add(j) = v };
++                        }
++                    });
++                    true
++                } else {
++                    false
++                }
++            };
++            #[cfg(not(feature = "parallel"))]
++            let done_parallel = false;
++            if !done_parallel {
++                for (j, l) in self.logits[..vocab].iter_mut().enumerate() {
++                    *l = match self.model.head_planes_row(j, hidden) {
++                        Some((hi, lo)) => {
++                            Self::lmhead_dot_dispatch_planes(&self.codes[..hidden], hi, lo)
++                        }
++                        None => Self::lmhead_dot_dispatch(
++                            &self.codes[..hidden],
++                            self.model.head_row(j, hidden),
++                        ),
++                    };
++                }
+             }
+         });
+         // logit_real = acc · s / 2^F  (the head table is Q.F).
+@@ -2269,6 +2334,59 @@ impl<'m, 'a> CisEngine<'m, 'a> {
+ // `scripts/cis_e2_golden_gen.py` (Python arbitrary-precision integers,
+ // scripted from the same spec text) — never by the Rust under test.
+ // ---------------------------------------------------------------------------
++
++/// Smallest CIS matvec worth fanning out (same threshold spirit as
++/// `ops::PARALLEL_MIN_MACS`): below this the broadcast barrier costs more than
++/// the rows. k/v_proj at 640x2560 = 1.6M MACs is the smallest shape that
++/// qualifies in BitNet-2B-4T.
++#[cfg(feature = "parallel")]
++const CIS_PARALLEL_MIN_MACS: usize = 1 << 20;
++
++/// Disjoint row range for worker `id` of `n` (plain split; the CIS kernels have
++/// no row-unroll alignment requirement).
++#[cfg(feature = "parallel")]
++#[inline]
++fn cis_row_split(dim_out: usize, id: usize, n: usize) -> (usize, usize) {
++    let per = dim_out.div_ceil(n).max(1);
++    let row0 = id * per;
++    if row0 >= dim_out {
++        return (dim_out, 0);
++    }
++    (row0, core::cmp::min(per, dim_out - row0))
++}
++
++/// Send-able base pointer for an i32 output buffer that workers slice disjointly.
++#[cfg(feature = "parallel")]
++#[derive(Clone, Copy)]
++struct CisOutPtr(*mut i32);
++#[cfg(feature = "parallel")]
++impl CisOutPtr {
++    #[inline(always)]
++    fn get(self) -> *mut i32 {
++        self.0
++    }
++}
++#[cfg(feature = "parallel")]
++unsafe impl Send for CisOutPtr {}
++#[cfg(feature = "parallel")]
++unsafe impl Sync for CisOutPtr {}
++
++/// Send-able base pointer for the i64 logits the LM-head workers fill disjointly.
++#[cfg(feature = "parallel")]
++#[derive(Clone, Copy)]
++struct CisLogitPtr(*mut i64);
++#[cfg(feature = "parallel")]
++impl CisLogitPtr {
++    #[inline(always)]
++    fn get(self) -> *mut i64 {
++        self.0
++    }
++}
++#[cfg(feature = "parallel")]
++unsafe impl Send for CisLogitPtr {}
++#[cfg(feature = "parallel")]
++unsafe impl Sync for CisLogitPtr {}
++
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+diff --git a/aegis-core/src/cis_vnni.rs b/aegis-core/src/cis_vnni.rs
+new file mode 100644
+index 0000000..96beb8b
+--- /dev/null
++++ b/aegis-core/src/cis_vnni.rs
+@@ -0,0 +1,431 @@
++//! AVX-512 VNNI (`vpdpbusd zmm`) and AVX-VNNI (`vpdpbusd ymm`) ternary matvec for
++//! CIS-1 integer semantics — bit-identical to [`crate::cis::ternary_matvec_i8`].
++//!
++//! # Why this is allowed to exist
++//!
++//! The CIS-1 axiom (spec §1): every reduction in the decode path is a sum of
++//! integers whose worst case provably fits its accumulator, so ANY summation
++//! order — lane-wise, blocked, 4-at-a-time inside a VNNI dot — produces the same
++//! bits. This kernel therefore needs an equality assertion against the scalar
++//! reference, which `tests/cis_vnni_equivalence.rs` carries, not a tolerance.
++//!
++//! # Method (same packing, same traffic as the incumbent)
++//!
++//! The container is untouched: row-major, 4 weights per byte, low bit-pair
++//! first, code `00`=0 `01`=+1 `10`=-1 `11`=0 (defined-as-zero, spec §4). One
++//! 64-byte (zmm) or 32-byte (ymm) load of packed weights is decoded by nibble
++//! with `vpshufb` into the OFFSET weight `u = w + 1 in {0, 1, 2}` (u8), exactly
++//! as `cis_avx2` v3b does, so the dot can use the unsigned×signed VNNI
++//! instruction directly:
++//!
++//! `vpdpbusd(acc, u, a)` multiplies 4 adjacent u8 (`u`) by 4 adjacent i8 (`a`),
++//! sums the 4 i16 products and adds the result into the i32 lane. With
++//! `|u·a| <= 2·127 = 254` the 4-product partial is `<= 1016`, far inside i16,
++//! and the non-saturating `vpdpbusd` accumulates exactly into i32. The i32
++//! lane total over a whole row is bounded by `254 · dim_in / 16` (zmm) or
++//! `254 · dim_in / 8` (ymm) — for the largest CIS-1 shape in scope (dim_in
++//! 6912) that is < 2^18, so no lane can overflow regardless of input.
++//!
++//! The offset identity `Σ u_j·a_j = Σ w_j·a_j + Σ a_j` is exact, so the true dot
++//! is `acc − Σ a_j` over the full-block range, subtracted once per row after the
++//! horizontal reduction. Tail bytes (dim_in not a multiple of the block) use the
++//! reference's own scalar arithmetic.
++//!
++//! Compared with the AVX2 v3b kernel this removes the i16 pair-sum accumulator
++//! and its periodic widening flush entirely (VNNI widens to i32 in the same
++//! instruction), halves the number of decodes per weight for the 512-bit path,
++//! and issues 4 `vpdpbusd` per 256 weights instead of 4 `vpmaddubsw` + 4
++//! `vpaddw` per 128.
++//!
++//! # Dispatch
++//!
++//! `ternary_matvec_i8_vnni` → zmm path if AVX-512F/BW/VNNI are present and
++//! OS-enabled, else ymm path if AVX-VNNI (Alder Lake+) is present, else the
++//! AVX2 kernel (which itself falls back to the scalar reference). The
++//! `-128` activation hazard and the `set_force_scalar` race toggle are honoured
++//! exactly as in `cis_avx2`, so one binary rejects/answers the same inputs on
++//! every CPU (spec §5.1 rejection surface is enforced first, unconditionally).
++//!
++//! Identity/correctness kernel first; any speed figure for it must come from
++//! a named physical machine (Rule A).
++
++use crate::cis::{check_tmv_preconditions, ternary_matvec_i8};
++use alloc::vec;
++use core::arch::x86_64::*;
++use core::sync::atomic::{AtomicU8, Ordering};
++
++/// 0 = unprobed, 1 = none, 2 = avx-vnni (ymm), 3 = avx512-vnni (zmm).
++static VNNI_STATE: AtomicU8 = AtomicU8::new(0);
++
++/// Runtime force-off toggle so the same binary can race VNNI against AVX2 in
++/// one process (the A/B discipline every kernel claim in this programme uses).
++static FORCE_NO_VNNI: core::sync::atomic::AtomicBool = core::sync::atomic::AtomicBool::new(false);
++
++/// Select the 4-row-blocked zmm kernel (A/B against the 1-row default).
++static FORCE_R4: core::sync::atomic::AtomicBool = core::sync::atomic::AtomicBool::new(false);
++
++pub fn set_force_r4(v: bool) {
++    FORCE_R4.store(v, Ordering::Relaxed);
++}
++
++pub fn set_force_no_vnni(v: bool) {
++    FORCE_NO_VNNI.store(v, Ordering::Relaxed);
++}
++
++/// CPUID-only probe (the crate is `no_std` without the `parallel` feature, so
++/// `std::arch::is_x86_feature_detected!` is unavailable; the same code serves
++/// Linux and the UEFI target). Leaf 7.0: EBX[5] AVX2, EBX[16] AVX512F,
++/// EBX[30] AVX512BW, ECX[11] AVX512_VNNI; leaf 7.1: EAX[4] AVX-VNNI. The OS
++/// must have enabled the register state in XCR0 (bits 1,2 for xmm/ymm; bits
++/// 5,6,7 for opmask/ZMM_Hi256/Hi16_ZMM) — on UEFI that is main.rs's job; if
++/// XCR0 lacks the bits the corresponding path is NOT taken. XGETBV is only
++/// executed when CPUID.1:ECX[27] (OSXSAVE) is set, so it cannot #UD.
++fn probe_vnni() -> u8 {
++    // SAFETY: CPUID is unprivileged and side-effect free; XGETBV(0) is
++    // executed only after confirming OSXSAVE, which is its sole precondition.
++    unsafe {
++        let l1 = __cpuid(1);
++        let osxsave = (l1.ecx >> 27) & 1 == 1;
++        if !osxsave {
++            return 1;
++        }
++        let max_leaf = __cpuid(0).eax;
++        if max_leaf < 7 {
++            return 1;
++        }
++        let l7 = __cpuid_count(7, 0);
++        let l7_1 = if l7.eax >= 1 {
++            __cpuid_count(7, 1)
++        } else {
++            __cpuid_count(7, 0)
++        };
++        let avx2 = (l7.ebx >> 5) & 1 == 1;
++        let avx512f = (l7.ebx >> 16) & 1 == 1;
++        let avx512bw = (l7.ebx >> 30) & 1 == 1;
++        let avx512vnni = (l7.ecx >> 11) & 1 == 1;
++        let avxvnni = l7.eax >= 1 && (l7_1.eax >> 4) & 1 == 1;
++        let xcr0 = _xgetbv(0);
++        let ymm_ok = xcr0 & 0b110 == 0b110;
++        let zmm_ok = ymm_ok && (xcr0 & 0b1110_0000) == 0b1110_0000;
++        if avx512f && avx512bw && avx512vnni && zmm_ok {
++            3
++        } else if avx2 && avxvnni && ymm_ok {
++            2
++        } else {
++            1
++        }
++    }
++}
++
++/// Capability of the silicon, cached after the first probe.
++pub fn vnni_level() -> u8 {
++    match VNNI_STATE.load(Ordering::Relaxed) {
++        0 => {
++            let s = probe_vnni();
++            VNNI_STATE.store(s, Ordering::Relaxed);
++            s
++        }
++        s => s,
++    }
++}
++
++pub fn vnni_level_name() -> &'static str {
++    match vnni_level() {
++        3 => "AVX-512 VNNI (zmm)",
++        2 => "AVX-VNNI (ymm)",
++        _ => "none",
++    }
++}
++
++#[inline]
++fn vnni_on() -> u8 {
++    if FORCE_NO_VNNI.load(Ordering::Relaxed) || !crate::ops::simd_on() {
++        1
++    } else {
++        vnni_level()
++    }
++}
++
++/// VNNI TMV. Byte-identical to [`crate::cis::ternary_matvec_i8`] for every
++/// input; falls back to [`crate::cis_avx2::ternary_matvec_i8_avx2`] (and
++/// through it to the scalar reference) when VNNI is unavailable or forced off,
++/// when the shape is too small to block, or when the activations contain
++/// `-128`.
++pub fn ternary_matvec_i8_vnni(
++    output: &mut [i32],
++    input: &[i8],
++    weights_packed: &[u8],
++    dim_out: usize,
++    dim_in: usize,
++) {
++    // The rejection surface is enforced here, unconditionally, before any
++    // dispatch decision (spec §5.1: one binary, one behaviour on every CPU).
++    check_tmv_preconditions(output, input, weights_packed, dim_out, dim_in);
++    let n_bytes = dim_in / 4;
++    let level = vnni_on();
++    let block = match level {
++        3 => 64,
++        2 => 32,
++        _ => {
++            crate::cis_avx2::ternary_matvec_i8_avx2(output, input, weights_packed, dim_out, dim_in);
++            return;
++        }
++    };
++    if n_bytes < block {
++        crate::cis_avx2::ternary_matvec_i8_avx2(output, input, weights_packed, dim_out, dim_in);
++        return;
++    }
++
++    // Stride-4 deinterleave of the activations (one pass per matvec, reused
++    // across every output row) + `-128` hazard detection in the same pass.
++    let mut lanes = vec![0i8; 4 * n_bytes];
++    let mut has_min = false;
++    for j in 0..n_bytes {
++        for k in 0..4 {
++            let v = input[4 * j + k];
++            has_min |= v == i8::MIN;
++            lanes[k * n_bytes + j] = v;
++        }
++    }
++    if has_min {
++        ternary_matvec_i8(output, input, weights_packed, dim_out, dim_in);
++        return;
++    }
++
++    // SAFETY: `vnni_on()` returned 3/2 only after CPUID + XCR0 (or std's
++    // detection) confirmed the respective ISA is supported and OS-enabled;
++    // `lanes` is exactly `4 * n_bytes` long; the callees bound every weight and
++    // output access against `dim_out` and `n_bytes` before dereferencing.
++    unsafe {
++        if level == 3 {
++            // Default is the 1-row kernel: the 4-row-blocked variant measured
++            // SLOWER on the first silicon it ran on (Sapphire Rapids class VM,
++            // 2026-10-06: 68 vs 78 GMAC/s cache-resident, 24.5 vs 25.1
++            // streaming), consistent with the compiler spilling the 16-vector
++            // accumulator array. Kept behind `set_force_r4` for A/B on iron.
++            if dim_out >= 4 && FORCE_R4.load(Ordering::Relaxed) {
++                tmv_i8_avx512vnni_r4(output, input, &lanes, weights_packed, dim_out, n_bytes)
++            } else {
++                tmv_i8_avx512vnni(output, input, &lanes, weights_packed, dim_out, n_bytes)
++            }
++        } else {
++            tmv_i8_avxvnni(output, input, &lanes, weights_packed, dim_out, n_bytes)
++        }
++    }
++}
++
++/// Scalar tail in the reference's own arithmetic, shared by both widths.
++#[inline(always)]
++fn tail_dot(w_row: &[u8], input: &[i8], tail_start_b: usize) -> i32 {
++    let mut total = 0i32;
++    for (off, &b) in w_row[tail_start_b..].iter().enumerate() {
++        let base = 4 * (tail_start_b + off);
++        for k in 0..4 {
++            let code = (b >> (2 * k)) & 0b11;
++            let wv: i32 = match code {
++                1 => 1,
++                2 => -1,
++                _ => 0,
++            };
++            total += wv * input[base + k] as i32;
++        }
++    }
++    total
++}
++
++// Nibble -> u = w+1 maps, as 16-byte tables (replicated per 128-bit lane by
++// the kernels). index n -> wcode(n & 3) + 1 (bit-pair 0 / 2 of the nibble) and
++// index n -> wcode((n >> 2) & 3) + 1 (bit-pair 1 / 3). Codes 0 and 3 -> 1
++// (w = 0), code 1 -> 2 (w = +1), code 2 -> 0 (w = -1).
++const LUT_LO: [i8; 16] = [1, 2, 0, 1, 1, 2, 0, 1, 1, 2, 0, 1, 1, 2, 0, 1];
++const LUT_HI: [i8; 16] = [1, 1, 1, 1, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1];
++
++/// # Safety
++/// AVX-512F/BW/VNNI must be supported and OS-enabled. `lanes` must be the
++/// stride-4 deinterleave of `input`, `4 * n_bytes` long, with no `i8::MIN`.
++#[target_feature(enable = "avx512f,avx512bw,avx512vnni")]
++unsafe fn tmv_i8_avx512vnni(
++    output: &mut [i32],
++    input: &[i8],
++    lanes: &[i8],
++    weights_packed: &[u8],
++    dim_out: usize,
++    n_bytes: usize,
++) {
++    const BLOCK: usize = 64;
++    let lut_lo = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_LO.as_ptr() as *const __m128i));
++    let lut_hi = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_HI.as_ptr() as *const __m128i));
++    let nib = _mm512_set1_epi8(0x0F);
++
++    let full_blocks = n_bytes / BLOCK;
++    let tail_start_b = full_blocks * BLOCK;
++    let sum_a: i32 = input[0..4 * tail_start_b].iter().map(|&x| x as i32).sum();
++
++    for (row, out) in output.iter_mut().enumerate().take(dim_out) {
++        let w_row = &weights_packed[row * n_bytes..(row + 1) * n_bytes];
++        // Four independent accumulators (one per bit-pair) break the
++        // vpdpbusd dependency chain; integer addition makes the final merge
++        // order irrelevant to the result.
++        let mut acc = [_mm512_setzero_si512(); 4];
++        for blk in 0..full_blocks {
++            let b0 = blk * BLOCK;
++            let v = _mm512_loadu_si512(w_row.as_ptr().add(b0) as *const __m512i);
++            let lo_nib = _mm512_and_si512(v, nib);
++            let hi_nib = _mm512_and_si512(_mm512_srli_epi16::<4>(v), nib);
++            let u = [
++                _mm512_shuffle_epi8(lut_lo, lo_nib), // bit-pair 0
++                _mm512_shuffle_epi8(lut_hi, lo_nib), // bit-pair 1
++                _mm512_shuffle_epi8(lut_lo, hi_nib), // bit-pair 2
++                _mm512_shuffle_epi8(lut_hi, hi_nib), // bit-pair 3
++            ];
++            for k in 0..4 {
++                let a = _mm512_loadu_si512(lanes.as_ptr().add(k * n_bytes + b0) as *const __m512i);
++                acc[k] = _mm512_dpbusd_epi32(acc[k], u[k], a);
++            }
++        }
++        let s = _mm512_add_epi32(
++            _mm512_add_epi32(acc[0], acc[1]),
++            _mm512_add_epi32(acc[2], acc[3]),
++        );
++        let total = _mm512_reduce_add_epi32(s) - sum_a;
++        *out = total + tail_dot(w_row, input, tail_start_b);
++    }
++}
++
++/// 4-row-blocked zmm variant: four output rows share every activation load,
++/// and 16 independent `vpdpbusd` accumulator chains (4 rows x 4 bit-pairs)
++/// hide the instruction's latency. AVX-512 has 32 zmm registers, which is
++/// what makes this blocking affordable here and not in the ymm/AVX2 kernels.
++/// Byte-identical to the 1-row kernel by integer associativity: the per-row
++/// sums are the same products added in a different order.
++///
++/// # Safety
++/// Same contract as [`tmv_i8_avx512vnni`]; additionally `dim_out % 4 == 0`
++/// rows are processed here and the caller handles the remainder.
++#[target_feature(enable = "avx512f,avx512bw,avx512vnni")]
++unsafe fn tmv_i8_avx512vnni_r4(
++    output: &mut [i32],
++    input: &[i8],
++    lanes: &[i8],
++    weights_packed: &[u8],
++    dim_out: usize,
++    n_bytes: usize,
++) {
++    const BLOCK: usize = 64;
++    let lut_lo = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_LO.as_ptr() as *const __m128i));
++    let lut_hi = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_HI.as_ptr() as *const __m128i));
++    let nib = _mm512_set1_epi8(0x0F);
++
++    let full_blocks = n_bytes / BLOCK;
++    let tail_start_b = full_blocks * BLOCK;
++    let sum_a: i32 = input[0..4 * tail_start_b].iter().map(|&x| x as i32).sum();
++
++    let rows4 = dim_out / 4 * 4;
++    let mut row = 0usize;
++    while row < rows4 {
++        let w0 = weights_packed.as_ptr().add(row * n_bytes);
++        let w1 = weights_packed.as_ptr().add((row + 1) * n_bytes);
++        let w2 = weights_packed.as_ptr().add((row + 2) * n_bytes);
++        let w3 = weights_packed.as_ptr().add((row + 3) * n_bytes);
++        let mut acc = [[_mm512_setzero_si512(); 4]; 4];
++        for blk in 0..full_blocks {
++            let b0 = blk * BLOCK;
++            let a = [
++                _mm512_loadu_si512(lanes.as_ptr().add(b0) as *const __m512i),
++                _mm512_loadu_si512(lanes.as_ptr().add(n_bytes + b0) as *const __m512i),
++                _mm512_loadu_si512(lanes.as_ptr().add(2 * n_bytes + b0) as *const __m512i),
++                _mm512_loadu_si512(lanes.as_ptr().add(3 * n_bytes + b0) as *const __m512i),
++            ];
++            for (r, wp) in [w0, w1, w2, w3].iter().enumerate() {
++                let v = _mm512_loadu_si512(wp.add(b0) as *const __m512i);
++                let lo_nib = _mm512_and_si512(v, nib);
++                let hi_nib = _mm512_and_si512(_mm512_srli_epi16::<4>(v), nib);
++                acc[r][0] =
++                    _mm512_dpbusd_epi32(acc[r][0], _mm512_shuffle_epi8(lut_lo, lo_nib), a[0]);
++                acc[r][1] =
++                    _mm512_dpbusd_epi32(acc[r][1], _mm512_shuffle_epi8(lut_hi, lo_nib), a[1]);
++                acc[r][2] =
++                    _mm512_dpbusd_epi32(acc[r][2], _mm512_shuffle_epi8(lut_lo, hi_nib), a[2]);
++                acc[r][3] =
++                    _mm512_dpbusd_epi32(acc[r][3], _mm512_shuffle_epi8(lut_hi, hi_nib), a[3]);
++            }
++        }
++        for r in 0..4 {
++            let s = _mm512_add_epi32(
++                _mm512_add_epi32(acc[r][0], acc[r][1]),
++                _mm512_add_epi32(acc[r][2], acc[r][3]),
++            );
++            let w_row = &weights_packed[(row + r) * n_bytes..(row + r + 1) * n_bytes];
++            output[row + r] =
++                _mm512_reduce_add_epi32(s) - sum_a + tail_dot(w_row, input, tail_start_b);
++        }
++        row += 4;
++    }
++    if row < dim_out {
++        // Remainder rows (< 4) through the 1-row kernel.
++        let (_, rest) = output.split_at_mut(row);
++        tmv_i8_avx512vnni(
++            &mut rest[..dim_out - row],
++            input,
++            lanes,
++            &weights_packed[row * n_bytes..],
++            dim_out - row,
++            n_bytes,
++        );
++    }
++}
++
++/// # Safety
++/// AVX2 and AVX-VNNI must be supported and OS-enabled. `lanes` must be the
++/// stride-4 deinterleave of `input`, `4 * n_bytes` long, with no `i8::MIN`.
++#[target_feature(enable = "avx2,avxvnni")]
++unsafe fn tmv_i8_avxvnni(
++    output: &mut [i32],
++    input: &[i8],
++    lanes: &[i8],
++    weights_packed: &[u8],
++    dim_out: usize,
++    n_bytes: usize,
++) {
++    const BLOCK: usize = 32;
++    let lut_lo = _mm256_broadcastsi128_si256(_mm_loadu_si128(LUT_LO.as_ptr() as *const __m128i));
++    let lut_hi = _mm256_broadcastsi128_si256(_mm_loadu_si128(LUT_HI.as_ptr() as *const __m128i));
++    let nib = _mm256_set1_epi8(0x0F);
++
++    let full_blocks = n_bytes / BLOCK;
++    let tail_start_b = full_blocks * BLOCK;
++    let sum_a: i32 = input[0..4 * tail_start_b].iter().map(|&x| x as i32).sum();
++
++    for (row, out) in output.iter_mut().enumerate().take(dim_out) {
++        let w_row = &weights_packed[row * n_bytes..(row + 1) * n_bytes];
++        let mut acc = [_mm256_setzero_si256(); 4];
++        for blk in 0..full_blocks {
++            let b0 = blk * BLOCK;
++            let v = _mm256_loadu_si256(w_row.as_ptr().add(b0) as *const __m256i);
++            let lo_nib = _mm256_and_si256(v, nib);
++            let hi_nib = _mm256_and_si256(_mm256_srli_epi16::<4>(v), nib);
++            let u = [
++                _mm256_shuffle_epi8(lut_lo, lo_nib),
++                _mm256_shuffle_epi8(lut_hi, lo_nib),
++                _mm256_shuffle_epi8(lut_lo, hi_nib),
++                _mm256_shuffle_epi8(lut_hi, hi_nib),
++            ];
++            for k in 0..4 {
++                let a = _mm256_loadu_si256(lanes.as_ptr().add(k * n_bytes + b0) as *const __m256i);
++                acc[k] = _mm256_dpbusd_avx_epi32(acc[k], u[k], a);
++            }
++        }
++        let s = _mm256_add_epi32(
++            _mm256_add_epi32(acc[0], acc[1]),
++            _mm256_add_epi32(acc[2], acc[3]),
++        );
++        // Horizontal sum; reassociation is exact for integers.
++        let lo = _mm256_castsi256_si128(s);
++        let hi = _mm256_extracti128_si256(s, 1);
++        let t = _mm_add_epi32(lo, hi);
++        let t = _mm_add_epi32(t, _mm_shuffle_epi32(t, 0b01_00_11_10));
++        let t = _mm_add_epi32(t, _mm_shuffle_epi32(t, 0b10_11_00_01));
++        let total = _mm_cvtsi128_si32(t) - sum_a;
++        *out = total + tail_dot(w_row, input, tail_start_b);
++    }
++}
+diff --git a/aegis-core/src/lib.rs b/aegis-core/src/lib.rs
+index 1b899a4..8f0f6a0 100644
+--- a/aegis-core/src/lib.rs
++++ b/aegis-core/src/lib.rs
+@@ -31,6 +31,10 @@ pub mod witness;
+ 
+ #[cfg(all(target_arch = "x86_64", not(target_os = "uefi")))]
+ pub mod cis_avx2;
++// AVX-512 VNNI / AVX-VNNI CIS-1 matvec (lab/vnni-cis1): same cfg as cis_avx2, which it
++// falls back to; bit-identical to the reference by the same test discipline.
++#[cfg(all(target_arch = "x86_64", not(target_os = "uefi")))]
++pub mod cis_vnni;
+ // Amdahl-decomposition phase counters (RDTSC/RDTSCP), gated behind
+ // `phase-timers`, default OFF. x86_64-only: it uses the same intrinsics as
+ // `inference`, which it instruments.
+diff --git a/aegis-core/tests/cis_vnni_equivalence.rs b/aegis-core/tests/cis_vnni_equivalence.rs
+new file mode 100644
+index 0000000..e03aa77
+--- /dev/null
++++ b/aegis-core/tests/cis_vnni_equivalence.rs
+@@ -0,0 +1,88 @@
++//! cis_vnni must be byte-identical to the CIS-1 scalar reference for every
++//! input, on every shape class the engine uses, including the paths where it
++//! falls back (small shapes, `-128` activations, VNNI forced off).
++#![cfg(all(target_arch = "x86_64", not(target_os = "uefi")))]
++
++use aegis_core::cis::ternary_matvec_i8;
++use aegis_core::cis_vnni::{set_force_no_vnni, ternary_matvec_i8_vnni, vnni_level_name};
++
++fn lcg(state: &mut u64) -> u64 {
++    *state = state
++        .wrapping_mul(6364136223846793005)
++        .wrapping_add(1442695040888963407);
++    *state
++}
++
++fn case(dim_out: usize, dim_in: usize, seed: u64, allow_min: bool) {
++    let mut st = seed;
++    let n_bytes = dim_in / 4;
++    let mut input = vec![0i8; dim_in];
++    for x in input.iter_mut() {
++        let v = ((lcg(&mut st) >> 40) % 255) as i32 - 127;
++        *x = v as i8;
++    }
++    if allow_min {
++        input[dim_in / 2] = i8::MIN;
++    }
++    let mut w = vec![0u8; dim_out * n_bytes];
++    for b in w.iter_mut() {
++        *b = (lcg(&mut st) & 0xFF) as u8; // includes code 11 (defined-as-zero)
++    }
++    let mut want = vec![0i32; dim_out];
++    let mut got = vec![0i32; dim_out];
++    ternary_matvec_i8(&mut want, &input, &w, dim_out, dim_in);
++    ternary_matvec_i8_vnni(&mut got, &input, &w, dim_out, dim_in);
++    assert_eq!(
++        want,
++        got,
++        "cis_vnni diverged from scalar reference at {dim_out}x{dim_in} (level {})",
++        vnni_level_name()
++    );
++}
++
++#[test]
++fn vnni_matches_reference_on_engine_shapes() {
++    // BitNet-2B-4T: q/o 2560x2560, k/v 640x2560, gate/up 6912x2560, down 2560x6912;
++    // M7-class 384-wide; Falcon-E 2048/8192-class; plus odd tails.
++    for &(o, i) in &[
++        (2560usize, 2560usize),
++        (640, 2560),
++        (6912, 2560),
++        (2560, 6912),
++        (384, 384),
++        (1024, 384),
++        (2048, 2048),
++        (8192, 2048),
++        (7, 4),
++        (3, 132),
++        (5, 260),
++        (9, 1028),
++        (2, 4096 + 4),
++    ] {
++        case(o, i, 0x5EED_0000 + (o * 31 + i) as u64, false);
++    }
++}
++
++#[test]
++fn vnni_minus128_hazard_routes_to_reference() {
++    case(2560, 2560, 0xA5A5, true);
++    case(640, 6912, 0xB6B6, true);
++}
++
++#[test]
++fn vnni_forced_off_still_matches_reference() {
++    set_force_no_vnni(true);
++    case(2560, 2560, 0xC7C7, false);
++    case(2560, 6912, 0xD8D8, false);
++    set_force_no_vnni(false);
++}
++
++#[test]
++fn vnni_rejects_exactly_the_reference_rejection_surface() {
++    // dim_in not a multiple of 4 must panic before any dispatch (spec §5.1).
++    let r = std::panic::catch_unwind(|| {
++        let mut out = vec![0i32; 4];
++        ternary_matvec_i8_vnni(&mut out, &[1i8; 10], &[0u8; 12], 4, 10);
++    });
++    assert!(r.is_err(), "dim_in=10 must be rejected");
++}
+diff --git a/aegis-forge/repack_ternary.py b/aegis-forge/repack_ternary.py
+index c77b725..93aca89 100644
+--- a/aegis-forge/repack_ternary.py
++++ b/aegis-forge/repack_ternary.py
+@@ -423,21 +423,37 @@ def ternary_weight_bytes(src, name, packing, dim_out, dim_in):
+     return pack_ternary(ints)
+ 
+ 
+-def scalar_f32_scale(src, name):
++def scalar_f32_scale(src, name, convention="reciprocal"):
+     """Per-tensor weight_scale, converted to the ENGINE's convention.
+ 
+-    Source checkpoints served by transformers' BitLinear (Falcon-E via
+-    onebitllms, HF1BitLLM) store the QUANTIZATION scale and dequantize by
+-    DIVISION: out = (x_q @ w_q) / (act_scale * weight_scale), i.e.
+-    effective weights = w_q / weight_scale (onebitllms _weight_quant:
+-    scale = 1/mean|w|, so stored values are ~10-60).
+-
+-    The engine MULTIPLIES: out[row] = dot * scale (ops.rs), the convention
+-    of the Microsoft BitNet-2B artifact chain (empirically pinned by the
+-    10.348 eval anchor and the 'Paris' generation). So the repack must
+-    write the RECIPROCAL of the source scale. Found the hard way: copying
+-    the raw scalar made every Falcon-E linear ~450x too large and produced
+-    confident token-salad while all shape/ternary checks passed.
++    The engine MULTIPLIES: out[row] = dot * scale (ops.rs). Source
++    checkpoints disagree on what they store:
++
++    reciprocal  transformers' BitLinear (Falcon-E via onebitllms, HF1BitLLM)
++                stores the QUANTIZATION scale and dequantizes by DIVISION:
++                out = (x_q @ w_q) / (act_scale * weight_scale), i.e. effective
++                weights = w_q / weight_scale (onebitllms _weight_quant:
++                scale = 1/mean|w|, stored values ~10-60). Write 1/scale.
++                Found the hard way: copying the raw scalar made every
++                Falcon-E linear ~450x too large and produced confident
++                token-salad while all shape/ternary checks passed.
++
++    multiply    transformers' AutoBitLinear in OFFLINE mode (Microsoft's
++                packed `microsoft/bitnet-b1.58-2B-4T`, config.json
++                quantization_config.quant_method == "bitnet",
++                quantization_mode == "offline") MULTIPLIES by weight_scale
++                (integrations/bitnet.py, AutoBitLinear.forward), and stores
++                ~1.2-2.3. Copy the scalar EXACTLY (BF16 -> F32 is exact).
++                This is the convention of the canonical BitNet-2B artifact
++                (correct_transmute.py copies the scalar) that pins the
++                CIS_DECODE digest cab11400d737ac4a. Applying `reciprocal`
++                here (the 2026-10-06 lab finding) scales every linear by
++                ~0.7-0.4, decodes to ", the and the and the ..." and passes
++                every shape/ternary check — the same silent failure class
++                as the Falcon-E case, in the opposite direction.
++
++    `--scale-convention auto` picks `multiply` iff the source config carries
++    quantization_config.quant_method == "bitnet"; otherwise `reciprocal`.
+     """
+     raw, dtype, shape = src.get(name)
+     n = 1
+@@ -449,7 +465,22 @@ def scalar_f32_scale(src, name):
+     source_scale = to_f32_list(raw, dtype)[0]
+     if source_scale <= 0.0:
+         raise ValueError(f"{name}: nonpositive weight_scale {source_scale}")
+-    return struct.pack("<f", 1.0 / source_scale)
++    if convention == "multiply":
++        return struct.pack("<f", source_scale)
++    if convention == "reciprocal":
++        return struct.pack("<f", 1.0 / source_scale)
++    raise ValueError(f"unknown scale convention {convention!r}")
++
++
++def resolve_scale_convention(arg, cfg):
++    """`auto` -> multiply for Microsoft offline-quantized BitNet checkpoints
++    (quantization_config.quant_method == "bitnet"), reciprocal otherwise."""
++    if arg != "auto":
++        return arg
++    qc = cfg.get("quantization_config") or {}
++    if qc.get("quant_method") == "bitnet":
++        return "multiply"
++    return "reciprocal"
+ 
+ 
+ def sniff_chat_template(args):
+@@ -486,6 +517,11 @@ def main():
+     ap.add_argument("--max-seq", type=int, default=2048,
+                     help="engine KV/arena window; the arena is sized by this, so a 32k "
+                          "source context would exhaust a 2GB-class target")
++    ap.add_argument("--scale-convention", choices=["auto", "reciprocal", "multiply"], default="auto",
++                    help="how the source stores weight_scale: reciprocal (transformers BitLinear / "
++                         "Falcon-E / HF1BitLLM: engine writes 1/scale) or multiply (transformers "
++                         "AutoBitLinear offline / microsoft packed BitNet: copy exactly); auto sniffs "
++                         "config.json quantization_config.quant_method == 'bitnet' -> multiply")
+     ap.add_argument("--chat-template", choices=["auto", "llama3", "chatml", "none"],
+                     default="auto",
+                     help="prompt convention stored in aegis_config; auto sniffs "
+@@ -495,6 +531,9 @@ def main():
+     with open(os.path.join(args.ckpt_dir, "config.json")) as f:
+         cfg = json.load(f)
+ 
++    scale_convention = resolve_scale_convention(args.scale_convention, cfg)
++    print(f"weight_scale convention: {scale_convention} "
++          f"(--scale-convention {args.scale_convention})")
+     hidden_act = cfg.get("hidden_act", "silu")
+     if hidden_act not in ("silu", "relu2"):
+         raise SystemExit(f"hidden_act '{hidden_act}' has no engine kernel — this is an "
+@@ -546,7 +585,8 @@ def main():
+             dim_out, dim_in = dims[dk_out], dims[dk_in]
+             packed = ternary_weight_bytes(src, w, args.source_packing, dim_out, dim_in)
+             out_tensors.append((w, "U8", [dim_out, dim_in // 4], packed))
+-            out_tensors.append((f"{w}_scale", "F32", [1], scalar_f32_scale(src, f"{w}_scale")))
++            out_tensors.append((f"{w}_scale", "F32", [1],
++                                scalar_f32_scale(src, f"{w}_scale", scale_convention)))
+         print(f"layer {i}: repacked")
+ 
+     raw, dtype, _ = src.get("model.norm.weight")
+diff --git a/aegis-linux/examples/cis_decode_timed.rs b/aegis-linux/examples/cis_decode_timed.rs
+new file mode 100644
+index 0000000..b04766c
+--- /dev/null
++++ b/aegis-linux/examples/cis_decode_timed.rs
+@@ -0,0 +1,122 @@
++//! cis_decode_timed — the SAME deterministic CIS-1 FullInt greedy decode as
++//! `cis_decode` (same digest line, same inputs), plus wall-clock timing of the
++//! decode loop only (model load and engine construction excluded).
++//!
++//! Rule A applies in full: this binary names the CPU from CPUID and prints
++//! `env=vm` when the hypervisor bit is set; a figure taken in a VM, in CI, or
++//! under emulation is NOT a performance claim and must not be quoted as one.
++//! What this binary is for: same-machine, same-binary RATIOS — threads 1 vs N
++//! (`AEGIS_THREADS`), kernel toggles — with the digest printed alongside so a
++//! speed-up that changes a single bit is caught in the same run.
++//!
++//! Run: cis_decode_timed <MODEL.SAF> <EMBED.BIN> <VOCAB.BIN> [max_new] [prompt] [repeats]
++//! Build: cargo build --release --features parallel --example cis_decode_timed
++use aegis_core::cis_infer::{CisEngine, CisMode, CisModel, argmax_i64, fnv1a64};
++use aegis_core::model::{FullBitNetPipeline, ModelConfig, SafeTensors};
++use aegis_core::tokenizer::AegisTokenizer;
++use std::time::Instant;
++
++fn cpu_brand() -> String {
++    let mut s = String::new();
++    for leaf in 0x8000_0002u32..=0x8000_0004 {
++        let r = unsafe { core::arch::x86_64::__cpuid(leaf) };
++        for v in [r.eax, r.ebx, r.ecx, r.edx] {
++            s.push_str(&String::from_utf8_lossy(&v.to_le_bytes()));
++        }
++    }
++    s.trim_matches(char::from(0)).trim().to_string()
++}
++fn hypervisor() -> bool {
++    (unsafe { core::arch::x86_64::__cpuid(1) }.ecx >> 31) & 1 == 1
++}
++
++fn main() {
++    let args: Vec<String> = std::env::args().collect();
++    if args.len() < 4 {
++        eprintln!(
++            "usage: cis_decode_timed <MODEL.SAF> <EMBED.BIN> <VOCAB.BIN> [max_new] [prompt] [repeats]"
++        );
++        std::process::exit(2);
++    }
++    let max_new: usize = args.get(4).and_then(|s| s.parse().ok()).unwrap_or(64);
++    let prompt = args
++        .get(5)
++        .map(String::as_str)
++        .unwrap_or("Once upon a time");
++    let repeats: usize = args.get(6).and_then(|s| s.parse().ok()).unwrap_or(3);
++    let model_bytes = std::fs::read(&args[1]).expect("read MODEL.SAF");
++    let embed_bytes = std::fs::read(&args[2]).expect("read EMBED.BIN");
++    let vocab_bytes = std::fs::read(&args[3]).expect("read VOCAB.BIN");
++    let tensors = SafeTensors::deserialize(&model_bytes).expect("parse MODEL.SAF");
++    let cfg_json = tensors
++        .metadata_field("aegis_config")
++        .expect("read __metadata__")
++        .expect("MODEL.SAF carries no aegis_config");
++    let config = ModelConfig::from_json(&cfg_json).expect("parse aegis_config");
++    let pipeline = FullBitNetPipeline::new(&tensors, &embed_bytes, &config).expect("pipeline");
++    let cis_model = CisModel::new(&pipeline, &config).expect("CIS model");
++    let tokenizer = AegisTokenizer::new(&vocab_bytes).expect("VOCAB.BIN");
++    let prompt_ids = tokenizer.encode(prompt);
++    // Thread count the pool will use; 1 without the `parallel` feature.
++    #[cfg(feature = "parallel")]
++    let threads = aegis_core::ops::worker_threads();
++    #[cfg(not(feature = "parallel"))]
++    let threads = 1usize;
++    println!(
++        "CIS_DECODE_TIMED cpu=\"{}\" env={} threads={} vnni=\"{}\" layers={} hidden={} vocab={} prompt_toks={} max_new={} repeats={}",
++        cpu_brand(),
++        if hypervisor() { "vm" } else { "iron" },
++        threads,
++        aegis_core::cis_vnni::vnni_level_name(),
++        config.num_hidden_layers,
++        config.hidden_size,
++        config.vocab_size,
++        prompt_ids.len(),
++        max_new,
++        repeats
++    );
++    let mut digests = Vec::new();
++    let mut decode_secs = Vec::new();
++    let mut prefill_secs = Vec::new();
++    for rep in 0..repeats {
++        let mut engine = CisEngine::new_with_mode(&cis_model, CisMode::FullInt);
++        let mut fnv: u64 = 0xcbf2_9ce4_8422_2325;
++        let t0 = Instant::now();
++        let mut pos = 0usize;
++        for &t in &prompt_ids {
++            fnv = fnv1a64(fnv, &t.to_le_bytes());
++            engine.forward_step_int(t, pos);
++            pos += 1;
++        }
++        let t1 = Instant::now();
++        for _ in 0..max_new {
++            let tok = argmax_i64(engine.decode_logits());
++            fnv = fnv1a64(fnv, &tok.to_le_bytes());
++            engine.forward_step_int(tok, pos);
++            pos += 1;
++        }
++        let t2 = Instant::now();
++        let dsec = (t2 - t1).as_secs_f64();
++        println!(
++            "rep={rep} prefill_s={:.3} decode_s={:.3} tok_per_s={:.3} digest={fnv:016x}",
++            (t1 - t0).as_secs_f64(),
++            dsec,
++            max_new as f64 / dsec
++        );
++        digests.push(fnv);
++        decode_secs.push(dsec);
++        prefill_secs.push((t1 - t0).as_secs_f64());
++    }
++    decode_secs.sort_by(|a, b| a.partial_cmp(b).unwrap());
++    let med = decode_secs[decode_secs.len() / 2];
++    let all_same = digests.iter().all(|&d| d == digests[0]);
++    println!(
++        "CIS_DECODE_TIMED_SUMMARY threads={} median_decode_s={:.3} median_tok_per_s={:.3} digest={:016x} digests_identical_across_repeats={} (env={}; ratios only)",
++        threads,
++        med,
++        max_new as f64 / med,
++        digests[0],
++        all_same,
++        if hypervisor() { "vm" } else { "iron" }
++    );
++}
+diff --git a/aegis-uefi/Cargo.lock b/aegis-uefi/Cargo.lock
+index df4a4a0..101acdc 100644
+--- a/aegis-uefi/Cargo.lock
++++ b/aegis-uefi/Cargo.lock
+@@ -16,6 +16,7 @@ dependencies = [
+  "aegis-core",
+  "linked_list_allocator",
+  "spin",
++ "tpm2min",
+  "uefi",
+ ]
+ 
+@@ -140,6 +141,10 @@ dependencies = [
+  "unicode-ident",
+ ]
+ 
++[[package]]
++name = "tpm2min"
++version = "0.1.0"
++
+ [[package]]
+ name = "ucs2"
+ version = "0.3.3"
+diff --git a/aegis-uefi/Cargo.toml b/aegis-uefi/Cargo.toml
+index 92ed416..2950e95 100644
+--- a/aegis-uefi/Cargo.toml
++++ b/aegis-uefi/Cargo.toml
+@@ -20,6 +20,7 @@ aegis-core = { path = "../aegis-core" }
+ uefi = { version = "0.38.0", features = ["alloc"] }   # boot services, protocols, console
+ spin = "0.12.1"                                        # Mutex for the heap
+ linked_list_allocator = "0.10.6"                       # the heap itself
++tpm2min = { path = "../tpm2min" }                      # TPM 2.0 wire format (no_std, no alloc, no unsafe): quote over the receipt PCRs
+ 
+ [features]
+ default = ["gop"]
+diff --git a/aegis-uefi/src/attest.rs b/aegis-uefi/src/attest.rs
+new file mode 100644
+index 0000000..8a5b4b9
+--- /dev/null
++++ b/aegis-uefi/src/attest.rs
+@@ -0,0 +1,449 @@
++//! AEGIS-ATTEST v0 — measured-boot attestation of the inference payload.
++//!
++//! Closes the attribution hole recorded in ledger A33/A34 ("the unikernel's
++//! verifier prints no CPU identifier") with a hardware root of trust instead
++//! of a log line: when the firmware exposes `EFI_TCG2_PROTOCOL` (a TPM 2.0 is
++//! present), the unikernel
++//!
++//! 1. measures what it LOADED — SHA-256 of MODEL.SAF, EMBED.BIN, VOCAB.BIN and
++//!    (if present) RECEIPT.TXT — into **PCR 12**, one event per artifact, as
++//!    `EV_IPL` events whose data is an ASCII line naming the artifact and its
++//!    digest (the same convention systemd-stub uses for the kernel command
++//!    line and initrd it loads);
++//! 2. measures what HAPPENED — the CIS-1 witness chain and verdict of the
++//!    receipt it verified or minted — into **PCR 13**;
++//! 3. reads PCRs 4 (the firmware's own measurement of BOOTX64.EFI), 12 and 13
++//!    back through `TPM2_PCR_Read`, dumps the TCG event log entries for those
++//!    PCRs, and writes `ATTEST.TXT` next to `BOOTLOG.TXT`.
++//!
++//! A remote verifier therefore gets, from one file: the firmware chain
++//! (PCR 0-7, including the exact unikernel binary in PCR 4), the exact model
++//! artifact bytes (PCR 12), and the exact inference transcript commitment
++//! (PCR 13) — each replayable from the event log, and (step 4, `tpm2min`,
++//! separate lab) signable by the TPM as a quote. No operating system is in the
++//! trusted computing base at any point.
++//!
++//! Identity/correctness module only (Rule A): prints no timing, ever.
++
++use aegis_core::witness::{hex_lower, sha256};
++use alloc::boxed::Box;
++use alloc::format;
++use alloc::string::String;
++use alloc::vec;
++use alloc::vec::Vec;
++use tpm2min::cmd::SigScheme;
++use tpm2min::{PcrSelection, PcrSelectionList};
++use uefi::boot::{OpenProtocolAttributes, OpenProtocolParams, ScopedProtocol};
++use uefi::proto::tcg::v2::{HashLogExtendEventFlags, PcrEventInputs, Tcg};
++use uefi::proto::tcg::{AlgorithmId, EventType, PcrIndex};
++
++/// PCR holding the payload measurements (what was loaded).
++pub const PCR_PAYLOAD: u32 = 12;
++/// PCR holding the inference transcript commitment (what happened).
++pub const PCR_RECEIPT: u32 = 13;
++/// PCR the firmware uses for the booted EFI application (PC Client spec).
++pub const PCR_BOOT_APP: u32 = 4;
++
++fn hex32(d: &[u8; 32]) -> String {
++    let mut buf = [0u8; 64];
++    let n = hex_lower(d, &mut buf);
++    String::from_utf8_lossy(&buf[..n]).into_owned()
++}
++
++fn hex(d: &[u8]) -> String {
++    let mut buf = vec![0u8; d.len() * 2];
++    let n = hex_lower(d, &mut buf);
++    String::from_utf8_lossy(&buf[..n]).into_owned()
++}
++
++pub struct Attestor {
++    tcg: ScopedProtocol<Tcg>,
++    /// Every measurement line this boot extended, in order, for BOOTLOG and
++    /// ATTEST.TXT. The verifier replays PCR 12/13 from exactly these lines.
++    pub measured: Vec<(u32, String)>,
++    pub errors: Vec<String>,
++}
++
++impl Attestor {
++    /// `None` when the firmware exposes no TCG2 protocol (no TPM, or TPM
++    /// disabled in setup). The caller logs that as a finding, not an error.
++    pub fn open() -> Option<Self> {
++        let handle = uefi::boot::get_handle_for_protocol::<Tcg>().ok()?;
++        // SAFETY: GET_PROTOCOL open — read-only sharing with whatever agent
++        // already holds the TCG2 protocol (the firmware's own TPM driver); we
++        // never close or uninstall it.
++        let tcg = unsafe {
++            uefi::boot::open_protocol::<Tcg>(
++                OpenProtocolParams {
++                    handle,
++                    agent: uefi::boot::image_handle(),
++                    controller: None,
++                },
++                OpenProtocolAttributes::GetProtocol,
++            )
++        }
++        .ok()?;
++        Some(Attestor {
++            tcg,
++            measured: Vec::new(),
++            errors: Vec::new(),
++        })
++    }
++
++    /// Extend `pcr` with SHA-256(`line`) and log the line as an EV_IPL event.
++    /// The firmware hashes `line` itself (TCG2 HashLogExtendEvent), so the
++    /// PCR value is replayable from the event log alone.
++    pub fn extend(&mut self, pcr: u32, line: &str) -> bool {
++        let event: Box<PcrEventInputs> =
++            match PcrEventInputs::new_in_box(PcrIndex(pcr), EventType::IPL, line.as_bytes()) {
++                Ok(e) => e,
++                Err(e) => {
++                    self.errors
++                        .push(format!("extend pcr{pcr}: event alloc failed ({e:?})"));
++                    return false;
++                }
++            };
++        match self.tcg.hash_log_extend_event(
++            HashLogExtendEventFlags::empty(),
++            line.as_bytes(),
++            &event,
++        ) {
++            Ok(()) => {
++                self.measured.push((pcr, String::from(line)));
++                true
++            }
++            Err(e) => {
++                self.errors.push(format!("extend pcr{pcr}: {e:?}"));
++                false
++            }
++        }
++    }
++
++    /// Measure the three model artifacts (and the receipt, if any) into
++    /// PCR 12. Returns the artifact digests for reuse.
++    pub fn measure_artifacts(
++        &mut self,
++        model: &[u8],
++        embed: &[u8],
++        vocab: &[u8],
++        receipt: Option<&[u8]>,
++    ) -> ([u8; 32], [u8; 32], [u8; 32]) {
++        let m = sha256(model);
++        let e = sha256(embed);
++        let v = sha256(vocab);
++        for (name, len, d) in [
++            ("MODEL.SAF", model.len(), &m),
++            ("EMBED.BIN", embed.len(), &e),
++            ("VOCAB.BIN", vocab.len(), &v),
++        ] {
++            let line = format!(
++                "AEGIS-MEASURE v0 artifact={name} bytes={len} sha256={}",
++                hex32(d)
++            );
++            self.extend(PCR_PAYLOAD, &line);
++        }
++        if let Some(r) = receipt {
++            let line = format!(
++                "AEGIS-MEASURE v0 artifact=RECEIPT.TXT bytes={} sha256={}",
++                r.len(),
++                hex32(&sha256(r))
++            );
++            self.extend(PCR_PAYLOAD, &line);
++        }
++        (m, e, v)
++    }
++
++    /// Commit the inference transcript to PCR 13: the witness chain (a
++    /// SHA-256 over every decode step's token id AND full i64 logit vector),
++    /// the token-sequence digest, the step count, and the mode/verdict.
++    pub fn record_receipt(
++        &mut self,
++        mode: &str,
++        chain: &[u8; 32],
++        cis_digest: u64,
++        steps: usize,
++        verdict: &str,
++    ) {
++        let line = format!(
++            "AEGIS-RECEIPT v0 mode={mode} steps={steps} cis-digest={cis_digest:016x} chain={} verdict={verdict}",
++            hex32(chain)
++        );
++        self.extend(PCR_RECEIPT, &line);
++    }
++
++    /// TPM2_PCR_Read (TPM 2.0 Part 3 §22.4) for SHA-256 PCRs `pcrs` (≤ 8).
++    /// Returns `(pcr, digest)` pairs in selection order, or an error string.
++    pub fn pcr_read(&mut self, pcrs: &[u32]) -> Result<Vec<(u32, [u8; 32])>, String> {
++        if pcrs.is_empty() || pcrs.len() > 8 || pcrs.iter().any(|&p| p >= 24) {
++            return Err(String::from("pcr_read: bad selection"));
++        }
++        let mut select = [0u8; 3];
++        for &p in pcrs {
++            select[(p / 8) as usize] |= 1 << (p % 8);
++        }
++        // TPM2_PCR_Read: TPMI_ST_COMMAND_TAG (TPM_ST_NO_SESSIONS = 0x8001),
++        // commandSize, commandCode 0x0000017E, TPML_PCR_SELECTION{count=1,
++        // {hash=TPM_ALG_SHA256 0x000B, sizeofSelect=3, pcrSelect[3]}}.
++        let mut cmd: Vec<u8> = Vec::with_capacity(20);
++        cmd.extend_from_slice(&0x8001u16.to_be_bytes());
++        cmd.extend_from_slice(&0u32.to_be_bytes()); // size, patched below
++        cmd.extend_from_slice(&0x0000_017Eu32.to_be_bytes());
++        cmd.extend_from_slice(&1u32.to_be_bytes());
++        cmd.extend_from_slice(&0x000Bu16.to_be_bytes());
++        cmd.push(3);
++        cmd.extend_from_slice(&select);
++        let n = cmd.len() as u32;
++        cmd[2..6].copy_from_slice(&n.to_be_bytes());
++
++        let mut rsp = vec![0u8; 1024];
++        self.tcg
++            .submit_command(&cmd, &mut rsp)
++            .map_err(|e| format!("pcr_read: submit_command {e:?}"))?;
++        // Response: tag u16, size u32, rc u32, pcrUpdateCounter u32,
++        // TPML_PCR_SELECTION, TPML_DIGEST{count u32, TPM2B_DIGEST{size u16, buf}...}
++        let be32 = |b: &[u8], o: usize| u32::from_be_bytes([b[o], b[o + 1], b[o + 2], b[o + 3]]);
++        let be16 = |b: &[u8], o: usize| u16::from_be_bytes([b[o], b[o + 1]]);
++        let size = be32(&rsp, 2) as usize;
++        if size < 10 || size > rsp.len() {
++            return Err(format!("pcr_read: bad response size {size}"));
++        }
++        let rc = be32(&rsp, 6);
++        if rc != 0 {
++            return Err(format!("pcr_read: TPM_RC 0x{rc:08x}"));
++        }
++        let mut o = 14usize; // past pcrUpdateCounter
++        let sel_count = be32(&rsp, o) as usize;
++        o += 4;
++        for _ in 0..sel_count {
++            o += 2; // hash alg
++            let sz = rsp[o] as usize;
++            o += 1 + sz;
++        }
++        let dcount = be32(&rsp, o) as usize;
++        o += 4;
++        if dcount != pcrs.len() {
++            return Err(format!(
++                "pcr_read: TPM returned {dcount} digests for {} PCRs (bank not SHA-256?)",
++                pcrs.len()
++            ));
++        }
++        let mut out = Vec::with_capacity(dcount);
++        for &p in pcrs {
++            let dsz = be16(&rsp, o) as usize;
++            o += 2;
++            if dsz != 32 || o + 32 > size {
++                return Err(format!("pcr_read: digest size {dsz} at offset {o}"));
++            }
++            let mut d = [0u8; 32];
++            d.copy_from_slice(&rsp[o..o + 32]);
++            o += 32;
++            out.push((p, d));
++        }
++        Ok(out)
++    }
++
++    /// TCG2 event-log (crypto-agile format) entries for PCRs 4, 12 and 13:
++    /// one line each, `event pcr=<n> type=0x<t> sha256=<hex> data=<ascii|hex>`.
++    pub fn event_log_lines(&mut self) -> Vec<String> {
++        let mut lines = Vec::new();
++        let log = match self.tcg.get_event_log_v2() {
++            Ok(l) => l,
++            Err(e) => {
++                lines.push(format!("eventlog: unavailable ({e:?})"));
++                return lines;
++            }
++        };
++        for ev in log.iter() {
++            let pcr = ev.pcr_index().0;
++            if pcr != PCR_BOOT_APP && pcr != PCR_PAYLOAD && pcr != PCR_RECEIPT {
++                continue;
++            }
++            let mut sha = String::from("-");
++            for (alg, digest) in ev.digests() {
++                if alg == AlgorithmId::SHA256 {
++                    sha = hex(digest);
++                }
++            }
++            let data = ev.event_data();
++            let printable = data.iter().all(|&b| (0x20..0x7f).contains(&b));
++            let shown = if printable && !data.is_empty() {
++                String::from_utf8_lossy(data).into_owned()
++            } else {
++                format!("hex:{}", hex(&data[..data.len().min(96)]))
++            };
++            lines.push(format!(
++                "event pcr={pcr} type=0x{:x} sha256={sha} data={shown}",
++                ev.event_type().0
++            ));
++        }
++        if log.is_truncated() {
++            lines.push(String::from("eventlog: TRUNCATED by firmware"));
++        }
++        lines
++    }
++
++    /// Compose ATTEST.TXT: machine identity, every measurement line, the
++    /// event-log excerpt, and the live PCR values.
++    pub fn report(&mut self, cpuid_line: &str, qualifying: Option<&[u8; 32]>) -> String {
++        let mut s = String::new();
++        s.push_str("AEGIS-ATTEST v0\n");
++        s.push_str(&format!("{cpuid_line}\n"));
++        s.push_str("pcr-bank sha256\n");
++        for (pcr, line) in &self.measured {
++            s.push_str(&format!("measured pcr={pcr} {line}\n"));
++        }
++        for l in self.event_log_lines() {
++            s.push_str(&l);
++            s.push('\n');
++        }
++        match self.pcr_read(&[PCR_BOOT_APP, PCR_PAYLOAD, PCR_RECEIPT]) {
++            Ok(v) => {
++                for (p, d) in v {
++                    s.push_str(&format!("pcr {p} {}\n", hex32(&d)));
++                }
++            }
++            Err(e) => s.push_str(&format!("pcr-read-error {e}\n")),
++        }
++        if let Some(q) = qualifying {
++            match self.quote(q) {
++                Ok(qo) => {
++                    s.push_str(&format!(
++                        "quote-pcrs {},{},{}\n",
++                        qo.pcrs[0], qo.pcrs[1], qo.pcrs[2]
++                    ));
++                    s.push_str(&format!("quote-qualifying {}\n", hex32(&qo.qualifying)));
++                    s.push_str(&format!("quote-pub-x {}\n", hex32(&qo.pub_x)));
++                    s.push_str(&format!("quote-pub-y {}\n", hex32(&qo.pub_y)));
++                    s.push_str(&format!("quote-public {}\n", hex(&qo.public_raw)));
++                    s.push_str(&format!("quote-attest {}\n", hex(&qo.attest)));
++                    s.push_str(&format!("quote-sig-r {}\n", hex32(&qo.sig_r)));
++                    s.push_str(&format!("quote-sig-s {}\n", hex32(&qo.sig_s)));
++                    s.push_str(&format!("quote-retries {}\n", qo.retries));
++                    s.push_str(
++                        "quote-key ecc-p256 ecdsa-sha256 owner-hierarchy transient (this boot)\n",
++                    );
++                }
++                Err(e) => s.push_str(&format!("quote-error {e}\n")),
++            }
++        }
++        for e in &self.errors {
++            s.push_str(&format!("error {e}\n"));
++        }
++        s
++    }
++}
++
++/// A TPM quote over PCRs 4, 12 and 13, signed by a TPM-resident ECC P-256
++/// attestation key created under the owner hierarchy for this boot.
++pub struct QuoteOut {
++    pub pub_x: [u8; 32],
++    pub pub_y: [u8; 32],
++    /// Raw `TPMT_PUBLIC` of the signing key (what `tpm2_readpublic -o` emits
++    /// minus the 2-byte size prefix).
++    pub public_raw: Vec<u8>,
++    /// Raw `TPMS_ATTEST` (the signed bytes).
++    pub attest: Vec<u8>,
++    pub sig_r: [u8; 32],
++    pub sig_s: [u8; 32],
++    pub qualifying: [u8; 32],
++    pub pcrs: [u32; 3],
++    pub retries: u32,
++}
++
++impl Attestor {
++    /// Submit a raw TPM 2.0 command through EFI_TCG2_PROTOCOL and return the
++    /// response slice. Resends (bounded) on the TPM's warning-class "retry"
++    /// codes: on every fresh swtpm/libtpms the first TPM2_Quote after Startup
++    /// answers TPM_RC_RETRY (0x922) and succeeds when re-sent unchanged —
++    /// tpm2-tss and the Linux TPM driver do this resend transparently, the
++    /// TCG2 protocol does not (lab finding 2026-10-06, tpm2min RESULT.md).
++    fn submit<'r>(&mut self, cmd: &[u8], rsp: &'r mut [u8]) -> Result<(&'r [u8], u32), String> {
++        let mut retries = 0u32;
++        loop {
++            for b in rsp.iter_mut() {
++                *b = 0;
++            }
++            self.tcg
++                .submit_command(cmd, rsp)
++                .map_err(|e| format!("submit_command {e:?}"))?;
++            let size = u32::from_be_bytes([rsp[2], rsp[3], rsp[4], rsp[5]]) as usize;
++            if size < 10 || size > rsp.len() {
++                return Err(format!("response size {size} out of range"));
++            }
++            let rc = u32::from_be_bytes([rsp[6], rsp[7], rsp[8], rsp[9]]);
++            if tpm2min::Error::TpmRc(rc).is_retryable() && retries < 8 {
++                retries += 1;
++                continue;
++            }
++            // Re-borrow after the loop decides; the slice lives as long as `rsp`.
++            let out: &'r [u8] = unsafe { core::slice::from_raw_parts(rsp.as_ptr(), size) };
++            return Ok((out, retries));
++        }
++    }
++
++    /// CreatePrimary (owner, ECC P-256 ECDSA/SHA-256, restricted signing key)
++    /// -> Quote(PCR 4,12,13 SHA-256, qualifyingData) -> FlushContext.
++    pub fn quote(&mut self, qualifying: &[u8; 32]) -> Result<QuoteOut, String> {
++        let mut cmd = [0u8; tpm2min::COMMAND_BUFFER_SIZE];
++        let mut rsp = vec![0u8; tpm2min::RESPONSE_BUFFER_SIZE];
++        let n = tpm2min::cmd::create_primary_ecc_p256(&mut cmd, tpm2min::consts::TPM_RH_OWNER)
++            .map_err(|e| format!("create_primary build {e:?}"))?;
++        let (r, retries_a) = self.submit(&cmd[..n], &mut rsp)?;
++        let cp = tpm2min::rsp::create_primary(r).map_err(|e| format!("create_primary {e:?}"))?;
++        let ecc = tpm2min::rsp::ecc_public(cp.public.as_slice())
++            .map_err(|e| format!("ecc_public {e:?}"))?;
++        let handle = cp.handle;
++        let public_raw = cp.public.as_slice().to_vec();
++
++        let sel = PcrSelectionList::single(PcrSelection::sha256(&[
++            PCR_BOOT_APP as u8,
++            PCR_PAYLOAD as u8,
++            PCR_RECEIPT as u8,
++        ]));
++        let n = tpm2min::cmd::quote(&mut cmd, handle, qualifying, SigScheme::Null, &sel)
++            .map_err(|e| format!("quote build {e:?}"))?;
++        let quote_res = self.submit(&cmd[..n], &mut rsp);
++        // Always flush the transient key, even if the quote failed.
++        let mut flush = [0u8; 32];
++        if let Ok(m) = tpm2min::cmd::flush_context(&mut flush, handle) {
++            let mut frsp = [0u8; 64];
++            let _ = self.tcg.submit_command(&flush[..m], &mut frsp);
++        }
++        let (r, retries_b) = quote_res?;
++        let q = tpm2min::rsp::quote(r).map_err(|e| format!("quote parse {e:?}"))?;
++        // Sanity-parse the attestation structure before reporting it.
++        let a =
++            tpm2min::rsp::attest(q.attest.as_slice()).map_err(|e| format!("attest parse {e:?}"))?;
++        if a.extra_data.as_slice() != qualifying {
++            return Err(String::from("quote extraData != qualifyingData"));
++        }
++        Ok(QuoteOut {
++            pub_x: ecc.x,
++            pub_y: ecc.y,
++            public_raw,
++            attest: q.attest.as_slice().to_vec(),
++            sig_r: q.signature.r,
++            sig_s: q.signature.s,
++            qualifying: *qualifying,
++            pcrs: [PCR_BOOT_APP, PCR_PAYLOAD, PCR_RECEIPT],
++            retries: retries_a + retries_b,
++        })
++    }
++}
++
++/// Host-side replay rule, stated here so the verifier and the unikernel agree:
++/// `PCR_n = SHA256(PCR_{n-1} || SHA256(line_n))` starting from 32 zero bytes,
++/// over the `measured pcr=<n>` lines of ATTEST.TXT in order (for PCR 12 and
++/// 13; PCR 4's events are the firmware's and replay from the event log's own
++/// digests). Pure function, used by the self-check below.
++pub fn replay_pcr(lines: &[&str]) -> [u8; 32] {
++    let mut pcr = [0u8; 32];
++    for l in lines {
++        let d = sha256(l.as_bytes());
++        let mut cat = [0u8; 64];
++        cat[..32].copy_from_slice(&pcr);
++        cat[32..].copy_from_slice(&d);
++        pcr = sha256(&cat);
++    }
++    pcr
++}
+diff --git a/aegis-uefi/src/main.rs b/aegis-uefi/src/main.rs
+index 63829f5..35e8103 100644
+--- a/aegis-uefi/src/main.rs
++++ b/aegis-uefi/src/main.rs
+@@ -3,10 +3,13 @@
+ 
+ extern crate alloc;
+ 
++use alloc::borrow::ToOwned;
+ use alloc::format;
++use alloc::string::String;
+ use core::fmt::Write;
+ 
+ mod allocator;
++mod attest;
+ mod console;
+ mod cpu;
+ mod font;
+@@ -40,6 +43,35 @@ fn boot_log(root: &mut uefi::proto::media::file::Directory, msg: &str) {
+     }
+ }
+ 
++/// Write (create or replace) a whole file on the boot volume. Used for
++/// ATTEST.TXT and a minted RECEIPT.TXT — artifacts a verifier reads back.
++fn write_whole_file(
++    root: &mut uefi::proto::media::file::Directory,
++    name: &str,
++    data: &[u8],
++) -> bool {
++    use uefi::proto::media::file::{File, FileAttribute, FileMode, FileType};
++    let mut buf = [0u16; 32];
++    let Ok(cstr) = uefi::CStr16::from_str_with_buf(name, &mut buf) else {
++        return false;
++    };
++    // Replace semantics: delete a stale copy first (ignore "not found").
++    if let Ok(h) = root.open(cstr, FileMode::CreateReadWrite, FileAttribute::empty())
++        && let Ok(FileType::Regular(f)) = h.into_type()
++    {
++        let _ = f.delete();
++    }
++    let Ok(h) = root.open(cstr, FileMode::CreateReadWrite, FileAttribute::empty()) else {
++        return false;
++    };
++    let Ok(FileType::Regular(mut f)) = h.into_type() else {
++        return false;
++    };
++    let ok = f.write(data).is_ok() && f.flush().is_ok();
++    f.close();
++    ok
++}
++
+ /// Wall-clock seconds since midnight, from UEFI Runtime Services GetTime().
+ /// Independent of the TSC, which is invariant and therefore cannot see a
+ /// throttled core. Returns None if the firmware refuses.
+@@ -676,6 +708,26 @@ fn main() -> uefi::Status {
+         }
+     }
+ 
++    // 4e. Mint request, if the stick carries one and no receipt: MINT.TXT =
++    // first line max_new tokens, remaining lines the prompt. The unikernel
++    // then runs the CIS-1 decode itself and writes RECEIPT.TXT (attest.rs).
++    let mut mint_bytes: alloc::vec::Vec<u8> = alloc::vec::Vec::new();
++    if receipt_bytes.is_empty()
++        && let Some(msize) = get_file_size(&mut root, "MINT.TXT")
++        && msize > 0
++        && msize <= 8 * 1024
++    {
++        mint_bytes.resize(msize, 0);
++        if load_file_into(&mut root, "MINT.TXT", bounce_slice, &mut mint_bytes) {
++            boot_log(
++                &mut root,
++                "STAGE 4e: MINT.TXT loaded — receipt mint mode armed",
++            );
++        } else {
++            mint_bytes.clear();
++        }
++    }
++
+     // 5. Initialize the massive second block LAST so large files got priority for contiguous physical RAM
+     allocator::init_uefi_alloc_large();
+     boot_log(&mut root, "STAGE 5: working heap online");
+@@ -690,6 +742,53 @@ fn main() -> uefi::Status {
+         core::fmt::Result::Ok(())
+     });
+ 
++    // ---- AEGIS-ATTEST: measure the payload into the TPM (if any) ----------
++    // What was loaded goes to PCR 12 before anything runs on it. No TPM is a
++    // finding, not an error: the kit still works, it just cannot prove where.
++    let mut attestor = attest::Attestor::open();
++    let mut attest_cpuid = String::new();
++    {
++        let mut vb = [0u8; 12];
++        let mut bb = [0u8; 48];
++        let vendor = cpu::vendor_string(&mut vb);
++        let brand = cpu::brand_string(&mut bb);
++        let (fam, model_id, step) = cpu::family_model_stepping();
++        let _ = write!(
++            attest_cpuid,
++            "cpuid vendor={} brand=\"{}\" family={} model={} stepping={} hypervisor={}",
++            vendor,
++            brand,
++            fam,
++            model_id,
++            step,
++            cpu::is_hypervisor() as u8
++        );
++    }
++    match attestor.as_mut() {
++        Some(a) => {
++            boot_log(
++                &mut root,
++                "TPM: EFI_TCG2_PROTOCOL present — measuring payload into PCR 12",
++            );
++            let receipt_opt = if receipt_bytes.is_empty() {
++                None
++            } else {
++                Some(&receipt_bytes[..])
++            };
++            a.measure_artifacts(model_slice, embeddings_slice, vocab_slice, receipt_opt);
++            for (pcr, line) in a.measured.clone() {
++                boot_log(&mut root, &format!("TPM: extended pcr{pcr} <- {line}"));
++            }
++            for e in a.errors.clone() {
++                boot_log(&mut root, &format!("TPM: error {e}"));
++            }
++        }
++        None => boot_log(
++            &mut root,
++            "TPM: no EFI_TCG2_PROTOCOL — attestation disabled (no TPM, or disabled in firmware setup)",
++        ),
++    }
++
+     // ---- Provable AI Kit: verifier mode --------------------------------
+     // A receipt on the stick turns this boot into a witness verification:
+     // replay the receipt's decode through the CIS-1 full-integer engine and
+@@ -741,6 +840,40 @@ fn main() -> uefi::Status {
+                 verdict.detail.lines().last().unwrap_or("")
+             ),
+         );
++        if let Some(a) = attestor.as_mut() {
++            if let Some(chain) = verdict.chain {
++                a.record_receipt(
++                    "verify",
++                    &chain,
++                    verdict.cis_digest,
++                    verdict.steps,
++                    if verdict.pass { "PASS" } else { "FAIL" },
++                );
++            }
++            let qual = aegis_core::witness::sha256(&receipt_bytes);
++            let report = a.report(&attest_cpuid, Some(&qual));
++            let wrote = write_whole_file(&mut root, "ATTEST.TXT", report.as_bytes());
++            for line in report.lines() {
++                if line.starts_with("pcr ")
++                    || line.starts_with("pcr-read-error")
++                    || line.starts_with("error")
++                    || line.starts_with("quote-error")
++                    || line.starts_with("quote-retries")
++                {
++                    boot_log(&mut root, &format!("TPM: {line}"));
++                }
++            }
++            boot_log(&mut root, &format!("STAGE A: ATTEST.TXT written={wrote}"));
++            let _ = console::with_console(|st| {
++                for line in report.lines() {
++                    if line.starts_with("pcr ") {
++                        let _ = st.write_str(line);
++                        let _ = st.write_str("\r\n");
++                    }
++                }
++                core::fmt::Result::Ok(())
++            });
++        }
+         // SAFETY: qemu-test builds write the exit code to QEMU's
+         // isa-debug-exit port and never return; production builds compile
+         // this to a no-op and fall through to the on-screen halt below.
+@@ -759,6 +892,103 @@ fn main() -> uefi::Status {
+         }
+     }
+ 
++    // ---- AEGIS-ATTEST: mint mode ----------------------------------------
++    // MINT.TXT present: run the CIS-1 FullInt decode here, with no OS, write
++    // RECEIPT.TXT in witness v1 format (verifiable by cis_witness / cis-verify
++    // on any host), and commit its chain to PCR 13.
++    if !mint_bytes.is_empty() {
++        let text = String::from_utf8_lossy(&mint_bytes).into_owned();
++        let mut lines = text.lines();
++        let max_new: usize = lines
++            .next()
++            .and_then(|l| l.trim().parse().ok())
++            .unwrap_or(64)
++            .min(1024);
++        let prompt: String = lines.collect::<alloc::vec::Vec<_>>().join("\n");
++        let prompt = prompt.trim().to_owned();
++        let _ = console::with_console(|st| {
++            let _ = st.write_str(
++                "\r\n[AEGIS] MINT.TXT found — minting a CIS-1 receipt with no OS underneath\r\n",
++            );
++            core::fmt::Result::Ok(())
++        });
++        let model_sha = aegis_core::witness::sha256(model_slice);
++        let embed_sha = aegis_core::witness::sha256(embeddings_slice);
++        let vocab_sha = aegis_core::witness::sha256(vocab_slice);
++        let hashes = (&model_sha, &embed_sha, &vocab_sha);
++        let mut minted_receipt: Option<String> = None;
++        let ok = match verifier::replay(
++            model_slice,
++            embeddings_slice,
++            vocab_slice,
++            hashes,
++            &prompt,
++            max_new,
++        ) {
++            Ok(rep) => {
++                let receipt = verifier::render_receipt(hashes, &prompt, max_new, &rep);
++                minted_receipt = Some(receipt.clone());
++                let wrote = write_whole_file(&mut root, "RECEIPT.TXT", receipt.as_bytes());
++                boot_log(
++                    &mut root,
++                    &format!(
++                        "STAGE M: minted receipt steps={} cis-digest={:016x} written={wrote}",
++                        rep.generated.len(),
++                        rep.fnv
++                    ),
++                );
++                if let Some(a) = attestor.as_mut() {
++                    a.record_receipt("mint", &rep.chain, rep.fnv, rep.generated.len(), "MINTED");
++                }
++                let _ = console::with_console(|st| {
++                    for line in receipt.lines() {
++                        let _ = st.write_str(line);
++                        let _ = st.write_str("\r\n");
++                    }
++                    core::fmt::Result::Ok(())
++                });
++                wrote
++            }
++            Err(e) => {
++                boot_log(&mut root, &format!("STAGE M FAILED: {e}"));
++                false
++            }
++        };
++        if let Some(a) = attestor.as_mut() {
++            let qual = minted_receipt
++                .as_ref()
++                .map(|r| aegis_core::witness::sha256(r.as_bytes()));
++            let report = a.report(&attest_cpuid, qual.as_ref());
++            let wrote = write_whole_file(&mut root, "ATTEST.TXT", report.as_bytes());
++            for line in report.lines() {
++                if line.starts_with("pcr ")
++                    || line.starts_with("pcr-read-error")
++                    || line.starts_with("error")
++                    || line.starts_with("quote-error")
++                    || line.starts_with("quote-retries")
++                {
++                    boot_log(&mut root, &format!("TPM: {line}"));
++                }
++            }
++            boot_log(&mut root, &format!("STAGE A: ATTEST.TXT written={wrote}"));
++        }
++        // SAFETY: as in verifier mode — qemu-test builds exit through the
++        // debug port and never return; production builds fall through.
++        unsafe {
++            exit_uefi_test_runner(ok);
++        }
++        #[allow(unreachable_code)]
++        {
++            let _ = console::with_console(|st| {
++                let _ = st.write_str("\r\nReceipt minted. It is safe to power off.\r\n");
++                core::fmt::Result::Ok(())
++            });
++            loop {
++                uefi::boot::stall(core::time::Duration::from_secs(60));
++            }
++        }
++    }
++
+     let mut engine = match aegis_core::inference::TernaryInferenceEngine::new(
+         embeddings_slice,
+         model_slice,
+diff --git a/aegis-uefi/src/verifier.rs b/aegis-uefi/src/verifier.rs
+index 79001fa..d704183 100644
+--- a/aegis-uefi/src/verifier.rs
++++ b/aegis-uefi/src/verifier.rs
+@@ -18,6 +18,7 @@ use aegis_core::tokenizer::AegisTokenizer;
+ use aegis_core::witness::{WitnessChain, WitnessHeader, hex_lower, sha256};
+ use alloc::format;
+ use alloc::string::String;
++use alloc::vec;
+ use alloc::vec::Vec;
+ use core::fmt::Write as _;
+ 
+@@ -26,6 +27,119 @@ pub struct Verdict {
+     /// Human-readable transcript of the verification, console- and
+     /// BOOTLOG-ready.
+     pub detail: String,
++    /// Replay outcome, when the replay ran: the witness chain this machine
++    /// computed, the FNV token-sequence digest, and the generated step count.
++    /// Consumed by `attest` (PCR 13) — zero/None when the replay never ran.
++    pub chain: Option<[u8; 32]>,
++    pub cis_digest: u64,
++    pub steps: usize,
++}
++
++fn fail(detail: String) -> Verdict {
++    Verdict {
++        pass: false,
++        detail,
++        chain: None,
++        cis_digest: 0,
++        steps: 0,
++    }
++}
++
++/// Outcome of one deterministic CIS-1 FullInt greedy decode.
++pub struct Replay {
++    pub prompt_toks: usize,
++    pub generated: Vec<u32>,
++    pub fnv: u64,
++    pub chain: [u8; 32],
++}
++
++/// The deterministic decode `run` (verify) and `mint` share — step order and
++/// digest folds are EXACTLY `aegis-linux/examples/cis_witness.rs`'s, so a
++/// receipt minted here verifies with the Linux tools and vice versa.
++pub fn replay(
++    model: &[u8],
++    embed: &[u8],
++    vocab: &[u8],
++    hashes: (&[u8; 32], &[u8; 32], &[u8; 32]),
++    prompt: &str,
++    max_new: usize,
++) -> Result<Replay, &'static str> {
++    let tensors = SafeTensors::deserialize(model).map_err(|_| "MODEL.SAF did not parse")?;
++    let config = tensors
++        .metadata_field("aegis_config")
++        .ok()
++        .flatten()
++        .and_then(|j| ModelConfig::from_json(&j).ok())
++        .ok_or("MODEL.SAF carries no parseable aegis_config")?;
++    let pipeline =
++        FullBitNetPipeline::new(&tensors, embed, &config).map_err(|_| "pipeline build")?;
++    let cis_model = CisModel::new(&pipeline, &config).map_err(|_| "CIS model conversion")?;
++    let mut engine = CisEngine::new_with_mode(&cis_model, CisMode::FullInt);
++    let tokenizer = AegisTokenizer::new(vocab).map_err(|_| "VOCAB.BIN did not parse")?;
++    let prompt_ids = tokenizer.encode(prompt);
++    if prompt_ids.is_empty() || prompt_ids.len() + max_new > config.max_position_embeddings {
++        return Err("prompt empty or exceeds context");
++    }
++    let header = WitnessHeader {
++        model_sha: hashes.0,
++        embed_sha: hashes.1,
++        vocab_sha: hashes.2,
++        max_new: max_new as u64,
++        prompt: prompt.as_bytes(),
++    };
++    let mut fnv: u64 = 0xcbf2_9ce4_8422_2325;
++    let mut chain = WitnessChain::from_header(&header);
++    let mut pos = 0usize;
++    for &t in &prompt_ids {
++        fnv = fnv1a64(fnv, &t.to_le_bytes());
++        engine.forward_step_int(t, pos);
++        pos += 1;
++    }
++    let mut generated: Vec<u32> = Vec::with_capacity(max_new);
++    for _ in 0..max_new {
++        let tok = {
++            let logits = engine.decode_logits();
++            let t = argmax_i64(logits);
++            chain.fold_step(t, logits);
++            t
++        };
++        fnv = fnv1a64(fnv, &tok.to_le_bytes());
++        generated.push(tok);
++        engine.forward_step_int(tok, pos);
++        pos += 1;
++    }
++    Ok(Replay {
++        prompt_toks: prompt_ids.len(),
++        generated,
++        fnv,
++        chain: chain.digest(),
++    })
++}
++
++/// Render a witness v1 receipt exactly as `cis_witness gen` prints it (LF
++/// line endings, same key order), so the Linux verifiers accept it unchanged.
++pub fn render_receipt(
++    hashes: (&[u8; 32], &[u8; 32], &[u8; 32]),
++    prompt: &str,
++    max_new: usize,
++    r: &Replay,
++) -> String {
++    let mut s = String::new();
++    let _ = writeln!(s, "AEGIS-WITNESS v1-CIS");
++    let _ = writeln!(s, "model {}", hex32(hashes.0));
++    let _ = writeln!(s, "embed {}", hex32(hashes.1));
++    let _ = writeln!(s, "vocab {}", hex32(hashes.2));
++    let _ = writeln!(s, "maxtok {max_new}");
++    let mut ph = vec![0u8; prompt.len() * 2];
++    let n = hex_lower(prompt.as_bytes(), &mut ph);
++    let _ = writeln!(s, "prompt-hex {}", String::from_utf8_lossy(&ph[..n]));
++    let _ = writeln!(s, "prompt-toks {}", r.prompt_toks);
++    let _ = writeln!(s, "gen-toks {}", r.generated.len());
++    let ids: Vec<String> = r.generated.iter().map(|t| format!("{t}")).collect();
++    let _ = writeln!(s, "token-ids {}", ids.join(","));
++    let _ = writeln!(s, "cis-digest {:016x}", r.fnv);
++    let _ = writeln!(s, "chain {}", hex32(&r.chain));
++    s
+ }
+ 
+ fn hex32(d: &[u8; 32]) -> String {
+@@ -114,19 +228,13 @@ pub fn run(model: &[u8], embed: &[u8], vocab: &[u8], receipt_bytes: &[u8]) -> Ve
+     let text = match core::str::from_utf8(receipt_bytes) {
+         Ok(t) => t,
+         Err(_) => {
+-            return Verdict {
+-                pass: false,
+-                detail: String::from("RECEIPT.TXT is not valid UTF-8"),
+-            };
++            return fail(String::from("RECEIPT.TXT is not valid UTF-8"));
+         }
+     };
+     let r = match parse_receipt(text) {
+         Some(r) => r,
+         None => {
+-            return Verdict {
+-                pass: false,
+-                detail: String::from("RECEIPT.TXT does not parse as witness v1"),
+-            };
++            return fail(String::from("RECEIPT.TXT does not parse as witness v1"));
+         }
+     };
+ 
+@@ -147,114 +255,30 @@ pub fn run(model: &[u8], embed: &[u8], vocab: &[u8], receipt_bytes: &[u8]) -> Ve
+                 &claimed[..16.min(claimed.len())],
+                 &local[..16]
+             );
+-            return Verdict {
+-                pass: false,
+-                detail: d,
+-            };
++            return fail(d);
+         }
+     }
+     let _ = writeln!(d, "artifacts: 3/3 hashes match the receipt");
+ 
+     // 2. Replay under CIS-1 FullInt — the same loop as cis_decode /
+     //    cis_witness, so the fnv fold reproduces the CI-pinned constant.
+-    let tensors = match SafeTensors::deserialize(model) {
+-        Ok(t) => t,
+-        Err(_) => {
+-            d.push_str("FAIL: MODEL.SAF did not parse");
+-            return Verdict {
+-                pass: false,
+-                detail: d,
+-            };
+-        }
+-    };
+-    let config = match tensors
+-        .metadata_field("aegis_config")
+-        .ok()
+-        .flatten()
+-        .and_then(|j| ModelConfig::from_json(&j).ok())
+-    {
+-        Some(c) => c,
+-        None => {
+-            d.push_str("FAIL: MODEL.SAF carries no parseable aegis_config");
+-            return Verdict {
+-                pass: false,
+-                detail: d,
+-            };
+-        }
+-    };
+-    let pipeline = match FullBitNetPipeline::new(&tensors, embed, &config) {
+-        Ok(p) => p,
+-        Err(_) => {
+-            d.push_str("FAIL: pipeline build");
+-            return Verdict {
+-                pass: false,
+-                detail: d,
+-            };
++    let rep = match replay(
++        model,
++        embed,
++        vocab,
++        (&model_sha, &embed_sha, &vocab_sha),
++        &r.prompt,
++        r.maxtok,
++    ) {
++        Ok(x) => x,
++        Err(e) => {
++            let _ = write!(d, "FAIL: {e}");
++            return fail(d);
+         }
+     };
+-    let cis_model = match CisModel::new(&pipeline, &config) {
+-        Ok(m) => m,
+-        Err(_) => {
+-            d.push_str("FAIL: CIS model conversion");
+-            return Verdict {
+-                pass: false,
+-                detail: d,
+-            };
+-        }
+-    };
+-    let mut engine = CisEngine::new_with_mode(&cis_model, CisMode::FullInt);
+-
+-    let tokenizer = match AegisTokenizer::new(vocab) {
+-        Ok(t) => t,
+-        Err(_) => {
+-            d.push_str("FAIL: VOCAB.BIN did not parse");
+-            return Verdict {
+-                pass: false,
+-                detail: d,
+-            };
+-        }
+-    };
+-    let prompt_ids = tokenizer.encode(&r.prompt);
+-    if prompt_ids.is_empty() || prompt_ids.len() + r.maxtok > config.max_position_embeddings {
+-        d.push_str("FAIL: prompt empty or exceeds context");
+-        return Verdict {
+-            pass: false,
+-            detail: d,
+-        };
+-    }
+-
+-    let header = WitnessHeader {
+-        model_sha: &model_sha,
+-        embed_sha: &embed_sha,
+-        vocab_sha: &vocab_sha,
+-        max_new: r.maxtok as u64,
+-        prompt: r.prompt.as_bytes(),
+-    };
+-    let mut fnv: u64 = 0xcbf2_9ce4_8422_2325;
+-    let mut chain = WitnessChain::from_header(&header);
+-
+-    let mut pos = 0usize;
+-    for &t in &prompt_ids {
+-        fnv = fnv1a64(fnv, &t.to_le_bytes());
+-        engine.forward_step_int(t, pos);
+-        pos += 1;
+-    }
+-    let mut generated: Vec<u32> = Vec::with_capacity(r.maxtok);
+-    for _ in 0..r.maxtok {
+-        let tok = {
+-            let logits = engine.decode_logits();
+-            let t = argmax_i64(logits);
+-            chain.fold_step(t, logits);
+-            t
+-        };
+-        fnv = fnv1a64(fnv, &tok.to_le_bytes());
+-        generated.push(tok);
+-        engine.forward_step_int(tok, pos);
+-        pos += 1;
+-    }
+ 
+-    let local_fnv = format!("{fnv:016x}");
+-    let local_chain = hex32(&chain.digest());
++    let local_fnv = format!("{:016x}", rep.fnv);
++    let local_chain = hex32(&rep.chain);
+     let _ = writeln!(
+         d,
+         "receipt cis-digest {} chain {}..",
+@@ -268,25 +292,35 @@ pub fn run(model: &[u8], embed: &[u8], vocab: &[u8], receipt_bytes: &[u8]) -> Ve
+         &local_chain[..16]
+     );
+ 
+-    if local_fnv == r.cis_digest && local_chain == r.chain && generated == r.token_ids {
++    if local_fnv == r.cis_digest && local_chain == r.chain && rep.generated == r.token_ids {
+         let _ = write!(
+             d,
+             "VERIFY PASS — this machine reproduced all {} decode steps' full logit vectors bit-for-bit, with no OS underneath",
+-            generated.len()
++            rep.generated.len()
+         );
+         Verdict {
+             pass: true,
+             detail: d,
++            chain: Some(rep.chain),
++            cis_digest: rep.fnv,
++            steps: rep.generated.len(),
+         }
+     } else {
+-        if generated != r.token_ids {
+-            let first = generated.iter().zip(&r.token_ids).position(|(a, b)| a != b);
++        if rep.generated != r.token_ids {
++            let first = rep
++                .generated
++                .iter()
++                .zip(&r.token_ids)
++                .position(|(a, b)| a != b);
+             let _ = writeln!(d, "token divergence at generated index {first:?}");
+         }
+         let _ = write!(d, "VERIFY FAIL — replay diverged from the receipt");
+         Verdict {
+             pass: false,
+             detail: d,
++            chain: Some(rep.chain),
++            cis_digest: rep.fnv,
++            steps: rep.generated.len(),
+         }
+     }
+ }
+diff --git a/tpm2min/Cargo.toml b/tpm2min/Cargo.toml
+new file mode 100644
+index 0000000..1ebc0f7
+--- /dev/null
++++ b/tpm2min/Cargo.toml
+@@ -0,0 +1,11 @@
++[package]
++name = "tpm2min"
++version = "0.1.0"
++edition = "2021"
++description = "Dependency-free no_std marshalling/parsing of a minimal set of TPM 2.0 commands (Startup, PCR_Read, PCR_Extend, CreatePrimary, Quote, FlushContext)"
++license = "MIT OR Apache-2.0"
++
++[lib]
++path = "src/lib.rs"
++
++[dependencies]
+diff --git a/tpm2min/src/cmd.rs b/tpm2min/src/cmd.rs
+new file mode 100644
+index 0000000..3bbd888
+--- /dev/null
++++ b/tpm2min/src/cmd.rs
+@@ -0,0 +1,389 @@
++//! Command builders.  Every function writes a complete command into `out`
++//! and returns the number of bytes written (= `commandSize`).
++//!
++//! Common header (Part 1 §18.9 / Part 3 §5.2 "Command Header"):
++//!
++//! ```text
++//! offset  size  field
++//! 0       2     TPMI_ST_COMMAND_TAG tag     (0x8001 no sessions / 0x8002 sessions)
++//! 2       4     UINT32 commandSize           (total bytes incl. header)
++//! 6       4     TPM_CC commandCode
++//! 10      ...   handles, [authorizationSize + authorization area], parameters
++//! ```
++//!
++//! Password authorization area (Part 1 §19.4 / Part 3 §5.3 "Authorization
++//! Area"), one `TPMS_AUTH_COMMAND` (Part 2 §10.13.2) for the `TPM_RS_PW`
++//! pseudo-session with an empty password:
++//!
++//! ```text
++//! UINT32 authorizationSize          = 9
++//! TPMI_SH_AUTH_SESSION sessionHandle = 0x40000009 (TPM_RS_PW)
++//! TPM2B_NONCE nonce                  = 0000        (empty)
++//! TPMA_SESSION sessionAttributes     = 01          (continueSession)
++//! TPM2B_AUTH hmac                    = 0000        (empty password)
++//! ```
++
++use crate::consts::*;
++use crate::pcr::PcrSelectionList;
++use crate::{Error, Result, Writer};
++
++/// Exact byte count of `TPM2_Startup`.
++pub const STARTUP_LEN: usize = 12;
++/// Exact byte count of `TPM2_FlushContext`.
++pub const FLUSH_CONTEXT_LEN: usize = 14;
++/// Exact byte count of `TPM2_PCR_Extend` for one SHA-256 digest.
++pub const PCR_EXTEND_SHA256_LEN: usize = 65;
++/// Exact byte count of `TPM2_CreatePrimary` with the fixed ECC template.
++pub const CREATE_PRIMARY_ECC_P256_LEN: usize = 65;
++
++/// Signature scheme passed to `TPM2_Quote` as `inScheme` (`TPMT_SIG_SCHEME`,
++/// Part 2 §11.2.1.5).
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub enum SigScheme {
++    /// `TPM_ALG_NULL` — use the scheme baked into the signing key.  Marshals as
++    /// a bare `UINT16 0x0010` (no `details`).
++    Null,
++    /// `TPM_ALG_ECDSA` with `TPMS_SCHEME_HASH hashAlg = TPM_ALG_SHA256`.
++    /// Marshals as `0018 000B`.
++    EcdsaSha256,
++}
++
++impl SigScheme {
++    fn marshal(self, w: &mut Writer<'_>) -> Result<()> {
++        match self {
++            SigScheme::Null => w.put_u16(TPM_ALG_NULL),
++            SigScheme::EcdsaSha256 => {
++                w.put_u16(TPM_ALG_ECDSA)?;
++                w.put_u16(TPM_ALG_SHA256)
++            }
++        }
++    }
++}
++
++fn begin<'a>(out: &'a mut [u8], tag: u16, cc: u32) -> Result<Writer<'a>> {
++    let mut w = Writer::new(out);
++    w.put_u16(tag)?;
++    w.put_u32(0)?; // commandSize, patched in `end`
++    w.put_u32(cc)?;
++    Ok(w)
++}
++
++fn end(mut w: Writer<'_>) -> Result<usize> {
++    let n = w.position();
++    w.patch_u32(2, u32::try_from(n).map_err(|_| Error::TooLarge)?)?;
++    Ok(w.finish())
++}
++
++/// Write `authorizationSize` + one password (`TPM_RS_PW`) `TPMS_AUTH_COMMAND`.
++pub fn password_auth_area(w: &mut Writer<'_>, password: &[u8]) -> Result<()> {
++    let auth_len = 4 + 2 + 1 + 2 + password.len();
++    w.put_u32(u32::try_from(auth_len).map_err(|_| Error::TooLarge)?)?;
++    w.put_u32(TPM_RS_PW)?;
++    w.put_u16(0)?; // nonce
++    w.put_u8(TPMA_SESSION_CONTINUE_SESSION)?;
++    w.put_2b(password)
++}
++
++/// `TPM2_Startup` (Part 3 §9.3).
++///
++/// ```text
++/// 8001 | 0000000c | 00000144 | TPM_SU startupType (UINT16)
++/// ```
++pub fn startup(out: &mut [u8], startup_type: u16) -> Result<usize> {
++    let mut w = begin(out, TPM_ST_NO_SESSIONS, TPM_CC_STARTUP)?;
++    w.put_u16(startup_type)?;
++    end(w)
++}
++
++/// `TPM2_PCR_Read` (Part 3 §22.4).
++///
++/// ```text
++/// 8001 | size | 0000017e | TPML_PCR_SELECTION pcrSelectionIn
++/// ```
++/// For `sha256:4,12`: `8001 00000014 0000017e 00000001 000b 03 10 10 00`.
++pub fn pcr_read(out: &mut [u8], selection: &PcrSelectionList) -> Result<usize> {
++    let mut w = begin(out, TPM_ST_NO_SESSIONS, TPM_CC_PCR_READ)?;
++    selection.marshal(&mut w)?;
++    end(w)
++}
++
++/// `TPM2_PCR_Extend` (Part 3 §22.2) of one SHA-256 digest into `pcr_index`
++/// with an empty password session.
++///
++/// ```text
++/// 8002 | size=0x41 | 00000182
++/// TPMI_DH_PCR pcrHandle (UINT32 = pcr index)
++/// authorizationSize=00000009, auth area 40000009 0000 01 0000
++/// TPML_DIGEST_VALUES digests: UINT32 count=1,
++///     TPMT_HA { TPMI_ALG_HASH hashAlg=000b, BYTE digest[32] }
++/// ```
++pub fn pcr_extend_sha256(out: &mut [u8], pcr_index: u32, digest: &[u8; 32]) -> Result<usize> {
++    let mut w = begin(out, TPM_ST_SESSIONS, TPM_CC_PCR_EXTEND)?;
++    w.put_u32(pcr_index)?;
++    password_auth_area(&mut w, &[])?;
++    w.put_u32(1)?; // TPML_DIGEST_VALUES.count
++    w.put_u16(TPM_ALG_SHA256)?; // TPMT_HA.hashAlg
++    w.put_bytes(digest)?; // TPMT_HA.digest (TPMU_HA, sized by hashAlg)
++    end(w)
++}
++
++/// The fixed `TPMT_PUBLIC` template (Part 2 §12.2.4) used by
++/// [`create_primary_ecc_p256`]: ECC P-256, ECDSA/SHA-256, restricted signing
++/// key, `fixedTPM | fixedParent | sensitiveDataOrigin | userWithAuth |
++/// restricted | sign`, empty `authPolicy`, empty `unique` point.
++///
++/// ```text
++/// 0023        TPMI_ALG_PUBLIC   type         = TPM_ALG_ECC
++/// 000b        TPMI_ALG_HASH     nameAlg      = TPM_ALG_SHA256
++/// 00050072    TPMA_OBJECT       objectAttributes
++/// 0000        TPM2B_DIGEST      authPolicy   (empty)
++/// -- TPMS_ECC_PARMS parameters (Part 2 §12.2.3.6) --
++/// 0010        TPMT_SYM_DEF_OBJECT symmetric  = TPM_ALG_NULL (no keyBits/mode)
++/// 0018 000b   TPMT_ECC_SCHEME     scheme     = ECDSA, hashAlg SHA256
++/// 0003        TPMI_ECC_CURVE      curveID    = TPM_ECC_NIST_P256
++/// 0010        TPMT_KDF_SCHEME     kdf        = TPM_ALG_NULL
++/// -- TPMS_ECC_POINT unique --
++/// 0000        TPM2B_ECC_PARAMETER x (empty)
++/// 0000        TPM2B_ECC_PARAMETER y (empty)
++/// ```
++pub const ECC_P256_SIGNING_TEMPLATE: [u8; 24] = [
++    0x00, 0x23, // type = ECC
++    0x00, 0x0B, // nameAlg = SHA256
++    0x00, 0x05, 0x00, 0x72, // objectAttributes
++    0x00, 0x00, // authPolicy
++    0x00, 0x10, // symmetric = NULL
++    0x00, 0x18, 0x00, 0x0B, // scheme = ECDSA / SHA256
++    0x00, 0x03, // curveID = NIST P-256
++    0x00, 0x10, // kdf = NULL
++    0x00, 0x00, // unique.x
++    0x00, 0x00, // unique.y
++];
++
++/// Write the `TPMT_PUBLIC` body of [`ECC_P256_SIGNING_TEMPLATE`] field by field
++/// (kept separate so the unit test can compare it to the hand-written bytes).
++pub fn write_ecc_p256_signing_template(w: &mut Writer<'_>) -> Result<()> {
++    w.put_u16(TPM_ALG_ECC)?;
++    w.put_u16(TPM_ALG_SHA256)?;
++    w.put_u32(SIGNING_KEY_ATTRIBUTES)?;
++    w.put_2b(&[])?; // authPolicy
++    w.put_u16(TPM_ALG_NULL)?; // symmetric
++    w.put_u16(TPM_ALG_ECDSA)?; // scheme.scheme
++    w.put_u16(TPM_ALG_SHA256)?; // scheme.details.hashAlg
++    w.put_u16(TPM_ECC_NIST_P256)?; // curveID
++    w.put_u16(TPM_ALG_NULL)?; // kdf
++    w.put_2b(&[])?; // unique.x
++    w.put_2b(&[]) // unique.y
++}
++
++/// `TPM2_CreatePrimary` (Part 3 §24.1) under `hierarchy` (normally
++/// [`TPM_RH_OWNER`]) with the fixed ECC P-256 signing template and empty
++/// hierarchy password.
++///
++/// ```text
++/// 8002 | size=0x41 | 00000131
++/// TPMI_RH_HIERARCHY primaryHandle          40000001
++/// authorizationSize + password auth area   00000009 40000009 0000 01 0000
++/// TPM2B_SENSITIVE_CREATE inSensitive       0004 { TPM2B_AUTH userAuth 0000, TPM2B_SENSITIVE_DATA data 0000 }
++/// TPM2B_PUBLIC inPublic                    0018 + ECC_P256_SIGNING_TEMPLATE (24 bytes)
++/// TPM2B_DATA outsideInfo                   0000
++/// TPML_PCR_SELECTION creationPCR           00000000
++/// ```
++pub fn create_primary_ecc_p256(out: &mut [u8], hierarchy: u32) -> Result<usize> {
++    let mut w = begin(out, TPM_ST_SESSIONS, TPM_CC_CREATE_PRIMARY)?;
++    w.put_u32(hierarchy)?;
++    password_auth_area(&mut w, &[])?;
++    // TPM2B_SENSITIVE_CREATE
++    w.put_u16(4)?;
++    w.put_2b(&[])?; // userAuth
++    w.put_2b(&[])?; // data
++                    // TPM2B_PUBLIC
++    w.put_u16(ECC_P256_SIGNING_TEMPLATE.len() as u16)?;
++    write_ecc_p256_signing_template(&mut w)?;
++    // outsideInfo, creationPCR
++    w.put_2b(&[])?;
++    w.put_u32(0)?;
++    end(w)
++}
++
++/// `TPM2_Quote` (Part 3 §18.4) with an empty password session on `sign_handle`.
++///
++/// ```text
++/// 8002 | size | 00000158
++/// TPMI_DH_OBJECT signHandle
++/// authorizationSize + password auth area   00000009 40000009 0000 01 0000
++/// TPM2B_DATA qualifyingData                 UINT16 size + bytes (<= 64)
++/// TPMT_SIG_SCHEME inScheme                  0010  |  0018 000b
++/// TPML_PCR_SELECTION PCRselect
++/// ```
++pub fn quote(
++    out: &mut [u8],
++    sign_handle: u32,
++    qualifying_data: &[u8],
++    scheme: SigScheme,
++    selection: &PcrSelectionList,
++) -> Result<usize> {
++    if qualifying_data.len() > MAX_DIGEST_SIZE {
++        // TPM2B_DATA is bounded by sizeof(TPMT_HA) (Part 2 §10.4.3).
++        return Err(Error::TooLarge);
++    }
++    let mut w = begin(out, TPM_ST_SESSIONS, TPM_CC_QUOTE)?;
++    w.put_u32(sign_handle)?;
++    password_auth_area(&mut w, &[])?;
++    w.put_2b(qualifying_data)?;
++    scheme.marshal(&mut w)?;
++    selection.marshal(&mut w)?;
++    end(w)
++}
++
++/// `TPM2_FlushContext` (Part 3 §28.4).
++///
++/// ```text
++/// 8001 | 0000000e | 00000165 | TPMI_DH_CONTEXT flushHandle (UINT32)
++/// ```
++pub fn flush_context(out: &mut [u8], handle: u32) -> Result<usize> {
++    let mut w = begin(out, TPM_ST_NO_SESSIONS, TPM_CC_FLUSH_CONTEXT)?;
++    w.put_u32(handle)?;
++    end(w)
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    use crate::pcr::PcrSelection;
++
++    const PW_AUTH: [u8; 13] = [
++        0x00, 0x00, 0x00, 0x09, // authorizationSize
++        0x40, 0x00, 0x00, 0x09, // TPM_RS_PW
++        0x00, 0x00, // nonce
++        0x01, // continueSession
++        0x00, 0x00, // hmac
++    ];
++
++    #[test]
++    fn startup_clear_bytes() {
++        let mut b = [0u8; 64];
++        let n = startup(&mut b, TPM_SU_CLEAR).unwrap();
++        assert_eq!(n, STARTUP_LEN);
++        assert_eq!(
++            &b[..n],
++            &[0x80, 0x01, 0, 0, 0, 0x0c, 0, 0, 0x01, 0x44, 0x00, 0x00]
++        );
++    }
++
++    #[test]
++    fn flush_context_bytes() {
++        let mut b = [0u8; 64];
++        let n = flush_context(&mut b, 0x8000_0001).unwrap();
++        assert_eq!(n, FLUSH_CONTEXT_LEN);
++        assert_eq!(
++            &b[..n],
++            &[0x80, 0x01, 0, 0, 0, 0x0e, 0, 0, 0x01, 0x65, 0x80, 0x00, 0x00, 0x01]
++        );
++    }
++
++    #[test]
++    fn pcr_read_sha256_4_12_bytes() {
++        let mut b = [0u8; 64];
++        let sel = PcrSelectionList::single(PcrSelection::sha256(&[4, 12]));
++        let n = pcr_read(&mut b, &sel).unwrap();
++        assert_eq!(
++            &b[..n],
++            &[
++                0x80, 0x01, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x01, 0x7e, // header
++                0x00, 0x00, 0x00, 0x01, // count
++                0x00, 0x0b, 0x03, 0x10, 0x10, 0x00 // sha256, 3, bitmap
++            ]
++        );
++    }
++
++    #[test]
++    fn pcr_extend_bytes() {
++        let mut b = [0u8; 128];
++        let d: [u8; 32] = core::array::from_fn(|i| i as u8);
++        let n = pcr_extend_sha256(&mut b, 12, &d).unwrap();
++        assert_eq!(n, PCR_EXTEND_SHA256_LEN);
++        let mut want = [0u8; PCR_EXTEND_SHA256_LEN];
++        want[..10].copy_from_slice(&[0x80, 0x02, 0, 0, 0, 0x41, 0, 0, 0x01, 0x82]);
++        want[10..14].copy_from_slice(&[0, 0, 0, 12]);
++        want[14..27].copy_from_slice(&PW_AUTH);
++        want[27..31].copy_from_slice(&[0, 0, 0, 1]);
++        want[31..33].copy_from_slice(&[0x00, 0x0b]);
++        want[33..65].copy_from_slice(&d);
++        assert_eq!(&b[..n], &want[..]);
++    }
++
++    #[test]
++    fn template_matches_handwritten_bytes() {
++        let mut b = [0u8; 64];
++        let mut w = Writer::new(&mut b);
++        write_ecc_p256_signing_template(&mut w).unwrap();
++        let n = w.finish();
++        assert_eq!(&b[..n], &ECC_P256_SIGNING_TEMPLATE[..]);
++        assert_eq!(SIGNING_KEY_ATTRIBUTES, 0x0005_0072);
++    }
++
++    #[test]
++    fn create_primary_bytes() {
++        let mut b = [0u8; 128];
++        let n = create_primary_ecc_p256(&mut b, TPM_RH_OWNER).unwrap();
++        assert_eq!(n, CREATE_PRIMARY_ECC_P256_LEN);
++        let mut want = [0u8; CREATE_PRIMARY_ECC_P256_LEN];
++        want[..10].copy_from_slice(&[0x80, 0x02, 0, 0, 0, 0x41, 0, 0, 0x01, 0x31]);
++        want[10..14].copy_from_slice(&[0x40, 0, 0, 0x01]); // TPM_RH_OWNER
++        want[14..27].copy_from_slice(&PW_AUTH);
++        want[27..33].copy_from_slice(&[0, 4, 0, 0, 0, 0]); // inSensitive
++        want[33..35].copy_from_slice(&[0, 0x18]); // inPublic.size
++        want[35..59].copy_from_slice(&ECC_P256_SIGNING_TEMPLATE);
++        want[59..61].copy_from_slice(&[0, 0]); // outsideInfo
++        want[61..65].copy_from_slice(&[0, 0, 0, 0]); // creationPCR
++        assert_eq!(&b[..n], &want[..]);
++    }
++
++    #[test]
++    fn quote_bytes_null_scheme() {
++        let mut b = [0u8; 128];
++        let qd = [0xA5u8; 32];
++        let sel = PcrSelectionList::single(PcrSelection::sha256(&[4, 12]));
++        let n = quote(&mut b, 0x8000_0000, &qd, SigScheme::Null, &sel).unwrap();
++        assert_eq!(n, 73);
++        let mut want = [0u8; 73];
++        want[..10].copy_from_slice(&[0x80, 0x02, 0, 0, 0, 0x49, 0, 0, 0x01, 0x58]);
++        want[10..14].copy_from_slice(&[0x80, 0, 0, 0]);
++        want[14..27].copy_from_slice(&PW_AUTH);
++        want[27..29].copy_from_slice(&[0, 0x20]);
++        want[29..61].copy_from_slice(&qd);
++        want[61..63].copy_from_slice(&[0, 0x10]); // TPM_ALG_NULL
++        want[63..73].copy_from_slice(&[0, 0, 0, 1, 0, 0x0b, 3, 0x10, 0x10, 0]);
++        assert_eq!(&b[..n], &want[..]);
++    }
++
++    #[test]
++    fn quote_bytes_ecdsa_scheme() {
++        let mut b = [0u8; 128];
++        let qd = [0u8; 32];
++        let sel = PcrSelectionList::single(PcrSelection::sha256(&[4, 12]));
++        let n = quote(&mut b, 0x8000_0000, &qd, SigScheme::EcdsaSha256, &sel).unwrap();
++        assert_eq!(n, 75);
++        assert_eq!(&b[2..6], &[0, 0, 0, 0x4b]);
++        assert_eq!(&b[61..65], &[0, 0x18, 0, 0x0b]);
++    }
++
++    #[test]
++    fn quote_rejects_oversized_qualifying_data() {
++        let mut b = [0u8; 256];
++        let sel = PcrSelectionList::single(PcrSelection::sha256(&[4]));
++        assert_eq!(
++            quote(&mut b, 0x8000_0000, &[0u8; 65], SigScheme::Null, &sel),
++            Err(Error::TooLarge)
++        );
++    }
++
++    #[test]
++    fn small_buffer_is_rejected_cleanly() {
++        let mut b = [0u8; 20];
++        assert_eq!(
++            create_primary_ecc_p256(&mut b, TPM_RH_OWNER),
++            Err(Error::BufferTooSmall)
++        );
++    }
++}
+diff --git a/tpm2min/src/consts.rs b/tpm2min/src/consts.rs
+new file mode 100644
+index 0000000..edcd5fa
+--- /dev/null
++++ b/tpm2min/src/consts.rs
+@@ -0,0 +1,150 @@
++//! TPM 2.0 constants.  Section numbers refer to the TPM 2.0 Library
++//! Specification, Part 2 "Structures", revision 1.59.
++
++// ---- §6.9 TPM_ST (structure tags) -------------------------------------------
++/// Command/response tag: no authorization sessions present.
++pub const TPM_ST_NO_SESSIONS: u16 = 0x8001;
++/// Command/response tag: authorization area present.
++pub const TPM_ST_SESSIONS: u16 = 0x8002;
++/// `TPMS_ATTEST.type` for a `TPM2_Quote` attestation.
++pub const TPM_ST_ATTEST_QUOTE: u16 = 0x8018;
++/// Tag of a `TPMT_TK_CREATION` ticket.
++pub const TPM_ST_CREATION: u16 = 0x8021;
++
++// ---- §6.2 TPM_GENERATED --------------------------------------------------------
++/// Magic that starts every `TPMS_ATTEST` ("\xffTCG").
++pub const TPM_GENERATED_VALUE: u32 = 0xff54_4347;
++
++// ---- §6.5.2 TPM_CC (command codes) --------------------------------------------
++/// `TPM2_CreatePrimary`.
++pub const TPM_CC_CREATE_PRIMARY: u32 = 0x0000_0131;
++/// `TPM2_Startup`.
++pub const TPM_CC_STARTUP: u32 = 0x0000_0144;
++/// `TPM2_Quote`.
++pub const TPM_CC_QUOTE: u32 = 0x0000_0158;
++/// `TPM2_FlushContext`.
++pub const TPM_CC_FLUSH_CONTEXT: u32 = 0x0000_0165;
++/// `TPM2_PCR_Read`.
++pub const TPM_CC_PCR_READ: u32 = 0x0000_017E;
++/// `TPM2_PCR_Extend`.
++pub const TPM_CC_PCR_EXTEND: u32 = 0x0000_0182;
++
++// ---- §6.3 TPM_ALG_ID ------------------------------------------------------------
++/// RSA.
++pub const TPM_ALG_RSA: u16 = 0x0001;
++/// SHA-1.
++pub const TPM_ALG_SHA1: u16 = 0x0004;
++/// SHA-256.
++pub const TPM_ALG_SHA256: u16 = 0x000B;
++/// SHA-384.
++pub const TPM_ALG_SHA384: u16 = 0x000C;
++/// SHA-512.
++pub const TPM_ALG_SHA512: u16 = 0x000D;
++/// Null algorithm / "no scheme".
++pub const TPM_ALG_NULL: u16 = 0x0010;
++/// ECDSA signature scheme.
++pub const TPM_ALG_ECDSA: u16 = 0x0018;
++/// ECC asymmetric algorithm.
++pub const TPM_ALG_ECC: u16 = 0x0023;
++
++// ---- §6.4 TPM_ECC_CURVE -------------------------------------------------------
++/// NIST P-256 (secp256r1).
++pub const TPM_ECC_NIST_P256: u16 = 0x0003;
++
++// ---- §7.4 TPM_RH (permanent handles) -----------------------------------------
++/// Owner (storage) hierarchy.
++pub const TPM_RH_OWNER: u32 = 0x4000_0001;
++/// Null hierarchy.
++pub const TPM_RH_NULL: u32 = 0x4000_0007;
++/// Password authorization "session" handle (`TPM_RS_PW`).
++pub const TPM_RS_PW: u32 = 0x4000_0009;
++/// Endorsement hierarchy.
++pub const TPM_RH_ENDORSEMENT: u32 = 0x4000_000B;
++/// Platform hierarchy.
++pub const TPM_RH_PLATFORM: u32 = 0x4000_000C;
++
++// ---- §7.3 TPM_HT / handle ranges -------------------------------------------------
++/// First transient object handle (`TPM_HT_TRANSIENT << 24`).
++pub const TRANSIENT_FIRST: u32 = 0x8000_0000;
++
++// ---- §6.10 TPM_SU -------------------------------------------------------------------
++/// `TPM_SU_CLEAR`.
++pub const TPM_SU_CLEAR: u16 = 0x0000;
++/// `TPM_SU_STATE`.
++pub const TPM_SU_STATE: u16 = 0x0001;
++
++// ---- §8.3 TPMA_OBJECT ------------------------------------------------------------
++/// Key's sensitive area may not leave the TPM in which it was created.
++pub const TPMA_OBJECT_FIXED_TPM: u32 = 1 << 1;
++/// Object is flushed on `TPM2_Startup(CLEAR)`.
++pub const TPMA_OBJECT_ST_CLEAR: u32 = 1 << 2;
++/// Parent may not be changed.
++pub const TPMA_OBJECT_FIXED_PARENT: u32 = 1 << 4;
++/// Sensitive data generated by the TPM.
++pub const TPMA_OBJECT_SENSITIVE_DATA_ORIGIN: u32 = 1 << 5;
++/// `authValue` may be used for USER role authorization.
++pub const TPMA_OBJECT_USER_WITH_AUTH: u32 = 1 << 6;
++/// ADMIN role requires a policy.
++pub const TPMA_OBJECT_ADMIN_WITH_POLICY: u32 = 1 << 7;
++/// Object is not subject to dictionary-attack protection.
++pub const TPMA_OBJECT_NO_DA: u32 = 1 << 10;
++/// Key may only sign/decrypt TPM-generated structures (needed for Quote).
++pub const TPMA_OBJECT_RESTRICTED: u32 = 1 << 16;
++/// Private portion may be used to decrypt.
++pub const TPMA_OBJECT_DECRYPT: u32 = 1 << 17;
++/// Private portion may be used to sign.
++pub const TPMA_OBJECT_SIGN_ENCRYPT: u32 = 1 << 18;
++
++/// Attributes used for the fixed signing-key template in
++/// [`crate::cmd::create_primary_ecc_p256`]: `fixedTPM | fixedParent |
++/// sensitiveDataOrigin | userWithAuth | restricted | sign` = `0x00050072`.
++pub const SIGNING_KEY_ATTRIBUTES: u32 = TPMA_OBJECT_FIXED_TPM
++    | TPMA_OBJECT_FIXED_PARENT
++    | TPMA_OBJECT_SENSITIVE_DATA_ORIGIN
++    | TPMA_OBJECT_USER_WITH_AUTH
++    | TPMA_OBJECT_RESTRICTED
++    | TPMA_OBJECT_SIGN_ENCRYPT;
++
++// ---- §8.4 TPMA_SESSION -----------------------------------------------------------
++/// `continueSession` bit.
++pub const TPMA_SESSION_CONTINUE_SESSION: u8 = 0x01;
++
++// ---- §6.6 TPM_RC --------------------------------------------------------------------
++/// Success.
++pub const TPM_RC_SUCCESS: u32 = 0x000;
++/// `TPM_RC_INITIALIZE`: TPM not initialized by `TPM2_Startup` *or* `TPM2_Startup`
++/// sent twice (`RC_VER1 + 0x000`).
++pub const TPM_RC_INITIALIZE: u32 = 0x100;
++/// `RC_WARN`: base of the warning-class (format-zero) response codes.
++pub const RC_WARN: u32 = 0x900;
++/// `TPM_RC_YIELDED`: the command was yielded; resend it.
++pub const TPM_RC_YIELDED: u32 = RC_WARN + 0x008;
++/// `TPM_RC_NV_RATE`: NV rate-limited; resend after a delay.
++pub const TPM_RC_NV_RATE: u32 = RC_WARN + 0x020;
++/// `TPM_RC_RETRY`: "the TPM was not able to start the command"; resend the
++/// identical command.  libtpms/swtpm returns this exactly once for the first
++/// command that touches the clock/orderly NV state after `TPM2_Startup`
++/// (observed: the first `TPM2_Quote`).
++pub const TPM_RC_RETRY: u32 = RC_WARN + 0x022;
++/// `TPM_RC_NV_UNAVAILABLE`: NV is not available; resend later.
++pub const TPM_RC_NV_UNAVAILABLE: u32 = RC_WARN + 0x023;
++
++// ---- Sizes --------------------------------------------------------------------------------
++/// Size of the command header `tag(2) + size(4) + cc(4)`.
++pub const COMMAND_HEADER_SIZE: usize = 10;
++/// Size of the response header `tag(2) + size(4) + rc(4)`.
++pub const RESPONSE_HEADER_SIZE: usize = 10;
++/// SHA-256 output size.
++pub const SHA256_DIGEST_SIZE: usize = 32;
++/// P-256 coordinate / scalar size.
++pub const P256_COORD_SIZE: usize = 32;
++/// Largest `sizeofSelect` accepted when parsing (`PCR_SELECT_MAX`, Part 2 §10.6.1).
++pub const PCR_SELECT_MAX: usize = 4;
++/// `sizeofSelect` used when building selections: 3 bytes = 24 PCRs
++/// (`PCR_SELECT_MIN`, matching `IMPLEMENTATION_PCR = 24`).
++pub const PCR_SELECT_MIN: usize = 3;
++/// Maximum number of digests `TPM2_PCR_Read` returns in one call
++/// (`TPML_DIGEST.digests[8]`, Part 2 §10.9.4).
++pub const PCR_READ_MAX_DIGESTS: usize = 8;
++/// Largest hash output we store (SHA-512).
++pub const MAX_DIGEST_SIZE: usize = 64;
+diff --git a/tpm2min/src/der.rs b/tpm2min/src/der.rs
+new file mode 100644
+index 0000000..a1c3fa6
+--- /dev/null
++++ b/tpm2min/src/der.rs
+@@ -0,0 +1,107 @@
++//! Tiny DER helpers so the TPM's raw ECC material can be handed to OpenSSL:
++//!
++//! * [`p256_spki`]: `SubjectPublicKeyInfo` (RFC 5480) for an uncompressed
++//!   P-256 point — `openssl ec -pubin -inform DER` / `-verify pub.pem`.
++//! * [`ecdsa_signature`]: `ECDSA-Sig-Value ::= SEQUENCE { r INTEGER, s INTEGER }`
++//!   (RFC 3279 §2.2.3) from the TPM's fixed-width `r`, `s`.
++
++use crate::{Error, Result, Writer};
++
++/// Length of a P-256 `SubjectPublicKeyInfo` DER encoding.
++pub const P256_SPKI_LEN: usize = 91;
++
++/// Upper bound of [`ecdsa_signature`] output (2 + 2×(2+33)).
++pub const ECDSA_P256_DER_MAX: usize = 72;
++
++/// `SEQUENCE { SEQUENCE { id-ecPublicKey, secp256r1 }, BIT STRING 0x00 || 0x04 || x || y }`
++const P256_SPKI_PREFIX: [u8; 26] = [
++    0x30, 0x59, // SEQUENCE, 89 bytes
++    0x30, 0x13, // SEQUENCE, 19 bytes (AlgorithmIdentifier)
++    0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02, 0x01, // OID 1.2.840.10045.2.1 ecPublicKey
++    0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x03, 0x01,
++    0x07, // OID 1.2.840.10045.3.1.7 prime256v1
++    0x03, 0x42, 0x00, // BIT STRING, 66 bytes, 0 unused bits
++];
++
++/// DER `SubjectPublicKeyInfo` for the P-256 point `(x, y)`.
++pub fn p256_spki(x: &[u8; 32], y: &[u8; 32]) -> [u8; P256_SPKI_LEN] {
++    let mut out = [0u8; P256_SPKI_LEN];
++    out[..26].copy_from_slice(&P256_SPKI_PREFIX);
++    out[26] = 0x04; // uncompressed point
++    out[27..59].copy_from_slice(x);
++    out[59..].copy_from_slice(y);
++    out
++}
++
++fn der_uint(w: &mut Writer<'_>, v: &[u8; 32]) -> Result<()> {
++    // strip leading zero bytes (keep at least one)
++    let first = v.iter().position(|&b| b != 0).unwrap_or(31);
++    let body = &v[first..];
++    let pad = body[0] & 0x80 != 0;
++    w.put_u8(0x02)?;
++    w.put_u8((body.len() + usize::from(pad)) as u8)?;
++    if pad {
++        w.put_u8(0)?;
++    }
++    w.put_bytes(body)
++}
++
++/// DER-encode `(r, s)` as `ECDSA-Sig-Value`; returns the encoded length.
++pub fn ecdsa_signature(r: &[u8; 32], s: &[u8; 32], out: &mut [u8]) -> Result<usize> {
++    let mut body = [0u8; ECDSA_P256_DER_MAX];
++    let body_len = {
++        let mut w = Writer::new(&mut body);
++        der_uint(&mut w, r)?;
++        der_uint(&mut w, s)?;
++        w.finish()
++    };
++    let mut w = Writer::new(out);
++    w.put_u8(0x30)?;
++    w.put_u8(u8::try_from(body_len).map_err(|_| Error::TooLarge)?)?;
++    w.put_bytes(&body[..body_len])?;
++    Ok(w.finish())
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn spki_layout() {
++        let x = [0x11u8; 32];
++        let y = [0x22u8; 32];
++        let d = p256_spki(&x, &y);
++        assert_eq!(d[0], 0x30);
++        assert_eq!(d[1] as usize, P256_SPKI_LEN - 2);
++        assert_eq!(d[26], 0x04);
++        assert_eq!(&d[27..59], &x);
++        assert_eq!(&d[59..], &y);
++    }
++
++    #[test]
++    fn sig_der_high_bit_padding_and_zero_stripping() {
++        let mut r = [0u8; 32];
++        r[0] = 0x80; // high bit set -> needs 0x00 pad -> 33-byte INTEGER
++        let mut s = [0u8; 32];
++        s[31] = 0x01; // leading zeros stripped -> 1-byte INTEGER
++        let mut out = [0u8; ECDSA_P256_DER_MAX];
++        let n = ecdsa_signature(&r, &s, &mut out).unwrap();
++        // 30 len | 02 21 00 80 00.. | 02 01 01
++        assert_eq!(n, 2 + 2 + 33 + 2 + 1);
++        assert_eq!(out[0], 0x30);
++        assert_eq!(out[1] as usize, n - 2);
++        assert_eq!(&out[2..5], &[0x02, 0x21, 0x00]);
++        assert_eq!(out[5], 0x80);
++        assert_eq!(&out[n - 3..n], &[0x02, 0x01, 0x01]);
++    }
++
++    #[test]
++    fn sig_der_all_zero_scalar_encodes_single_zero_byte() {
++        let r = [0u8; 32];
++        let s = [0x7fu8; 32];
++        let mut out = [0u8; ECDSA_P256_DER_MAX];
++        let n = ecdsa_signature(&r, &s, &mut out).unwrap();
++        assert_eq!(&out[2..5], &[0x02, 0x01, 0x00]);
++        assert_eq!(n, 2 + 3 + 2 + 32);
++    }
++}
+diff --git a/tpm2min/src/error.rs b/tpm2min/src/error.rs
+new file mode 100644
+index 0000000..6707957
+--- /dev/null
++++ b/tpm2min/src/error.rs
+@@ -0,0 +1,86 @@
++//! Error type.
++
++use core::fmt;
++
++/// Errors produced by the builders and parsers.
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub enum Error {
++    /// The caller-provided output buffer is too small for the command.
++    BufferTooSmall,
++    /// The response buffer ended before the structure was complete.
++    Truncated,
++    /// The TPM returned a non-zero `TPM_RC` (Part 2 §6.6).  The raw code is
++    /// carried verbatim (e.g. `0x100` = `TPM_RC_INITIALIZE`).
++    TpmRc(u32),
++    /// Response `tag` was not `TPM_ST_NO_SESSIONS`/`TPM_ST_SESSIONS` or did not
++    /// match what the command used.
++    BadTag(u16),
++    /// A length field (responseSize, parameterSize, TPM2B size, ...) does not
++    /// agree with the bytes actually present.
++    SizeMismatch,
++    /// A field has a value this crate does not handle (e.g. an RSA key where
++    /// an ECC key was expected).  Carries the offending 16-bit value.
++    Unsupported(u16),
++    /// A value exceeds the fixed-size storage this crate reserves for it
++    /// (e.g. more PCR selections than `MAX_PCR_SELECTIONS`).
++    TooLarge,
++    /// A structural invariant was violated (bad magic, wrong attestation type,
++    /// a point coordinate longer than the curve size, ...).
++    Malformed,
++}
++
++impl Error {
++    /// The raw `TPM_RC` if this is [`Error::TpmRc`].
++    pub fn rc(&self) -> Option<u32> {
++        match self {
++            Error::TpmRc(rc) => Some(*rc),
++            _ => None,
++        }
++    }
++
++    /// `true` for the warning-class codes that mean "resend the identical
++    /// command": `TPM_RC_RETRY`, `TPM_RC_YIELDED`, `TPM_RC_NV_RATE`,
++    /// `TPM_RC_NV_UNAVAILABLE` (Part 2 §6.6.3, warning codes).  A transport
++    /// should bound the number of resends.
++    pub fn is_retryable(&self) -> bool {
++        matches!(
++            self,
++            Error::TpmRc(crate::consts::TPM_RC_RETRY)
++                | Error::TpmRc(crate::consts::TPM_RC_YIELDED)
++                | Error::TpmRc(crate::consts::TPM_RC_NV_RATE)
++                | Error::TpmRc(crate::consts::TPM_RC_NV_UNAVAILABLE)
++        )
++    }
++}
++
++impl fmt::Display for Error {
++    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
++        match self {
++            Error::BufferTooSmall => f.write_str("output buffer too small"),
++            Error::Truncated => f.write_str("response truncated"),
++            Error::TpmRc(rc) => write!(f, "TPM returned TPM_RC 0x{rc:03x}"),
++            Error::BadTag(tag) => write!(f, "unexpected response tag 0x{tag:04x}"),
++            Error::SizeMismatch => f.write_str("length field disagrees with payload"),
++            Error::Unsupported(v) => write!(f, "unsupported value 0x{v:04x}"),
++            Error::TooLarge => f.write_str("value exceeds fixed-size storage"),
++            Error::Malformed => f.write_str("malformed structure"),
++        }
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn retryable_classification() {
++        assert!(Error::TpmRc(0x922).is_retryable()); // TPM_RC_RETRY
++        assert!(Error::TpmRc(0x908).is_retryable()); // TPM_RC_YIELDED
++        assert!(Error::TpmRc(0x920).is_retryable()); // TPM_RC_NV_RATE
++        assert!(!Error::TpmRc(0x100).is_retryable()); // TPM_RC_INITIALIZE
++        assert!(!Error::TpmRc(0x1c4).is_retryable()); // format-1 TPM_RC_VALUE
++        assert!(!Error::Truncated.is_retryable());
++        assert_eq!(Error::TpmRc(0x922).rc(), Some(0x922));
++        assert_eq!(Error::Malformed.rc(), None);
++    }
++}
+diff --git a/tpm2min/src/lib.rs b/tpm2min/src/lib.rs
+new file mode 100644
+index 0000000..3b92a53
+--- /dev/null
++++ b/tpm2min/src/lib.rs
+@@ -0,0 +1,68 @@
++//! `tpm2min` — a dependency-free, `no_std`, `forbid(unsafe_code)` library that
++//! marshals and parses a minimal set of TPM 2.0 commands as raw byte buffers
++//! in the TPM 2.0 Library Specification wire format
++//! (Part 3 "Commands" for command/response layout, Part 2 "Structures" for
++//! the data types).  The resulting buffers can be handed directly to
++//! `EFI_TCG2_PROTOCOL.SubmitCommand()` from a UEFI unikernel, or to a swtpm
++//! TCP socket for testing.
++//!
++//! Supported commands:
++//!
++//! | Command              | Builder                           | Parser                     |
++//! |----------------------|-----------------------------------|----------------------------|
++//! | `TPM2_Startup`       | [`cmd::startup`]                  | [`rsp::startup`]           |
++//! | `TPM2_PCR_Read`      | [`cmd::pcr_read`]                 | [`rsp::pcr_read`]          |
++//! | `TPM2_PCR_Extend`    | [`cmd::pcr_extend_sha256`]        | [`rsp::pcr_extend`]        |
++//! | `TPM2_CreatePrimary` | [`cmd::create_primary_ecc_p256`]  | [`rsp::create_primary`]    |
++//! | `TPM2_Quote`         | [`cmd::quote`]                    | [`rsp::quote`]             |
++//! | `TPM2_FlushContext`  | [`cmd::flush_context`]            | [`rsp::flush_context`]     |
++//!
++//! Plus: [`rsp::attest`] (TPMS_ATTEST parser), [`rsp::ecc_public`]
++//! (TPMT_PUBLIC parser for ECC keys), [`pcr::composite_sha256`] (PCR
++//! composite digest), a small [`sha256`] implementation, and [`der`]
++//! helpers that turn the TPM's ECC point / (r,s) signature into the DER
++//! structures OpenSSL expects.
++//!
++//! Everything works on caller-provided `&mut [u8]` buffers or fixed-size
++//! `[u8; N]` structs — no heap allocation anywhere.
++//!
++//! # Wire-format conventions (Part 1 §18, Part 3 §5)
++//!
++//! * All integers are big-endian.
++//! * `TPM2B_*` = `UINT16 size` followed by `size` bytes.
++//! * `TPML_*`  = `UINT32 count` followed by `count` elements.
++//! * A command is `tag(2) commandSize(4) commandCode(4) [handles] [authorizationSize(4) authArea] [parameters]`.
++//! * A response is `tag(2) responseSize(4) responseCode(4) [handles] [parameterSize(4)] [parameters] [authArea]`.
++//!   When `responseCode != TPM_RC_SUCCESS` the response is exactly the 10-byte header
++//!   with `tag = TPM_ST_NO_SESSIONS`.
++
++#![no_std]
++#![forbid(unsafe_code)]
++#![deny(missing_docs)]
++#![warn(clippy::all)]
++
++pub mod cmd;
++pub mod consts;
++pub mod der;
++pub mod error;
++pub mod pcr;
++pub mod rsp;
++pub mod sha256;
++pub mod wire;
++
++pub use error::Error;
++pub use pcr::{PcrSelection, PcrSelectionList};
++pub use wire::{Reader, Tpm2b, Writer};
++
++/// Result alias used throughout the crate.
++pub type Result<T> = core::result::Result<T, Error>;
++
++/// Recommended size of a command buffer: all commands this crate builds fit
++/// comfortably (the largest, `TPM2_Quote` with a 64-byte qualifying data and
++/// 8 PCR banks, is far below 256 bytes).
++pub const COMMAND_BUFFER_SIZE: usize = 512;
++
++/// Recommended size of a response buffer.  `MAX_COMMAND_SIZE`/`MAX_RESPONSE_SIZE`
++/// of real TPMs is typically 4096 (Part 2 §A.3), and `TPM2_CreatePrimary`
++/// responses carry a `TPM2B_CREATION_DATA` that can approach 1 KiB.
++pub const RESPONSE_BUFFER_SIZE: usize = 4096;
+diff --git a/tpm2min/src/pcr.rs b/tpm2min/src/pcr.rs
+new file mode 100644
+index 0000000..23ce537
+--- /dev/null
++++ b/tpm2min/src/pcr.rs
+@@ -0,0 +1,250 @@
++//! PCR selection structures and the PCR composite digest.
++//!
++//! * `TPMS_PCR_SELECTION` (Part 2 §10.6.2):
++//!   `TPMI_ALG_HASH hash (UINT16) | UINT8 sizeofSelect | BYTE pcrSelect[sizeofSelect]`
++//!   where PCR *i* is selected when `pcrSelect[i / 8] & (1 << (i % 8))` is set.
++//! * `TPML_PCR_SELECTION` (Part 2 §10.9.7):
++//!   `UINT32 count | TPMS_PCR_SELECTION pcrSelections[count]`.
++//! * PCR composite / `pcrDigest` (Part 3 §18.4 `TPM2_Quote`, Part 1 §17.7):
++//!   the digest, using the signing scheme's hash, of the concatenation of the
++//!   selected PCR values in selection order (bank order, then ascending PCR index).
++
++use crate::consts::{PCR_SELECT_MAX, PCR_SELECT_MIN, TPM_ALG_SHA256};
++use crate::sha256::Sha256;
++use crate::{Error, Reader, Result, Writer};
++
++/// One `TPMS_PCR_SELECTION` (one hash bank).
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct PcrSelection {
++    /// `TPM_ALG_ID` of the bank (e.g. [`TPM_ALG_SHA256`]).
++    pub hash: u16,
++    /// `sizeofSelect`, 1..=4.  Builders use 3 (24 PCRs).
++    pub size_of_select: u8,
++    /// `pcrSelect` bitmap; only the first `size_of_select` bytes are meaningful.
++    pub select: [u8; PCR_SELECT_MAX],
++}
++
++impl PcrSelection {
++    /// Empty selection for `hash` with `sizeofSelect = 3`.
++    pub const fn new(hash: u16) -> Self {
++        Self {
++            hash,
++            size_of_select: PCR_SELECT_MIN as u8,
++            select: [0u8; PCR_SELECT_MAX],
++        }
++    }
++
++    /// SHA-256 bank selecting the given PCR indices (const-evaluable).
++    pub const fn sha256(pcrs: &[u8]) -> Self {
++        let mut s = Self::new(TPM_ALG_SHA256);
++        let mut i = 0;
++        while i < pcrs.len() {
++            s = s.with_pcr(pcrs[i]);
++            i += 1;
++        }
++        s
++    }
++
++    /// Add PCR `pcr` to the selection (silently ignores indices >= 32).
++    pub const fn with_pcr(mut self, pcr: u8) -> Self {
++        let byte = (pcr / 8) as usize;
++        if byte < PCR_SELECT_MAX {
++            self.select[byte] |= 1 << (pcr % 8);
++            if byte + 1 > self.size_of_select as usize {
++                self.size_of_select = (byte + 1) as u8;
++            }
++        }
++        self
++    }
++
++    /// Whether PCR `pcr` is selected.
++    pub fn is_selected(&self, pcr: u8) -> bool {
++        let byte = (pcr / 8) as usize;
++        byte < self.size_of_select as usize && self.select[byte] & (1 << (pcr % 8)) != 0
++    }
++
++    /// Number of selected PCRs.
++    pub fn count(&self) -> usize {
++        self.select[..self.size_of_select as usize]
++            .iter()
++            .map(|b| b.count_ones() as usize)
++            .sum()
++    }
++
++    /// Selected PCR indices in ascending order (the order the TPM uses when
++    /// returning values and when computing the composite digest).
++    pub fn indices(&self) -> impl Iterator<Item = u8> + '_ {
++        (0..(self.size_of_select as u32 * 8) as u8).filter(move |&i| self.is_selected(i))
++    }
++
++    /// Marshal as `TPMS_PCR_SELECTION`.
++    pub fn marshal(&self, w: &mut Writer<'_>) -> Result<()> {
++        w.put_u16(self.hash)?;
++        w.put_u8(self.size_of_select)?;
++        w.put_bytes(&self.select[..self.size_of_select as usize])
++    }
++
++    /// Unmarshal a `TPMS_PCR_SELECTION`.
++    pub fn unmarshal(r: &mut Reader<'_>) -> Result<Self> {
++        let hash = r.u16()?;
++        let size_of_select = r.u8()?;
++        if size_of_select as usize > PCR_SELECT_MAX {
++            return Err(Error::TooLarge);
++        }
++        let bytes = r.take(size_of_select as usize)?;
++        let mut select = [0u8; PCR_SELECT_MAX];
++        select[..bytes.len()].copy_from_slice(bytes);
++        Ok(Self {
++            hash,
++            size_of_select,
++            select,
++        })
++    }
++}
++
++/// Maximum number of banks stored in a [`PcrSelectionList`] (`HASH_COUNT` of
++/// real TPMs is typically 2..4).
++pub const MAX_PCR_SELECTIONS: usize = 8;
++
++/// A `TPML_PCR_SELECTION` with fixed capacity.
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct PcrSelectionList {
++    count: usize,
++    items: [PcrSelection; MAX_PCR_SELECTIONS],
++}
++
++impl Default for PcrSelectionList {
++    fn default() -> Self {
++        Self::new()
++    }
++}
++
++impl PcrSelectionList {
++    /// Empty list (`count = 0`).
++    pub const fn new() -> Self {
++        Self {
++            count: 0,
++            items: [PcrSelection::new(0); MAX_PCR_SELECTIONS],
++        }
++    }
++
++    /// List containing a single bank.
++    pub const fn single(sel: PcrSelection) -> Self {
++        let mut l = Self::new();
++        l.items[0] = sel;
++        l.count = 1;
++        l
++    }
++
++    /// Append a bank.
++    pub fn push(&mut self, sel: PcrSelection) -> Result<()> {
++        if self.count >= MAX_PCR_SELECTIONS {
++            return Err(Error::TooLarge);
++        }
++        self.items[self.count] = sel;
++        self.count += 1;
++        Ok(())
++    }
++
++    /// The banks.
++    pub fn as_slice(&self) -> &[PcrSelection] {
++        &self.items[..self.count]
++    }
++
++    /// Number of banks.
++    pub fn len(&self) -> usize {
++        self.count
++    }
++
++    /// `true` when `count == 0`.
++    pub fn is_empty(&self) -> bool {
++        self.count == 0
++    }
++
++    /// Total number of selected PCRs across all banks.
++    pub fn total_pcrs(&self) -> usize {
++        self.as_slice().iter().map(PcrSelection::count).sum()
++    }
++
++    /// Marshal as `TPML_PCR_SELECTION`.
++    pub fn marshal(&self, w: &mut Writer<'_>) -> Result<()> {
++        w.put_u32(self.count as u32)?;
++        for s in self.as_slice() {
++            s.marshal(w)?;
++        }
++        Ok(())
++    }
++
++    /// Unmarshal a `TPML_PCR_SELECTION`.
++    pub fn unmarshal(r: &mut Reader<'_>) -> Result<Self> {
++        let count = r.u32()? as usize;
++        if count > MAX_PCR_SELECTIONS {
++            return Err(Error::TooLarge);
++        }
++        let mut l = Self::new();
++        for _ in 0..count {
++            l.push(PcrSelection::unmarshal(r)?)?;
++        }
++        Ok(l)
++    }
++}
++
++/// PCR composite digest for a SHA-256 quote: `SHA-256(pcr[0] || pcr[1] || ...)`
++/// with the values given in selection order.  This is what `TPM2_Quote`
++/// places in `TPMS_QUOTE_INFO.pcrDigest` (Part 3 §18.4.1).
++pub fn composite_sha256(values: &[[u8; 32]]) -> [u8; 32] {
++    let mut h = Sha256::new();
++    for v in values {
++        h.update(v);
++    }
++    h.finalize()
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn selection_bytes_sha256_4_12() {
++        // PCR 4  -> byte 0, bit 4 -> 0x10
++        // PCR 12 -> byte 1, bit 4 -> 0x10
++        let s = PcrSelection::sha256(&[4, 12]);
++        let mut buf = [0u8; 16];
++        let mut w = Writer::new(&mut buf);
++        s.marshal(&mut w).unwrap();
++        let n = w.finish();
++        assert_eq!(&buf[..n], &[0x00, 0x0B, 0x03, 0x10, 0x10, 0x00]);
++        assert_eq!(s.count(), 2);
++        let idx: [u8; 2] = {
++            let mut it = s.indices();
++            let a = it.next().unwrap();
++            let b = it.next().unwrap();
++            assert!(it.next().is_none());
++            [a, b]
++        };
++        assert_eq!(idx, [4, 12]);
++    }
++
++    #[test]
++    fn selection_list_marshal_unmarshal() {
++        let list = PcrSelectionList::single(PcrSelection::sha256(&[0, 7, 23]));
++        let mut buf = [0u8; 16];
++        let mut w = Writer::new(&mut buf);
++        list.marshal(&mut w).unwrap();
++        let n = w.finish();
++        assert_eq!(&buf[..n], &[0, 0, 0, 1, 0x00, 0x0B, 0x03, 0x81, 0x00, 0x80]);
++        let back = PcrSelectionList::unmarshal(&mut Reader::new(&buf[..n])).unwrap();
++        assert_eq!(back, list);
++        assert_eq!(back.total_pcrs(), 3);
++    }
++
++    #[test]
++    fn composite_is_plain_concatenation_hash() {
++        let a = [0x11u8; 32];
++        let b = [0x22u8; 32];
++        let mut cat = [0u8; 64];
++        cat[..32].copy_from_slice(&a);
++        cat[32..].copy_from_slice(&b);
++        assert_eq!(composite_sha256(&[a, b]), Sha256::digest(&cat));
++    }
++}
+diff --git a/tpm2min/src/rsp.rs b/tpm2min/src/rsp.rs
+new file mode 100644
+index 0000000..c18996c
+--- /dev/null
++++ b/tpm2min/src/rsp.rs
+@@ -0,0 +1,745 @@
++//! Response parsers.  Every parser takes the complete response buffer (exactly
++//! `responseSize` bytes) and returns typed, fixed-size results.
++//!
++//! Response header (Part 1 §18.10 / Part 3 §5.4):
++//!
++//! ```text
++//! offset  size  field
++//! 0       2     TPM_ST tag           (0x8001 / 0x8002; always 0x8001 on error)
++//! 2       4     UINT32 responseSize  (total bytes incl. header)
++//! 6       4     TPM_RC responseCode  (0 = success)
++//! 10      ...   [handles] [UINT32 parameterSize] [parameters] [TPMS_AUTH_RESPONSE...]
++//! ```
++//!
++//! `TPMS_AUTH_RESPONSE` (Part 2 §10.13.3) for a password session:
++//! `TPM2B_NONCE nonce (0000) | TPMA_SESSION (01 or 00) | TPM2B_AUTH hmac (0000)`.
++
++use crate::consts::*;
++use crate::pcr::PcrSelectionList;
++use crate::{Error, Reader, Result, Tpm2b};
++
++/// Capacity reserved for a `TPMT_PUBLIC` body.  ECC P-256 is 88 bytes;
++/// RSA-2048 would be ~314 — we leave room for either.
++pub const MAX_PUBLIC_SIZE: usize = 384;
++/// Capacity reserved for a `TPMS_ATTEST` body (a 2-PCR SHA-256 quote is 145 bytes).
++pub const MAX_ATTEST_SIZE: usize = 512;
++/// Capacity reserved for a `TPM2B_NAME` (`UINT16 alg || digest`, <= 66 bytes).
++pub const MAX_NAME_SIZE: usize = 68;
++/// Capacity reserved for a marshalled `TPMT_SIGNATURE` (ECDSA P-256 is 72 bytes).
++pub const MAX_SIGNATURE_SIZE: usize = 80;
++
++/// Parsed response header.
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct ResponseHeader {
++    /// `TPM_ST` tag.
++    pub tag: u16,
++    /// `responseSize`.
++    pub size: u32,
++    /// `TPM_RC` response code (0 on success).
++    pub rc: u32,
++}
++
++/// Parse and sanity-check the 10-byte header.  Does *not* fail on `rc != 0`.
++pub fn header(rsp: &[u8]) -> Result<ResponseHeader> {
++    let mut r = Reader::new(rsp);
++    let tag = r.u16()?;
++    let size = r.u32()?;
++    let rc = r.u32()?;
++    if tag != TPM_ST_NO_SESSIONS && tag != TPM_ST_SESSIONS {
++        return Err(Error::BadTag(tag));
++    }
++    if size as usize != rsp.len() {
++        return Err(if (size as usize) > rsp.len() {
++            Error::Truncated
++        } else {
++            Error::SizeMismatch
++        });
++    }
++    Ok(ResponseHeader { tag, size, rc })
++}
++
++/// Parse the header, fail with [`Error::TpmRc`] on a non-zero response code,
++/// check the tag matches `sessions`, and return a reader positioned after the
++/// header.
++fn open(rsp: &[u8], sessions: bool) -> Result<Reader<'_>> {
++    let h = header(rsp)?;
++    if h.rc != TPM_RC_SUCCESS {
++        return Err(Error::TpmRc(h.rc));
++    }
++    let want = if sessions {
++        TPM_ST_SESSIONS
++    } else {
++        TPM_ST_NO_SESSIONS
++    };
++    if h.tag != want {
++        return Err(Error::BadTag(h.tag));
++    }
++    let mut r = Reader::new(rsp);
++    r.take(RESPONSE_HEADER_SIZE)?;
++    Ok(r)
++}
++
++/// Consume one `TPMS_AUTH_RESPONSE` and require end of buffer.
++fn password_auth_response_and_end(r: &mut Reader<'_>) -> Result<()> {
++    let _nonce = r.take_2b()?;
++    let _attrs = r.u8()?;
++    let _hmac = r.take_2b()?;
++    r.expect_end()
++}
++
++/// `TPM2_Startup` response: header only.  Returns `Err(TpmRc(0x100))`
++/// (`TPM_RC_INITIALIZE`) if the TPM was already started — callers may treat
++/// that as success.
++pub fn startup(rsp: &[u8]) -> Result<()> {
++    open(rsp, false)?.expect_end()
++}
++
++/// `TPM2_FlushContext` response: header only.
++pub fn flush_context(rsp: &[u8]) -> Result<()> {
++    open(rsp, false)?.expect_end()
++}
++
++/// `TPM2_PCR_Extend` response: `parameterSize = 0` then the auth response.
++pub fn pcr_extend(rsp: &[u8]) -> Result<()> {
++    let mut r = open(rsp, true)?;
++    if r.u32()? != 0 {
++        return Err(Error::SizeMismatch);
++    }
++    password_auth_response_and_end(&mut r)
++}
++
++/// Result of `TPM2_PCR_Read` (Part 3 §22.4.2).
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct PcrReadResult {
++    /// `pcrUpdateCounter`.
++    pub update_counter: u32,
++    /// `pcrSelectionOut` — the PCRs actually returned (may be fewer than asked).
++    pub selection: PcrSelectionList,
++    /// Number of digests in `digests`.
++    pub count: usize,
++    /// `pcrValues` — in selection order.
++    pub digests: [Tpm2b<MAX_DIGEST_SIZE>; PCR_READ_MAX_DIGESTS],
++}
++
++impl PcrReadResult {
++    /// The returned digests.
++    pub fn values(&self) -> &[Tpm2b<MAX_DIGEST_SIZE>] {
++        &self.digests[..self.count]
++    }
++
++    /// Copy digest `i` into a 32-byte array (fails unless it is 32 bytes long).
++    pub fn sha256_value(&self, i: usize) -> Result<[u8; 32]> {
++        let d = self
++            .digests
++            .get(i)
++            .filter(|_| i < self.count)
++            .ok_or(Error::Malformed)?;
++        let mut out = [0u8; 32];
++        if d.len() != 32 {
++            return Err(Error::Malformed);
++        }
++        out.copy_from_slice(d.as_slice());
++        Ok(out)
++    }
++}
++
++/// `TPM2_PCR_Read` response:
++///
++/// ```text
++/// header (8001)
++/// UINT32 pcrUpdateCounter
++/// TPML_PCR_SELECTION pcrSelectionOut
++/// TPML_DIGEST pcrValues: UINT32 count, TPM2B_DIGEST digests[count]
++/// ```
++pub fn pcr_read(rsp: &[u8]) -> Result<PcrReadResult> {
++    let mut r = open(rsp, false)?;
++    let update_counter = r.u32()?;
++    let selection = PcrSelectionList::unmarshal(&mut r)?;
++    let count = r.u32()? as usize;
++    if count > PCR_READ_MAX_DIGESTS {
++        return Err(Error::TooLarge);
++    }
++    let mut digests = [Tpm2b::<MAX_DIGEST_SIZE>::empty(); PCR_READ_MAX_DIGESTS];
++    for d in digests.iter_mut().take(count) {
++        *d = r.read_2b()?;
++    }
++    r.expect_end()?;
++    if selection.total_pcrs() != count {
++        return Err(Error::SizeMismatch);
++    }
++    Ok(PcrReadResult {
++        update_counter,
++        selection,
++        count,
++        digests,
++    })
++}
++
++/// Result of `TPM2_CreatePrimary` (Part 3 §24.1.2).
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct CreatePrimaryResult {
++    /// `objectHandle` — the transient handle (0x80xxxxxx).
++    pub handle: u32,
++    /// `outPublic.publicArea` — the raw `TPMT_PUBLIC` bytes (the `TPM2B_PUBLIC`
++    /// is `UINT16 size || these bytes`).
++    pub public: Tpm2b<MAX_PUBLIC_SIZE>,
++    /// `creationHash`.
++    pub creation_hash: Tpm2b<MAX_DIGEST_SIZE>,
++    /// `name` — `UINT16 nameAlg || H_nameAlg(publicArea)`.
++    pub name: Tpm2b<MAX_NAME_SIZE>,
++}
++
++/// `TPM2_CreatePrimary` response:
++///
++/// ```text
++/// header (8002)
++/// TPM_HANDLE objectHandle
++/// UINT32 parameterSize
++/// TPM2B_PUBLIC outPublic
++/// TPM2B_CREATION_DATA creationData
++/// TPM2B_DIGEST creationHash
++/// TPMT_TK_CREATION creationTicket { TPM_ST tag=8021, TPMI_RH_HIERARCHY, TPM2B_DIGEST }
++/// TPM2B_NAME name
++/// TPMS_AUTH_RESPONSE
++/// ```
++pub fn create_primary(rsp: &[u8]) -> Result<CreatePrimaryResult> {
++    let mut r = open(rsp, true)?;
++    let handle = r.u32()?;
++    let param_size = r.u32()? as usize;
++    let start = r.position();
++    let public = r.read_2b::<MAX_PUBLIC_SIZE>()?;
++    let _creation_data = r.take_2b()?;
++    let creation_hash = r.read_2b::<MAX_DIGEST_SIZE>()?;
++    let tk_tag = r.u16()?;
++    if tk_tag != TPM_ST_CREATION {
++        return Err(Error::Malformed);
++    }
++    let _tk_hierarchy = r.u32()?;
++    let _tk_digest = r.take_2b()?;
++    let name = r.read_2b::<MAX_NAME_SIZE>()?;
++    if r.position() - start != param_size {
++        return Err(Error::SizeMismatch);
++    }
++    password_auth_response_and_end(&mut r)?;
++    Ok(CreatePrimaryResult {
++        handle,
++        public,
++        creation_hash,
++        name,
++    })
++}
++
++/// The interesting fields of an ECC `TPMT_PUBLIC` (Part 2 §12.2.4).
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct EccPublic {
++    /// `nameAlg`.
++    pub name_alg: u16,
++    /// `objectAttributes`.
++    pub attributes: u32,
++    /// `parameters.symmetric.algorithm`.
++    pub symmetric: u16,
++    /// `parameters.scheme.scheme` (`TPM_ALG_ECDSA` or `TPM_ALG_NULL`).
++    pub scheme: u16,
++    /// `parameters.scheme.details.hashAlg` (0 when `scheme == TPM_ALG_NULL`).
++    pub scheme_hash: u16,
++    /// `parameters.curveID`.
++    pub curve: u16,
++    /// `unique.x`, left-padded to 32 bytes.
++    pub x: [u8; 32],
++    /// `unique.y`, left-padded to 32 bytes.
++    pub y: [u8; 32],
++}
++
++fn coord32(b: &[u8]) -> Result<[u8; 32]> {
++    if b.len() > 32 {
++        return Err(Error::Malformed);
++    }
++    let mut out = [0u8; 32];
++    out[32 - b.len()..].copy_from_slice(b);
++    Ok(out)
++}
++
++/// Parse an ECC `TPMT_PUBLIC` body (as returned in [`CreatePrimaryResult::public`]):
++///
++/// ```text
++/// TPMI_ALG_PUBLIC type (must be 0023 ECC)
++/// TPMI_ALG_HASH nameAlg
++/// TPMA_OBJECT objectAttributes
++/// TPM2B_DIGEST authPolicy
++/// TPMS_ECC_PARMS { TPMT_SYM_DEF_OBJECT symmetric (alg [+ keyBits + mode if != NULL]),
++///                  TPMT_ECC_SCHEME scheme (alg [+ hashAlg if != NULL]),
++///                  TPMI_ECC_CURVE curveID,
++///                  TPMT_KDF_SCHEME kdf (alg [+ hashAlg if != NULL]) }
++/// TPMS_ECC_POINT unique { TPM2B_ECC_PARAMETER x, TPM2B_ECC_PARAMETER y }
++/// ```
++pub fn ecc_public(tpmt_public: &[u8]) -> Result<EccPublic> {
++    let mut r = Reader::new(tpmt_public);
++    let ty = r.u16()?;
++    if ty != TPM_ALG_ECC {
++        return Err(Error::Unsupported(ty));
++    }
++    let name_alg = r.u16()?;
++    let attributes = r.u32()?;
++    let _auth_policy = r.take_2b()?;
++    let symmetric = r.u16()?;
++    if symmetric != TPM_ALG_NULL {
++        let _key_bits = r.u16()?;
++        let _mode = r.u16()?;
++    }
++    let scheme = r.u16()?;
++    let scheme_hash = if scheme != TPM_ALG_NULL { r.u16()? } else { 0 };
++    let curve = r.u16()?;
++    let kdf = r.u16()?;
++    if kdf != TPM_ALG_NULL {
++        let _kdf_hash = r.u16()?;
++    }
++    let x = coord32(r.take_2b()?)?;
++    let y = coord32(r.take_2b()?)?;
++    r.expect_end()?;
++    Ok(EccPublic {
++        name_alg,
++        attributes,
++        symmetric,
++        scheme,
++        scheme_hash,
++        curve,
++        x,
++        y,
++    })
++}
++
++/// `TPMS_SIGNATURE_ECDSA` (Part 2 §11.3.3) with P-256-sized scalars.
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct EcdsaSignature {
++    /// `hash` — the hash algorithm used over the attestation (`TPM_ALG_SHA256`).
++    pub hash_alg: u16,
++    /// `signatureR`, left-padded to 32 bytes.
++    pub r: [u8; 32],
++    /// `signatureS`, left-padded to 32 bytes.
++    pub s: [u8; 32],
++}
++
++/// Result of `TPM2_Quote` (Part 3 §18.4.2).
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct QuoteResult {
++    /// `quoted.attestationData` — the raw `TPMS_ATTEST` bytes that are signed
++    /// (the `TPM2B_ATTEST` is `UINT16 size || these bytes`).
++    pub attest: Tpm2b<MAX_ATTEST_SIZE>,
++    /// Decoded `signature`.
++    pub signature: EcdsaSignature,
++    /// The marshalled `TPMT_SIGNATURE` exactly as received (what
++    /// `tpm2_quote -s` writes and `tpm2_checkquote -s` reads).
++    pub signature_raw: Tpm2b<MAX_SIGNATURE_SIZE>,
++}
++
++/// `TPM2_Quote` response:
++///
++/// ```text
++/// header (8002)
++/// UINT32 parameterSize
++/// TPM2B_ATTEST quoted
++/// TPMT_SIGNATURE signature { TPMI_ALG_SIG_SCHEME sigAlg = 0018 (ECDSA),
++///                            TPMS_SIGNATURE_ECDSA { TPMI_ALG_HASH hash,
++///                                                   TPM2B_ECC_PARAMETER r,
++///                                                   TPM2B_ECC_PARAMETER s } }
++/// TPMS_AUTH_RESPONSE
++/// ```
++pub fn quote(rsp: &[u8]) -> Result<QuoteResult> {
++    let mut r = open(rsp, true)?;
++    let param_size = r.u32()? as usize;
++    let start = r.position();
++    let attest = r.read_2b::<MAX_ATTEST_SIZE>()?;
++    let sig_start = r.position();
++    let sig_alg = r.u16()?;
++    if sig_alg != TPM_ALG_ECDSA {
++        return Err(Error::Unsupported(sig_alg));
++    }
++    let hash_alg = r.u16()?;
++    let rr = coord32(r.take_2b()?)?;
++    let ss = coord32(r.take_2b()?)?;
++    let sig_end = r.position();
++    if sig_end - start != param_size {
++        return Err(Error::SizeMismatch);
++    }
++    let signature_raw = Tpm2b::from_slice(&rsp[sig_start..sig_end])?;
++    password_auth_response_and_end(&mut r)?;
++    Ok(QuoteResult {
++        attest,
++        signature: EcdsaSignature {
++            hash_alg,
++            r: rr,
++            s: ss,
++        },
++        signature_raw,
++    })
++}
++
++/// `TPMS_CLOCK_INFO` (Part 2 §10.11.1).
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct ClockInfo {
++    /// `clock` (ms).
++    pub clock: u64,
++    /// `resetCount`.
++    pub reset_count: u32,
++    /// `restartCount`.
++    pub restart_count: u32,
++    /// `safe`.
++    pub safe: bool,
++}
++
++/// `TPMS_QUOTE_INFO` (Part 2 §10.12.1).
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct QuoteInfo {
++    /// `pcrSelect` — the PCRs covered by the quote.
++    pub pcr_select: PcrSelectionList,
++    /// `pcrDigest` — hash of the selected PCR values in selection order.
++    pub pcr_digest: Tpm2b<MAX_DIGEST_SIZE>,
++}
++
++/// Parsed `TPMS_ATTEST` for a quote (Part 2 §10.12.8).
++#[derive(Clone, Copy, Debug, PartialEq, Eq)]
++pub struct Attest {
++    /// `magic` — must be [`TPM_GENERATED_VALUE`] (checked).
++    pub magic: u32,
++    /// `type` — must be [`TPM_ST_ATTEST_QUOTE`] (checked).
++    pub attest_type: u16,
++    /// `qualifiedSigner` — qualified name of the signing key.
++    pub qualified_signer: Tpm2b<MAX_NAME_SIZE>,
++    /// `extraData` — echoes the `qualifyingData` passed to `TPM2_Quote`.
++    pub extra_data: Tpm2b<MAX_DIGEST_SIZE>,
++    /// `clockInfo`.
++    pub clock_info: ClockInfo,
++    /// `firmwareVersion`.
++    pub firmware_version: u64,
++    /// `attested.quote`.
++    pub quote: QuoteInfo,
++}
++
++/// Parse a `TPMS_ATTEST` produced by `TPM2_Quote`:
++///
++/// ```text
++/// TPM_GENERATED magic            = ff544347
++/// TPMI_ST_ATTEST type            = 8018 (TPM_ST_ATTEST_QUOTE)
++/// TPM2B_NAME qualifiedSigner
++/// TPM2B_DATA extraData
++/// TPMS_CLOCK_INFO clockInfo      { UINT64 clock, UINT32 resetCount, UINT32 restartCount, TPMI_YES_NO safe }
++/// UINT64 firmwareVersion
++/// TPMS_QUOTE_INFO attested.quote { TPML_PCR_SELECTION pcrSelect, TPM2B_DIGEST pcrDigest }
++/// ```
++pub fn attest(bytes: &[u8]) -> Result<Attest> {
++    let mut r = Reader::new(bytes);
++    let magic = r.u32()?;
++    if magic != TPM_GENERATED_VALUE {
++        return Err(Error::Malformed);
++    }
++    let attest_type = r.u16()?;
++    if attest_type != TPM_ST_ATTEST_QUOTE {
++        return Err(Error::Unsupported(attest_type));
++    }
++    let qualified_signer = r.read_2b()?;
++    let extra_data = r.read_2b()?;
++    let clock = r.u64()?;
++    let reset_count = r.u32()?;
++    let restart_count = r.u32()?;
++    let safe = match r.u8()? {
++        0 => false,
++        1 => true,
++        _ => return Err(Error::Malformed),
++    };
++    let firmware_version = r.u64()?;
++    let pcr_select = PcrSelectionList::unmarshal(&mut r)?;
++    let pcr_digest = r.read_2b()?;
++    r.expect_end()?;
++    Ok(Attest {
++        magic,
++        attest_type,
++        qualified_signer,
++        extra_data,
++        clock_info: ClockInfo {
++            clock,
++            reset_count,
++            restart_count,
++            safe,
++        },
++        firmware_version,
++        quote: QuoteInfo {
++            pcr_select,
++            pcr_digest,
++        },
++    })
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++    use crate::pcr::PcrSelection;
++    use crate::Writer;
++
++    fn rsp(tag: u16, rc: u32, body: &[u8]) -> ([u8; 1024], usize) {
++        let mut b = [0u8; 1024];
++        let n = {
++            let mut w = Writer::new(&mut b);
++            w.put_u16(tag).unwrap();
++            w.put_u32((10 + body.len()) as u32).unwrap();
++            w.put_u32(rc).unwrap();
++            w.put_bytes(body).unwrap();
++            w.finish()
++        };
++        (b, n)
++    }
++
++    const AUTH_RSP: [u8; 5] = [0, 0, 0x01, 0, 0];
++
++    #[test]
++    fn error_code_is_reported_not_parsed() {
++        // TPM_RC_FAILURE = 0x101; error responses carry tag 8001 and are 10 bytes.
++        let (b, n) = rsp(TPM_ST_NO_SESSIONS, 0x101, &[]);
++        assert_eq!(pcr_read(&b[..n]), Err(Error::TpmRc(0x101)));
++        assert_eq!(create_primary(&b[..n]), Err(Error::TpmRc(0x101)));
++        assert_eq!(quote(&b[..n]), Err(Error::TpmRc(0x101)));
++        assert_eq!(pcr_extend(&b[..n]), Err(Error::TpmRc(0x101)));
++        assert_eq!(flush_context(&b[..n]), Err(Error::TpmRc(0x101)));
++        // TPM_RC_INITIALIZE on a second Startup
++        let (b, n) = rsp(TPM_ST_NO_SESSIONS, TPM_RC_INITIALIZE, &[]);
++        assert_eq!(startup(&b[..n]), Err(Error::TpmRc(0x100)));
++    }
++
++    #[test]
++    fn header_checks() {
++        assert_eq!(header(&[0x80, 0x01, 0, 0]), Err(Error::Truncated));
++        // size says 12 but only 10 present
++        assert_eq!(
++            header(&[0x80, 0x01, 0, 0, 0, 12, 0, 0, 0, 0]),
++            Err(Error::Truncated)
++        );
++        // size says 10 but 11 present
++        assert_eq!(
++            header(&[0x80, 0x01, 0, 0, 0, 10, 0, 0, 0, 0, 0]),
++            Err(Error::SizeMismatch)
++        );
++        assert_eq!(
++            header(&[0x12, 0x34, 0, 0, 0, 10, 0, 0, 0, 0]),
++            Err(Error::BadTag(0x1234))
++        );
++        let ok = header(&[0x80, 0x01, 0, 0, 0, 10, 0, 0, 0, 0]).unwrap();
++        assert_eq!(
++            ok,
++            ResponseHeader {
++                tag: 0x8001,
++                size: 10,
++                rc: 0
++            }
++        );
++        assert!(startup(&[0x80, 0x01, 0, 0, 0, 10, 0, 0, 0, 0]).is_ok());
++    }
++
++    #[test]
++    fn wrong_tag_for_command_is_rejected() {
++        // PCR_Read must come back with 8001; a sessions tag is wrong.
++        let (b, n) = rsp(TPM_ST_SESSIONS, 0, &[0, 0, 0, 1]);
++        assert_eq!(pcr_read(&b[..n]), Err(Error::BadTag(0x8002)));
++    }
++
++    #[test]
++    fn pcr_read_parses_two_sha256_values() {
++        let mut body = [0u8; 256];
++        let n = {
++            let mut w = Writer::new(&mut body);
++            w.put_u32(7).unwrap(); // pcrUpdateCounter
++            PcrSelectionList::single(PcrSelection::sha256(&[4, 12]))
++                .marshal(&mut w)
++                .unwrap();
++            w.put_u32(2).unwrap();
++            w.put_2b(&[0xAA; 32]).unwrap();
++            w.put_2b(&[0xBB; 32]).unwrap();
++            w.finish()
++        };
++        let (b, len) = rsp(TPM_ST_NO_SESSIONS, 0, &body[..n]);
++        let res = pcr_read(&b[..len]).unwrap();
++        assert_eq!(res.update_counter, 7);
++        assert_eq!(res.count, 2);
++        assert_eq!(res.sha256_value(0).unwrap(), [0xAA; 32]);
++        assert_eq!(res.sha256_value(1).unwrap(), [0xBB; 32]);
++        assert!(res.sha256_value(2).is_err());
++        assert_eq!(res.selection.as_slice()[0].count(), 2);
++        // truncated: drop the last byte
++        assert_eq!(pcr_read(&b[..len - 1]), Err(Error::Truncated));
++    }
++
++    #[test]
++    fn pcr_extend_response() {
++        let mut body = [0u8; 16];
++        body[..4].copy_from_slice(&[0, 0, 0, 0]);
++        body[4..9].copy_from_slice(&AUTH_RSP);
++        let (b, n) = rsp(TPM_ST_SESSIONS, 0, &body[..9]);
++        assert!(pcr_extend(&b[..n]).is_ok());
++    }
++
++    /// Build an 88-byte ECC P-256 TPMT_PUBLIC with the given point.
++    fn ecc_tpmt_public(x: &[u8; 32], y: &[u8; 32]) -> [u8; 88] {
++        let mut p = [0u8; 88];
++        p[..20].copy_from_slice(&crate::cmd::ECC_P256_SIGNING_TEMPLATE[..20]);
++        p[20..22].copy_from_slice(&[0, 32]);
++        p[22..54].copy_from_slice(x);
++        p[54..56].copy_from_slice(&[0, 32]);
++        p[56..88].copy_from_slice(y);
++        p
++    }
++
++    #[test]
++    fn ecc_public_parses_point() {
++        let x: [u8; 32] = core::array::from_fn(|i| i as u8);
++        let y: [u8; 32] = core::array::from_fn(|i| 0xff - i as u8);
++        let p = ecc_tpmt_public(&x, &y);
++        let e = ecc_public(&p).unwrap();
++        assert_eq!(e.name_alg, TPM_ALG_SHA256);
++        assert_eq!(e.attributes, SIGNING_KEY_ATTRIBUTES);
++        assert_eq!(e.symmetric, TPM_ALG_NULL);
++        assert_eq!(e.scheme, TPM_ALG_ECDSA);
++        assert_eq!(e.scheme_hash, TPM_ALG_SHA256);
++        assert_eq!(e.curve, TPM_ECC_NIST_P256);
++        assert_eq!(e.x, x);
++        assert_eq!(e.y, y);
++        // RSA type is rejected
++        let mut rsa = p;
++        rsa[1] = 0x01;
++        assert_eq!(ecc_public(&rsa), Err(Error::Unsupported(TPM_ALG_RSA)));
++    }
++
++    #[test]
++    fn create_primary_response() {
++        let x = [0x11u8; 32];
++        let y = [0x22u8; 32];
++        let pubarea = ecc_tpmt_public(&x, &y);
++        let mut params = [0u8; 512];
++        let plen = {
++            let mut w = Writer::new(&mut params);
++            w.put_2b(&pubarea).unwrap(); // outPublic
++            w.put_2b(&[0x33; 40]).unwrap(); // creationData (opaque here)
++            w.put_2b(&[0x44; 32]).unwrap(); // creationHash
++            w.put_u16(TPM_ST_CREATION).unwrap(); // ticket
++            w.put_u32(TPM_RH_OWNER).unwrap();
++            w.put_2b(&[0x55; 32]).unwrap();
++            w.put_2b(&[0x00, 0x0B, 0x66, 0x66]).unwrap(); // name (short, fine for the test)
++            w.finish()
++        };
++        let mut body = [0u8; 600];
++        let blen = {
++            let mut w = Writer::new(&mut body);
++            w.put_u32(0x8000_0002).unwrap(); // objectHandle
++            w.put_u32(plen as u32).unwrap(); // parameterSize
++            w.put_bytes(&params[..plen]).unwrap();
++            w.put_bytes(&AUTH_RSP).unwrap();
++            w.finish()
++        };
++        let (b, n) = rsp(TPM_ST_SESSIONS, 0, &body[..blen]);
++        let res = create_primary(&b[..n]).unwrap();
++        assert_eq!(res.handle, 0x8000_0002);
++        assert_eq!(res.public.as_slice(), &pubarea[..]);
++        assert_eq!(res.creation_hash.as_slice(), &[0x44; 32]);
++        assert_eq!(res.name.as_slice(), &[0x00, 0x0B, 0x66, 0x66]);
++        assert_eq!(ecc_public(res.public.as_slice()).unwrap().x, x);
++
++        // wrong parameterSize is caught
++        let mut bad = b;
++        bad[14..18].copy_from_slice(&((plen + 1) as u32).to_be_bytes());
++        assert_eq!(create_primary(&bad[..n]), Err(Error::SizeMismatch));
++    }
++
++    fn sample_attest(extra: &[u8], pcr_digest: &[u8; 32]) -> ([u8; 256], usize) {
++        let mut a = [0u8; 256];
++        let n = {
++            let mut w = Writer::new(&mut a);
++            w.put_u32(TPM_GENERATED_VALUE).unwrap();
++            w.put_u16(TPM_ST_ATTEST_QUOTE).unwrap();
++            // qualifiedSigner: UINT16 nameAlg || 32-byte digest = 34 bytes (realistic size)
++            let mut qn = [0x77u8; 34];
++            qn[0] = 0x00;
++            qn[1] = 0x0B;
++            w.put_2b(&qn).unwrap();
++            w.put_2b(extra).unwrap();
++            w.put_u64(123_456).unwrap(); // clock
++            w.put_u32(3).unwrap(); // resetCount
++            w.put_u32(4).unwrap(); // restartCount
++            w.put_u8(1).unwrap(); // safe
++            w.put_u64(0x2020_0000_0000_0001).unwrap(); // firmwareVersion
++            PcrSelectionList::single(PcrSelection::sha256(&[4, 12]))
++                .marshal(&mut w)
++                .unwrap();
++            w.put_2b(pcr_digest).unwrap();
++            w.finish()
++        };
++        (a, n)
++    }
++
++    #[test]
++    fn attest_parses_and_validates() {
++        let extra = [0xEEu8; 32];
++        let pd = [0xDDu8; 32];
++        let (a, n) = sample_attest(&extra, &pd);
++        assert_eq!(n, 145);
++        let at = attest(&a[..n]).unwrap();
++        assert_eq!(at.magic, TPM_GENERATED_VALUE);
++        assert_eq!(at.attest_type, TPM_ST_ATTEST_QUOTE);
++        assert_eq!(at.extra_data.as_slice(), &extra);
++        assert_eq!(at.quote.pcr_digest.as_slice(), &pd);
++        assert_eq!(
++            at.clock_info,
++            ClockInfo {
++                clock: 123_456,
++                reset_count: 3,
++                restart_count: 4,
++                safe: true
++            }
++        );
++        assert_eq!(at.firmware_version, 0x2020_0000_0000_0001);
++        assert!(at.quote.pcr_select.as_slice()[0].is_selected(12));
++
++        let mut bad_magic = a;
++        bad_magic[0] = 0x00;
++        assert_eq!(attest(&bad_magic[..n]), Err(Error::Malformed));
++        let mut bad_type = a;
++        bad_type[5] = 0x17; // TPM_ST_ATTEST_CERTIFY
++        assert_eq!(attest(&bad_type[..n]), Err(Error::Unsupported(0x8017)));
++        assert_eq!(attest(&a[..n - 1]), Err(Error::Truncated));
++    }
++
++    #[test]
++    fn quote_response() {
++        let (a, alen) = sample_attest(&[0xEE; 32], &[0xDD; 32]);
++        let r = [0x9Au8; 32];
++        let s = [0x3Cu8; 32];
++        let mut params = [0u8; 512];
++        let plen = {
++            let mut w = Writer::new(&mut params);
++            w.put_2b(&a[..alen]).unwrap(); // quoted
++            w.put_u16(TPM_ALG_ECDSA).unwrap();
++            w.put_u16(TPM_ALG_SHA256).unwrap();
++            w.put_2b(&r).unwrap();
++            w.put_2b(&s).unwrap();
++            w.finish()
++        };
++        let mut body = [0u8; 600];
++        let blen = {
++            let mut w = Writer::new(&mut body);
++            w.put_u32(plen as u32).unwrap();
++            w.put_bytes(&params[..plen]).unwrap();
++            w.put_bytes(&AUTH_RSP).unwrap();
++            w.finish()
++        };
++        let (b, n) = rsp(TPM_ST_SESSIONS, 0, &body[..blen]);
++        let q = quote(&b[..n]).unwrap();
++        assert_eq!(q.attest.as_slice(), &a[..alen]);
++        assert_eq!(q.signature.hash_alg, TPM_ALG_SHA256);
++        assert_eq!(q.signature.r, r);
++        assert_eq!(q.signature.s, s);
++        assert_eq!(q.signature_raw.len(), 72);
++        assert_eq!(&q.signature_raw.as_slice()[..4], &[0, 0x18, 0, 0x0b]);
++        assert_eq!(q.signature_raw.as_slice(), &params[2 + alen..plen]);
++
++        // an RSA signature is rejected as unsupported
++        let mut rsa = b;
++        rsa[10 + 4 + 2 + alen + 1] = 0x14; // TPM_ALG_RSASSA
++        assert_eq!(quote(&rsa[..n]), Err(Error::Unsupported(0x0014)));
++    }
++}
+diff --git a/tpm2min/src/sha256.rs b/tpm2min/src/sha256.rs
+new file mode 100644
+index 0000000..9433ebe
+--- /dev/null
++++ b/tpm2min/src/sha256.rs
+@@ -0,0 +1,274 @@
++//! Minimal SHA-256 (FIPS 180-4).  Only used for the PCR composite digest and
++//! for convenience in tests/CLI; digests handed to the TPM may come from any
++//! other implementation.
++
++/// Streaming SHA-256 state.
++#[derive(Clone)]
++pub struct Sha256 {
++    state: [u32; 8],
++    block: [u8; 64],
++    block_len: usize,
++    total_len: u64,
++}
++
++const H0: [u32; 8] = [
++    0x6a09_e667,
++    0xbb67_ae85,
++    0x3c6e_f372,
++    0xa54f_f53a,
++    0x510e_527f,
++    0x9b05_688c,
++    0x1f83_d9ab,
++    0x5be0_cd19,
++];
++
++const K: [u32; 64] = [
++    0x428a_2f98,
++    0x7137_4491,
++    0xb5c0_fbcf,
++    0xe9b5_dba5,
++    0x3956_c25b,
++    0x59f1_11f1,
++    0x923f_82a4,
++    0xab1c_5ed5,
++    0xd807_aa98,
++    0x1283_5b01,
++    0x2431_85be,
++    0x550c_7dc3,
++    0x72be_5d74,
++    0x80de_b1fe,
++    0x9bdc_06a7,
++    0xc19b_f174,
++    0xe49b_69c1,
++    0xefbe_4786,
++    0x0fc1_9dc6,
++    0x240c_a1cc,
++    0x2de9_2c6f,
++    0x4a74_84aa,
++    0x5cb0_a9dc,
++    0x76f9_88da,
++    0x983e_5152,
++    0xa831_c66d,
++    0xb003_27c8,
++    0xbf59_7fc7,
++    0xc6e0_0bf3,
++    0xd5a7_9147,
++    0x06ca_6351,
++    0x1429_2967,
++    0x27b7_0a85,
++    0x2e1b_2138,
++    0x4d2c_6dfc,
++    0x5338_0d13,
++    0x650a_7354,
++    0x766a_0abb,
++    0x81c2_c92e,
++    0x9272_2c85,
++    0xa2bf_e8a1,
++    0xa81a_664b,
++    0xc24b_8b70,
++    0xc76c_51a3,
++    0xd192_e819,
++    0xd699_0624,
++    0xf40e_3585,
++    0x106a_a070,
++    0x19a4_c116,
++    0x1e37_6c08,
++    0x2748_774c,
++    0x34b0_bcb5,
++    0x391c_0cb3,
++    0x4ed8_aa4a,
++    0x5b9c_ca4f,
++    0x682e_6ff3,
++    0x748f_82ee,
++    0x78a5_636f,
++    0x84c8_7814,
++    0x8cc7_0208,
++    0x90be_fffa,
++    0xa450_6ceb,
++    0xbef9_a3f7,
++    0xc671_78f2,
++];
++
++impl Default for Sha256 {
++    fn default() -> Self {
++        Self::new()
++    }
++}
++
++impl Sha256 {
++    /// Fresh hasher.
++    pub const fn new() -> Self {
++        Self {
++            state: H0,
++            block: [0u8; 64],
++            block_len: 0,
++            total_len: 0,
++        }
++    }
++
++    /// One-shot digest.
++    pub fn digest(data: &[u8]) -> [u8; 32] {
++        let mut h = Self::new();
++        h.update(data);
++        h.finalize()
++    }
++
++    /// Absorb bytes.
++    pub fn update(&mut self, mut data: &[u8]) {
++        self.total_len = self.total_len.wrapping_add(data.len() as u64);
++        if self.block_len > 0 {
++            let want = 64 - self.block_len;
++            let n = want.min(data.len());
++            self.block[self.block_len..self.block_len + n].copy_from_slice(&data[..n]);
++            self.block_len += n;
++            data = &data[n..];
++            if self.block_len == 64 {
++                let blk = self.block;
++                compress(&mut self.state, &blk);
++                self.block_len = 0;
++            }
++        }
++        while data.len() >= 64 {
++            let mut blk = [0u8; 64];
++            blk.copy_from_slice(&data[..64]);
++            compress(&mut self.state, &blk);
++            data = &data[64..];
++        }
++        if !data.is_empty() {
++            self.block[..data.len()].copy_from_slice(data);
++            self.block_len = data.len();
++        }
++    }
++
++    /// Finish and return the 32-byte digest.
++    pub fn finalize(mut self) -> [u8; 32] {
++        let bit_len = self.total_len.wrapping_mul(8);
++        self.block[self.block_len] = 0x80;
++        self.block_len += 1;
++        if self.block_len > 56 {
++            for b in &mut self.block[self.block_len..] {
++                *b = 0;
++            }
++            let blk = self.block;
++            compress(&mut self.state, &blk);
++            self.block_len = 0;
++        }
++        for b in &mut self.block[self.block_len..56] {
++            *b = 0;
++        }
++        self.block[56..].copy_from_slice(&bit_len.to_be_bytes());
++        let blk = self.block;
++        compress(&mut self.state, &blk);
++        let mut out = [0u8; 32];
++        for (chunk, word) in out.chunks_exact_mut(4).zip(self.state.iter()) {
++            chunk.copy_from_slice(&word.to_be_bytes());
++        }
++        out
++    }
++}
++
++fn compress(state: &mut [u32; 8], block: &[u8; 64]) {
++    let mut w = [0u32; 64];
++    for (i, chunk) in block.chunks_exact(4).enumerate() {
++        w[i] = u32::from_be_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]);
++    }
++    for i in 16..64 {
++        let s0 = w[i - 15].rotate_right(7) ^ w[i - 15].rotate_right(18) ^ (w[i - 15] >> 3);
++        let s1 = w[i - 2].rotate_right(17) ^ w[i - 2].rotate_right(19) ^ (w[i - 2] >> 10);
++        w[i] = w[i - 16]
++            .wrapping_add(s0)
++            .wrapping_add(w[i - 7])
++            .wrapping_add(s1);
++    }
++    let [mut a, mut b, mut c, mut d, mut e, mut f, mut g, mut h] = *state;
++    for (k, wi) in K.iter().zip(w.iter()) {
++        let s1 = e.rotate_right(6) ^ e.rotate_right(11) ^ e.rotate_right(25);
++        let ch = (e & f) ^ (!e & g);
++        let t1 = h
++            .wrapping_add(s1)
++            .wrapping_add(ch)
++            .wrapping_add(*k)
++            .wrapping_add(*wi);
++        let s0 = a.rotate_right(2) ^ a.rotate_right(13) ^ a.rotate_right(22);
++        let maj = (a & b) ^ (a & c) ^ (b & c);
++        let t2 = s0.wrapping_add(maj);
++        h = g;
++        g = f;
++        f = e;
++        e = d.wrapping_add(t1);
++        d = c;
++        c = b;
++        b = a;
++        a = t1.wrapping_add(t2);
++    }
++    for (s, v) in state.iter_mut().zip([a, b, c, d, e, f, g, h]) {
++        *s = s.wrapping_add(v);
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    fn hex(d: &[u8; 32]) -> [u8; 64] {
++        const T: &[u8; 16] = b"0123456789abcdef";
++        let mut o = [0u8; 64];
++        for (i, b) in d.iter().enumerate() {
++            o[2 * i] = T[(b >> 4) as usize];
++            o[2 * i + 1] = T[(b & 15) as usize];
++        }
++        o
++    }
++
++    #[test]
++    fn empty() {
++        assert_eq!(
++            &hex(&Sha256::digest(b""))[..],
++            b"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++        );
++    }
++
++    #[test]
++    fn abc() {
++        assert_eq!(
++            &hex(&Sha256::digest(b"abc"))[..],
++            b"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
++        );
++    }
++
++    #[test]
++    fn two_blocks() {
++        assert_eq!(
++            &hex(&Sha256::digest(
++                b"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"
++            ))[..],
++            b"248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1"
++        );
++    }
++
++    #[test]
++    fn million_a_streamed() {
++        let mut h = Sha256::new();
++        let chunk = [b'a'; 1000];
++        for _ in 0..1000 {
++            h.update(&chunk);
++        }
++        assert_eq!(
++            &hex(&h.finalize())[..],
++            b"cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0"
++        );
++    }
++
++    #[test]
++    fn odd_chunking_matches_oneshot() {
++        let data: [u8; 200] = core::array::from_fn(|i| (i * 7 % 251) as u8);
++        let one = Sha256::digest(&data);
++        let mut h = Sha256::new();
++        h.update(&data[..1]);
++        h.update(&data[1..63]);
++        h.update(&data[63..64]);
++        h.update(&data[64..130]);
++        h.update(&data[130..]);
++        assert_eq!(h.finalize(), one);
++    }
++}
+diff --git a/tpm2min/src/wire.rs b/tpm2min/src/wire.rs
+new file mode 100644
+index 0000000..c1b342e
+--- /dev/null
++++ b/tpm2min/src/wire.rs
+@@ -0,0 +1,286 @@
++//! Big-endian cursors over caller-provided byte slices, plus a fixed-capacity
++//! `TPM2B` container.  (Part 1 §18 "Command/response marshalling": all
++//! integers are big-endian; `TPM2B_*` is `UINT16 size` + bytes.)
++
++use crate::{Error, Result};
++use core::fmt;
++
++/// Write cursor over a `&mut [u8]`.
++pub struct Writer<'a> {
++    buf: &'a mut [u8],
++    pos: usize,
++}
++
++impl<'a> Writer<'a> {
++    /// Start writing at the beginning of `buf`.
++    pub fn new(buf: &'a mut [u8]) -> Self {
++        Self { buf, pos: 0 }
++    }
++
++    /// Number of bytes written so far.
++    pub fn position(&self) -> usize {
++        self.pos
++    }
++
++    /// Bytes written so far.
++    pub fn written(&self) -> &[u8] {
++        &self.buf[..self.pos]
++    }
++
++    /// Append raw bytes.
++    pub fn put_bytes(&mut self, b: &[u8]) -> Result<()> {
++        let end = self.pos.checked_add(b.len()).ok_or(Error::BufferTooSmall)?;
++        let dst = self
++            .buf
++            .get_mut(self.pos..end)
++            .ok_or(Error::BufferTooSmall)?;
++        dst.copy_from_slice(b);
++        self.pos = end;
++        Ok(())
++    }
++
++    /// Append a `UINT8`.
++    pub fn put_u8(&mut self, v: u8) -> Result<()> {
++        self.put_bytes(&[v])
++    }
++
++    /// Append a big-endian `UINT16`.
++    pub fn put_u16(&mut self, v: u16) -> Result<()> {
++        self.put_bytes(&v.to_be_bytes())
++    }
++
++    /// Append a big-endian `UINT32`.
++    pub fn put_u32(&mut self, v: u32) -> Result<()> {
++        self.put_bytes(&v.to_be_bytes())
++    }
++
++    /// Append a big-endian `UINT64`.
++    pub fn put_u64(&mut self, v: u64) -> Result<()> {
++        self.put_bytes(&v.to_be_bytes())
++    }
++
++    /// Append a `TPM2B_*`: `UINT16 size` followed by the bytes.
++    pub fn put_2b(&mut self, b: &[u8]) -> Result<()> {
++        let n = u16::try_from(b.len()).map_err(|_| Error::TooLarge)?;
++        self.put_u16(n)?;
++        self.put_bytes(b)
++    }
++
++    /// Overwrite a previously written big-endian `UINT32` at offset `at`
++    /// (used to back-patch `commandSize`).
++    pub fn patch_u32(&mut self, at: usize, v: u32) -> Result<()> {
++        let end = at.checked_add(4).ok_or(Error::BufferTooSmall)?;
++        if end > self.pos {
++            return Err(Error::BufferTooSmall);
++        }
++        self.buf[at..end].copy_from_slice(&v.to_be_bytes());
++        Ok(())
++    }
++
++    /// Finish and return the number of bytes written.
++    pub fn finish(self) -> usize {
++        self.pos
++    }
++}
++
++/// Read cursor over a `&[u8]`.
++#[derive(Clone)]
++pub struct Reader<'a> {
++    buf: &'a [u8],
++    pos: usize,
++}
++
++impl<'a> Reader<'a> {
++    /// Start reading at the beginning of `buf`.
++    pub fn new(buf: &'a [u8]) -> Self {
++        Self { buf, pos: 0 }
++    }
++
++    /// Current offset.
++    pub fn position(&self) -> usize {
++        self.pos
++    }
++
++    /// Bytes left.
++    pub fn remaining(&self) -> usize {
++        self.buf.len() - self.pos
++    }
++
++    /// `true` when all bytes have been consumed.
++    pub fn is_empty(&self) -> bool {
++        self.remaining() == 0
++    }
++
++    /// Take `n` raw bytes.
++    pub fn take(&mut self, n: usize) -> Result<&'a [u8]> {
++        let end = self.pos.checked_add(n).ok_or(Error::Truncated)?;
++        let s = self.buf.get(self.pos..end).ok_or(Error::Truncated)?;
++        self.pos = end;
++        Ok(s)
++    }
++
++    /// Read a `UINT8`.
++    pub fn u8(&mut self) -> Result<u8> {
++        Ok(self.take(1)?[0])
++    }
++
++    /// Read a big-endian `UINT16`.
++    pub fn u16(&mut self) -> Result<u16> {
++        let b = self.take(2)?;
++        Ok(u16::from_be_bytes([b[0], b[1]]))
++    }
++
++    /// Read a big-endian `UINT32`.
++    pub fn u32(&mut self) -> Result<u32> {
++        let b = self.take(4)?;
++        Ok(u32::from_be_bytes([b[0], b[1], b[2], b[3]]))
++    }
++
++    /// Read a big-endian `UINT64`.
++    pub fn u64(&mut self) -> Result<u64> {
++        let b = self.take(8)?;
++        let mut a = [0u8; 8];
++        a.copy_from_slice(b);
++        Ok(u64::from_be_bytes(a))
++    }
++
++    /// Read a `TPM2B_*` and return its payload.
++    pub fn take_2b(&mut self) -> Result<&'a [u8]> {
++        let n = self.u16()? as usize;
++        self.take(n)
++    }
++
++    /// Read a `TPM2B_*` into a fixed-capacity [`Tpm2b`].
++    pub fn read_2b<const N: usize>(&mut self) -> Result<Tpm2b<N>> {
++        Tpm2b::from_slice(self.take_2b()?)
++    }
++
++    /// Fail with [`Error::SizeMismatch`] unless everything was consumed.
++    pub fn expect_end(&self) -> Result<()> {
++        if self.is_empty() {
++            Ok(())
++        } else {
++            Err(Error::SizeMismatch)
++        }
++    }
++}
++
++/// A `TPM2B_*` sized buffer with fixed capacity `N` (no heap).
++#[derive(Clone, Copy)]
++pub struct Tpm2b<const N: usize> {
++    len: usize,
++    buf: [u8; N],
++}
++
++impl<const N: usize> Tpm2b<N> {
++    /// Maximum payload length.
++    pub const CAPACITY: usize = N;
++
++    /// An empty buffer (`size = 0`).
++    pub const fn empty() -> Self {
++        Self {
++            len: 0,
++            buf: [0u8; N],
++        }
++    }
++
++    /// Copy `s` in; fails with [`Error::TooLarge`] if it does not fit.
++    pub fn from_slice(s: &[u8]) -> Result<Self> {
++        if s.len() > N {
++            return Err(Error::TooLarge);
++        }
++        let mut t = Self::empty();
++        t.buf[..s.len()].copy_from_slice(s);
++        t.len = s.len();
++        Ok(t)
++    }
++
++    /// Payload bytes.
++    pub fn as_slice(&self) -> &[u8] {
++        &self.buf[..self.len]
++    }
++
++    /// Payload length.
++    pub fn len(&self) -> usize {
++        self.len
++    }
++
++    /// `true` when `size == 0`.
++    pub fn is_empty(&self) -> bool {
++        self.len == 0
++    }
++
++    /// Marshal as `UINT16 size || payload`.
++    pub fn marshal(&self, w: &mut Writer<'_>) -> Result<()> {
++        w.put_2b(self.as_slice())
++    }
++}
++
++impl<const N: usize> Default for Tpm2b<N> {
++    fn default() -> Self {
++        Self::empty()
++    }
++}
++
++impl<const N: usize> PartialEq for Tpm2b<N> {
++    fn eq(&self, other: &Self) -> bool {
++        self.as_slice() == other.as_slice()
++    }
++}
++impl<const N: usize> Eq for Tpm2b<N> {}
++
++impl<const N: usize> fmt::Debug for Tpm2b<N> {
++    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
++        write!(f, "Tpm2b<{}>[{}]=", N, self.len)?;
++        for b in self.as_slice() {
++            write!(f, "{b:02x}")?;
++        }
++        Ok(())
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn writer_roundtrip() {
++        let mut buf = [0u8; 32];
++        let mut w = Writer::new(&mut buf);
++        w.put_u8(0xAA).unwrap();
++        w.put_u16(0x1122).unwrap();
++        w.put_u32(0x3344_5566).unwrap();
++        w.put_u64(0x0102_0304_0506_0708).unwrap();
++        w.put_2b(&[9, 8, 7]).unwrap();
++        let n = w.finish();
++        assert_eq!(n, 1 + 2 + 4 + 8 + 2 + 3);
++        assert_eq!(
++            &buf[..n],
++            &[0xAA, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 1, 2, 3, 4, 5, 6, 7, 8, 0, 3, 9, 8, 7]
++        );
++        let mut r = Reader::new(&buf[..n]);
++        assert_eq!(r.u8().unwrap(), 0xAA);
++        assert_eq!(r.u16().unwrap(), 0x1122);
++        assert_eq!(r.u32().unwrap(), 0x3344_5566);
++        assert_eq!(r.u64().unwrap(), 0x0102_0304_0506_0708);
++        assert_eq!(r.take_2b().unwrap(), &[9, 8, 7]);
++        assert!(r.expect_end().is_ok());
++        assert_eq!(r.u8(), Err(Error::Truncated));
++    }
++
++    #[test]
++    fn writer_overflow() {
++        let mut buf = [0u8; 3];
++        let mut w = Writer::new(&mut buf);
++        assert_eq!(w.put_u32(1), Err(Error::BufferTooSmall));
++        assert_eq!(w.position(), 0);
++    }
++
++    #[test]
++    fn tpm2b_capacity() {
++        assert!(Tpm2b::<4>::from_slice(&[1, 2, 3, 4, 5]).is_err());
++        let t = Tpm2b::<4>::from_slice(&[1, 2]).unwrap();
++        assert_eq!(t.as_slice(), &[1, 2]);
++        assert_eq!(t, Tpm2b::<4>::from_slice(&[1, 2]).unwrap());
++    }
++}
+-- 
+2.43.0
+
