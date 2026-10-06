@@ -1,0 +1,1001 @@
+From a8db6a4f35a887f50f0c570de3df60c840474539 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 6 Oct 2026 15:23:53 +0000
+Subject: [PATCH 2/2] lab(uefi): A.L.I.C.E. boot dashboard - GOP panels, live
+ CIS-1 decode, attestation view
+
+What a person at the machine sees is now a designed dashboard instead of a
+white-on-black transcript: a header with the mark and a mode badge; MACHINE,
+PAYLOAD and ATTESTATION panels filled from CPUID, file sizes, SHA-256s, TPM
+PCRs, the TPM2_Quote result and the receipt digest/chain; a transcript
+viewport that every existing print site writes into unchanged; and a footer
+stage bar (BOOT..DONE).
+
+- gop.rs: prefer the largest landscape mode <= 1920 px wide (QEMU std VGA
+  otherwise offers a 2048x2048 square); viewport-relative newline/scroll;
+  fill_rect, text_px, text_cell, set_viewport, clear_viewport primitives.
+- console.rs: 1x glyphs unless the panel is >= 2560 px wide (120 columns at
+  1920); with_gop() runs dashboard code only on the GOP backend.
+- ui.rs (new): palette, layout, panels, header, footer, receipt lines.
+- verifier.rs: replay_with(.., on_token), a display-only observer invoked
+  after the chain fold; replay() wraps it with a no-op. Receipts are
+  byte-identical with or without a screen: the RECEIPT.TXT minted under
+  QEMU by this build equals tests/golden/witness_v1_m7_once64.receipt.
+- main.rs: dashboard hooks at each stage; live token stream and token
+  counter during mint; receipt summary in the attestation panel for mint
+  and verify; a 3 s hold on the DONE frame before the test runner exits.
+
+The firmware text-console fallback is unchanged (every ui:: call is a no-op
+there). QEMU gate: mint and verify both exit 33 with swtpm attached; the
+host verifier reports ATTEST VERIFY PASS and QUOTE VERIFY PASS for both
+ATTEST.TXT files. No performance claims are made (Rule A).
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_015rZAekjhNTVJRRHVmzz2ae
+---
+ aegis-uefi/src/console.rs  |  39 ++++-
+ aegis-uefi/src/gop.rs      | 159 +++++++++++++++---
+ aegis-uefi/src/main.rs     | 144 ++++++++++++++++-
+ aegis-uefi/src/ui.rs       | 319 +++++++++++++++++++++++++++++++++++++
+ aegis-uefi/src/verifier.rs |  18 ++-
+ 5 files changed, 647 insertions(+), 32 deletions(-)
+ create mode 100644 aegis-uefi/src/ui.rs
+
+diff --git a/aegis-uefi/src/console.rs b/aegis-uefi/src/console.rs
+index a8021a5..fc85e4f 100644
+--- a/aegis-uefi/src/console.rs
++++ b/aegis-uefi/src/console.rs
+@@ -13,6 +13,8 @@ use spin::Mutex;
+ 
+ #[cfg(feature = "gop")]
+ use crate::gop::GopConsole;
++#[cfg(not(feature = "gop"))]
++pub type GopConsole = ();
+ 
+ /// Common surface both backends provide. A thin superset of `core::fmt::Write`
+ /// so callers that also need `.clear()` (as several boot-status prints do)
+@@ -44,7 +46,9 @@ impl ConsoleWriter for TextAdapter<'_> {
+ #[cfg(feature = "gop")]
+ impl ConsoleWriter for GopConsole {
+     fn clear(&mut self) {
+-        self.clear_with(0x0000_0000);
++        // Only the transcript viewport: the dashboard panels around it are
++        // state, not scrollback.
++        self.clear_viewport();
+     }
+ }
+ 
+@@ -60,11 +64,13 @@ static GOP_CONSOLE: Mutex<Option<GopConsole>> = Mutex::new(None);
+ pub fn init() -> bool {
+     #[cfg(feature = "gop")]
+     {
+-        // 1080p+ panels get a 2x scale so 16x32 glyphs stay crisp instead of
+-        // going tiny; anything smaller keeps 1x.
++        // The dashboard (ui.rs) needs columns: 16x32 glyphs at 1x give a
++        // 120-column grid on a 1920-wide panel, which is what the side panels
++        // and digest lines are laid out for. Only 4K-class panels (>= 2560
++        // wide) get 2x so the glyphs do not shrink to a wall of tiny text.
+         if let Some(probe) = GopConsole::init(1) {
+-            let (_w, h) = probe_resolution(&probe);
+-            let scale = if h >= 1080 { 2 } else { 1 };
++            let (w, _h) = probe_resolution(&probe);
++            let scale = if w >= 2560 { 2 } else { 1 };
+             drop(probe);
+             if let Some(console) = GopConsole::init(scale) {
+                 *GOP_CONSOLE.lock() = Some(console);
+@@ -80,6 +86,29 @@ fn probe_resolution(c: &GopConsole) -> (usize, usize) {
+     c.dims()
+ }
+ 
++/// Run `f` against the GOP console if it is the active backend. Returns
++/// false (and does nothing) on the text-console fallback — the dashboard is
++/// GOP-only and degrades to the plain transcript there.
++#[allow(dead_code)]
++pub fn with_gop<F>(f: F) -> bool
++where
++    F: FnOnce(&mut GopConsole),
++{
++    #[cfg(feature = "gop")]
++    {
++        let mut guard = GOP_CONSOLE.lock();
++        if let Some(gop) = guard.as_mut() {
++            f(gop);
++            return true;
++        }
++    }
++    #[cfg(not(feature = "gop"))]
++    {
++        let _ = f;
++    }
++    false
++}
++
+ /// Call `f` with whichever console backend is active. Mirrors the shape of
+ /// `uefi::system::with_stdout` so call sites are unchanged apart from the
+ /// function path.
+diff --git a/aegis-uefi/src/gop.rs b/aegis-uefi/src/gop.rs
+index 96f0883..ef471b4 100644
+--- a/aegis-uefi/src/gop.rs
++++ b/aegis-uefi/src/gop.rs
+@@ -34,6 +34,11 @@ pub struct GopConsole {
+     bg: u32,
+     /// Last border drawn (x, y, w, h, color); re-applied after every clear so panels survive `.clear()`.
+     border: Option<(usize, usize, usize, usize, u32)>,
++    /// Text viewport in CELLS (col0, row0, cols, rows) — the region the
++    /// `Write` impl scrolls. Defaults to the whole screen; the dashboard
++    /// (ui.rs) shrinks it to the transcript panel so the panels around it
++    /// survive every print and `.clear()`.
++    vp: (usize, usize, usize, usize),
+ }
+ 
+ // SAFETY: see struct doc — single-threaded boot-time use only.
+@@ -52,8 +57,14 @@ impl GopConsole {
+         let handle = uefi::boot::get_handle_for_protocol::<GraphicsOutput>().ok()?;
+         let mut gop = uefi::boot::open_protocol_exclusive::<GraphicsOutput>(handle).ok()?;
+ 
++        // Mode choice: the dashboard (ui.rs) wants a LANDSCAPE panel at most
++        // 1920 px wide (QEMU's std VGA otherwise offers a 2048x2048 square
++        // that reads as a wall of tiny text). Prefer the largest landscape
++        // mode <= 1920 wide; fall back to the largest mode of any shape.
+         let mut best: Option<uefi::proto::console::gop::Mode> = None;
+         let mut best_area = 0usize;
++        let mut best_any: Option<uefi::proto::console::gop::Mode> = None;
++        let mut best_any_area = 0usize;
+         for mode in gop.modes() {
+             let info = mode.info();
+             match info.pixel_format() {
+@@ -62,13 +73,17 @@ impl GopConsole {
+             }
+             let (w, h) = info.resolution();
+             let area = w * h;
+-            if area > best_area {
++            if area > best_any_area {
++                best_any_area = area;
++                best_any = Some(mode.clone());
++            }
++            if w <= 1920 && w * 10 >= h * 13 && area > best_area {
+                 best_area = area;
+                 best = Some(mode);
+             }
+         }
+ 
+-        let mode = best?;
++        let mode = best.or(best_any)?;
+         gop.set_mode(&mode).ok()?;
+ 
+         let info = mode.info();
+@@ -104,6 +119,7 @@ impl GopConsole {
+             fg: DEFAULT_FG,
+             bg: DEFAULT_BG,
+             border: None,
++            vp: (0, 0, cols, rows),
+         };
+         console.clear_screen();
+         // A single-pixel panel border around the whole screen so the boot
+@@ -119,6 +135,100 @@ impl GopConsole {
+         (self.width_px, self.height_px)
+     }
+ 
++    /// Text grid size in cells at the current scale.
++    pub fn cells(&self) -> (usize, usize) {
++        (self.cols, self.rows)
++    }
++
++    pub fn scale(&self) -> usize {
++        self.scale
++    }
++
++    pub fn set_colors(&mut self, fg: u32, bg: u32) {
++        self.fg = fg;
++        self.bg = bg;
++    }
++
++    /// Filled rectangle in pixels (clipped to the panel).
++    pub fn fill_rect(&mut self, x: usize, y: usize, w: usize, h: usize, color: u32) {
++        let x1 = (x + w).min(self.width_px);
++        let y1 = (y + h).min(self.height_px);
++        for yy in y.min(y1)..y1 {
++            for xx in x.min(x1)..x1 {
++                // SAFETY: bounds clipped above.
++                unsafe { self.put_pixel_raw(xx, yy, color) };
++            }
++        }
++    }
++
++    /// Pixel-positioned text at an arbitrary integer scale. `bg = None`
++    /// leaves the background untouched (text over a panel fill).
++    pub fn text_px(&mut self, x_px: usize, y_px: usize, s: &str, fg: u32, bg: Option<u32>, scale: usize) {
++        let scale = scale.max(1);
++        let mut cx = x_px;
++        for ch in s.chars() {
++            let glyph = font::glyph(ch);
++            for row in 0..font::FONT_H {
++                let byte0 = glyph[row * font::FONT_ROW_BYTES];
++                let byte1 = if font::FONT_ROW_BYTES > 1 { glyph[row * font::FONT_ROW_BYTES + 1] } else { 0 };
++                for col in 0..font::FONT_W {
++                    let bit_set = if col < 8 { (byte0 >> (7 - col)) & 1 != 0 } else { (byte1 >> (7 - (col - 8))) & 1 != 0 };
++                    let color = if bit_set {
++                        fg
++                    } else if let Some(b) = bg {
++                        b
++                    } else {
++                        continue;
++                    };
++                    self.fill_rect(cx + col * scale, y_px + row * scale, scale, scale, color);
++                }
++            }
++            cx += font::FONT_W * scale;
++        }
++    }
++
++    /// Cell-positioned text at the console scale, clipped to the grid width.
++    pub fn text_cell(&mut self, col: usize, row: usize, s: &str, fg: u32, bg: Option<u32>) {
++        if row >= self.rows {
++            return;
++        }
++        let cell_w = font::FONT_W * self.scale;
++        let cell_h = font::FONT_H * self.scale;
++        let mut c = col;
++        for ch in s.chars() {
++            if c >= self.cols {
++                break;
++            }
++            let mut buf = [0u8; 4];
++            let st = ch.encode_utf8(&mut buf);
++            self.text_px(c * cell_w, row * cell_h, st, fg, bg, self.scale);
++            c += 1;
++        }
++        let _ = cell_h;
++    }
++
++    /// Restrict the scrolling `Write` region to a cell rectangle and clear it.
++    pub fn set_viewport(&mut self, col0: usize, row0: usize, cols: usize, rows: usize) {
++        let col0 = col0.min(self.cols.saturating_sub(1));
++        let row0 = row0.min(self.rows.saturating_sub(1));
++        let cols = cols.clamp(1, self.cols - col0);
++        let rows = rows.clamp(1, self.rows - row0);
++        self.vp = (col0, row0, cols, rows);
++        self.clear_viewport();
++    }
++
++    /// Clear only the text viewport (panels around it survive).
++    pub fn clear_viewport(&mut self) {
++        let cell_w = font::FONT_W * self.scale;
++        let cell_h = font::FONT_H * self.scale;
++        let (c0, r0, cs, rs) = self.vp;
++        let bg = self.bg;
++        self.fill_rect(c0 * cell_w, r0 * cell_h, cs * cell_w, rs * cell_h, bg);
++        self.cursor_x = 0;
++        self.cursor_y = 0;
++    }
++
++
+     #[inline]
+     fn pack(&self, color: u32) -> u32 {
+         // color is 0x00RRGGBB regardless of the panel's native order; swap
+@@ -243,33 +353,40 @@ impl GopConsole {
+     fn newline(&mut self) {
+         self.cursor_x = 0;
+         self.cursor_y += 1;
+-        if self.cursor_y >= self.rows {
++        if self.cursor_y >= self.vp.3 {
+             self.scroll_one_row();
+-            self.cursor_y = self.rows - 1;
++            self.cursor_y = self.vp.3 - 1;
+         }
+     }
+ 
+-    /// Move all text rows up by one cell row, clearing the last row.
++    /// Move the viewport's text rows up by one cell row, clearing its last row.
+     fn scroll_one_row(&mut self) {
++        let cell_w = font::FONT_W * self.scale;
+         let cell_h = font::FONT_H * self.scale;
++        let (c0, r0, cs, rs) = self.vp;
++        let x0 = c0 * cell_w;
++        let y0 = r0 * cell_h;
++        let w_bytes = cs * cell_w * 4;
++        let h_px = rs * cell_h;
++        if h_px <= cell_h {
++            let bg = self.bg;
++            self.fill_rect(x0, y0, cs * cell_w, h_px, bg);
++            return;
++        }
+         let row_stride_bytes = self.stride_px * 4;
+-        let move_bytes = row_stride_bytes * (self.height_px - cell_h);
+-        // SAFETY: src/dst are both within the framebuffer allocation
+-        // (fb_size >= stride_px*4*height_px); regions may overlap, hence copy
+-        // (memmove semantics) rather than copy_nonoverlapping. This is a
+-        // linear framebuffer, not cached device memory with side effects, so
+-        // a bulk byte copy is standard practice for scrolling text consoles.
++        // SAFETY: every (src, dst) pair below lies inside the framebuffer
++        // (x0 + cs*cell_w <= width_px, y0 + h_px <= height_px by construction
++        // of the viewport); rows may overlap vertically, hence `copy`
++        // (memmove semantics). Linear framebuffer, no side effects.
+         unsafe {
+-            let dst = self.base;
+-            let src = self.base.add(row_stride_bytes * cell_h);
+-            core::ptr::copy(src, dst, move_bytes);
+-        }
+-        // Clear the newly-exposed bottom row.
+-        for y in (self.height_px - cell_h)..self.height_px {
+-            for x in 0..self.width_px {
+-                self.put_pixel(x, y, self.bg);
++            for y in y0..(y0 + h_px - cell_h) {
++                let dst = self.base.add(y * row_stride_bytes + x0 * 4);
++                let src = self.base.add((y + cell_h) * row_stride_bytes + x0 * 4);
++                core::ptr::copy(src, dst, w_bytes);
+             }
+         }
++        let bg = self.bg;
++        self.fill_rect(x0, y0 + h_px - cell_h, cs * cell_w, cell_h, bg);
+     }
+ 
+     fn put_str_at_cursor(&mut self, s: &str) {
+@@ -278,10 +395,10 @@ impl GopConsole {
+                 '\n' => self.newline(),
+                 '\r' => {} // CRLF pairs are common in this codebase; no-op on CR
+                 _ => {
+-                    if self.cursor_x >= self.cols {
++                    if self.cursor_x >= self.vp.2 {
+                         self.newline();
+                     }
+-                    let (x, y, fg, bg) = (self.cursor_x, self.cursor_y, self.fg, self.bg);
++                    let (x, y, fg, bg) = (self.vp.0 + self.cursor_x, self.vp.1 + self.cursor_y, self.fg, self.bg);
+                     self.put_char(x, y, ch, fg, bg);
+                     self.cursor_x += 1;
+                 }
+diff --git a/aegis-uefi/src/main.rs b/aegis-uefi/src/main.rs
+index 35e8103..69a2ed3 100644
+--- a/aegis-uefi/src/main.rs
++++ b/aegis-uefi/src/main.rs
+@@ -6,6 +6,7 @@ extern crate alloc;
+ use alloc::borrow::ToOwned;
+ use alloc::format;
+ use alloc::string::String;
++use alloc::vec::Vec;
+ use core::fmt::Write;
+ 
+ mod allocator;
+@@ -17,6 +18,7 @@ mod font;
+ mod gop;
+ mod h3;
+ mod mtrr_decode;
++mod ui;
+ mod verifier;
+ // Provides `wcslen`, which LLVM emits for the uefi crate's UTF-16 scans once
+ // SSE is on (hard-float target). No UEFI sysroot defines it. See wcs.rs.
+@@ -446,6 +448,11 @@ fn main() -> uefi::Status {
+     // else the firmware's 80x25 text console (console::with_console handles
+     // the fallback transparently for every print site below).
+     console::init();
++    #[cfg(feature = "qemu-test")]
++    ui::init("QEMU TEST");
++    #[cfg(not(feature = "qemu-test"))]
++    ui::init("BOOT");
++    ui::stage(0, "firmware handed off; enabling AVX");
+ 
+     // (Removed duplicate init_uefi_alloc_large call here to prevent OOM before file load)
+ 
+@@ -517,6 +524,23 @@ fn main() -> uefi::Status {
+             ),
+             5,
+         );
++        let (fam, model_id, step) = cpu::family_model_stepping();
++        let mut vb = [0u8; 12];
++        let vendor = cpu::vendor_string(&mut vb);
++        ui::machine(&[
++            ui::kv("CPU", brand.trim(), ui::TEXT),
++            ui::kv("ID", &format!("{vendor} fam {fam} model {model_id} step {step}"), ui::TEXT),
++            ui::kv("ISA", &format!(
++                "avx:{} avx2:{} fma:{} sse4.1:{}",
++                if avx_supported { "y" } else { "-" },
++                if avx2_supported { "y" } else { "-" },
++                if fma { "y" } else { "-" },
++                if sse41 { "y" } else { "-" }
++            ), ui::TEXT),
++            ui::kv("KERNEL", aegis_core::ops::simd_level_name(), ui::TEXT),
++            ui::kv("ENV", if cpu::is_hypervisor() { "virtual machine (hypervisor bit set)" } else { "bare metal" }, ui::TEXT),
++            ui::kv("OS", "none - ring 0 unikernel, boot services only", ui::TEXT),
++        ]);
+     }
+ 
+     let _ = console::with_console(|st| {
+@@ -583,6 +607,7 @@ fn main() -> uefi::Status {
+         &mut root,
+         "STAGE 1: boot volume opened, AVX enable attempted",
+     );
++    ui::stage(1, "boot volume opened");
+ 
+     let model_size = get_file_size(&mut root, "MODEL.SAF").unwrap_or(0);
+     let emb_size = get_file_size(&mut root, "EMBED.BIN").unwrap_or(0);
+@@ -646,6 +671,13 @@ fn main() -> uefi::Status {
+     });
+ 
+     boot_log(&mut root, "STAGE 3: tensor memory allocated");
++    ui::stage(2, "tensor memory locked in physical RAM");
++    ui::payload(&[
++        ui::kv("MODEL", &format!("MODEL.SAF  {}", ui::human_bytes(model_size)), ui::TEXT),
++        ui::kv("EMBED", &format!("EMBED.BIN  {}", ui::human_bytes(emb_size)), ui::TEXT),
++        ui::kv("VOCAB", &format!("VOCAB.BIN  {}", ui::human_bytes(vocab_size)), ui::TEXT),
++        (String::from("       loading from boot volume..."), ui::MUTED),
++    ]);
+     // H3: record where the firmware actually put each buffer, at load time —
+     // the physical placement is the variable under test (h3.rs).
+     boot_log(
+@@ -668,6 +700,7 @@ fn main() -> uefi::Status {
+     }
+     let _ = uefi::boot::stall(core::time::Duration::from_secs(1)); // 1-second stall to flush USB hardware state machine
+     boot_log(&mut root, "STAGE 4a: MODEL.SAF loaded");
++    ui::stage(3, "MODEL.SAF in RAM");
+ 
+     // 2. Embeddings
+     if !load_file_into(&mut root, "EMBED.BIN", bounce_slice, embeddings_slice) {
+@@ -731,6 +764,7 @@ fn main() -> uefi::Status {
+     // 5. Initialize the massive second block LAST so large files got priority for contiguous physical RAM
+     allocator::init_uefi_alloc_large();
+     boot_log(&mut root, "STAGE 5: working heap online");
++    ui::stage(4, "working heap online");
+ 
+     // Free bounce buffer
+     unsafe {
+@@ -782,11 +816,30 @@ fn main() -> uefi::Status {
+             for e in a.errors.clone() {
+                 boot_log(&mut root, &format!("TPM: error {e}"));
+             }
++            let (m, e, v) = a.measured.iter().fold((String::new(), String::new(), String::new()), |mut acc, (_, line)| {
++                let sha = line.rsplit("sha256=").next().unwrap_or("");
++                if line.contains("MODEL.SAF") { acc.0 = ui::short_hex(sha, 16); }
++                if line.contains("EMBED.BIN") { acc.1 = ui::short_hex(sha, 16); }
++                if line.contains("VOCAB.BIN") { acc.2 = ui::short_hex(sha, 16); }
++                acc
++            });
++            ui::payload(&[
++                ui::kv("MODEL", &format!("MODEL.SAF  {}  {m}", ui::human_bytes(model_size)), ui::TEXT),
++                ui::kv("EMBED", &format!("EMBED.BIN  {}  {e}", ui::human_bytes(emb_size)), ui::TEXT),
++                ui::kv("VOCAB", &format!("VOCAB.BIN  {}  {v}", ui::human_bytes(vocab_size)), ui::TEXT),
++                (String::from("       sha256 measured into TPM PCR 12"), ui::GREEN),
++            ]);
++            ui::attest(&ui::attest_lines_from_report(&a.measured, "", true));
++            ui::stage(5, "payload measured into PCR 12");
++        }
++        None => {
++            boot_log(
++                &mut root,
++                "TPM: no EFI_TCG2_PROTOCOL — attestation disabled (no TPM, or disabled in firmware setup)",
++            );
++            ui::attest(&ui::attest_lines_from_report(&[], "", false));
++            ui::stage(5, "no TPM: receipts unattested");
+         }
+-        None => boot_log(
+-            &mut root,
+-            "TPM: no EFI_TCG2_PROTOCOL — attestation disabled (no TPM, or disabled in firmware setup)",
+-        ),
+     }
+ 
+     // ---- Provable AI Kit: verifier mode --------------------------------
+@@ -800,6 +853,8 @@ fn main() -> uefi::Status {
+             );
+             core::fmt::Result::Ok(())
+         });
++        ui::set_mode("VERIFY RECEIPT - CIS-1 FullInt");
++        ui::stage(6, "replaying the receipt's decode bit for bit");
+         let verdict = verifier::run(model_slice, embeddings_slice, vocab_slice, &receipt_bytes);
+         let _ = console::with_console(|st| {
+             for line in verdict.detail.lines() {
+@@ -852,6 +907,24 @@ fn main() -> uefi::Status {
+             }
+             let qual = aegis_core::witness::sha256(&receipt_bytes);
+             let report = a.report(&attest_cpuid, Some(&qual));
++            let mut lines = ui::attest_lines_from_report(&a.measured, &report, true);
++            if let Some(chain) = verdict.chain.as_ref() {
++                lines.extend(ui::receipt_lines(
++                    "verify",
++                    chain,
++                    verdict.cis_digest,
++                    verdict.steps,
++                    if verdict.pass { "PASS - every logit reproduced" } else { "FAIL - replay diverged" },
++                    if verdict.pass { ui::GREEN } else { ui::RED },
++                ));
++            } else {
++                lines.push((
++                    if verdict.pass { String::from("VERIFY PASS") } else { String::from("VERIFY FAIL - replay diverged from the receipt") },
++                    if verdict.pass { ui::GREEN } else { ui::RED },
++                ));
++            }
++            ui::attest(&lines);
++            ui::stage(7, if verdict.pass { "DONE - VERIFY PASS, quote written to ATTEST.TXT" } else { "DONE - VERIFY FAIL" });
+             let wrote = write_whole_file(&mut root, "ATTEST.TXT", report.as_bytes());
+             for line in report.lines() {
+                 if line.starts_with("pcr ")
+@@ -874,6 +947,9 @@ fn main() -> uefi::Status {
+                 core::fmt::Result::Ok(())
+             });
+         }
++        // Hold the finished frame long enough to be seen before the test
++        // runner exits.
++        let _ = uefi::boot::stall(core::time::Duration::from_secs(3));
+         // SAFETY: qemu-test builds write the exit code to QEMU's
+         // isa-debug-exit port and never return; production builds compile
+         // this to a no-op and fall through to the on-screen halt below.
+@@ -912,22 +988,53 @@ fn main() -> uefi::Status {
+             );
+             core::fmt::Result::Ok(())
+         });
++        ui::set_mode("MINT RECEIPT - CIS-1 FullInt");
++        ui::stage(6, &format!("decoding {max_new} tokens, integer-exact"));
+         let model_sha = aegis_core::witness::sha256(model_slice);
+         let embed_sha = aegis_core::witness::sha256(embeddings_slice);
+         let vocab_sha = aegis_core::witness::sha256(vocab_slice);
+         let hashes = (&model_sha, &embed_sha, &vocab_sha);
+         let mut minted_receipt: Option<String> = None;
+-        let ok = match verifier::replay(
++        let mut minted_summary: Option<([u8; 32], u64, usize)> = None;
++        let _ = console::with_console(|st| {
++            let _ = st.write_str("\r\n");
++            let _ = st.write_str("PROMPT  ");
++            let _ = st.write_str(&prompt);
++            let _ = st.write_str("\r\nOUTPUT  ");
++            core::fmt::Result::Ok(())
++        });
++        // Display-only observer: streams each decoded piece into the
++        // transcript and ticks the footer. It runs after the chain fold, so
++        // the receipt is byte-identical with or without a screen.
++        let mut on_token = |step: usize, _tok: u32, piece: &str| {
++            let _ = console::with_console(|st| {
++                for ch in piece.chars() {
++                    if ch == '\n' {
++                        let _ = st.write_str("\r\n        ");
++                    } else if !ch.is_control() {
++                        let mut b = [0u8; 4];
++                        let _ = st.write_str(ch.encode_utf8(&mut b));
++                    }
++                }
++                core::fmt::Result::Ok(())
++            });
++            if step % 8 == 7 || step + 1 == max_new {
++                ui::stage(6, &format!("token {}/{max_new}  CIS-1 FullInt  argmax", step + 1));
++            }
++        };
++        let ok = match verifier::replay_with(
+             model_slice,
+             embeddings_slice,
+             vocab_slice,
+             hashes,
+             &prompt,
+             max_new,
++            &mut on_token,
+         ) {
+             Ok(rep) => {
+                 let receipt = verifier::render_receipt(hashes, &prompt, max_new, &rep);
+                 minted_receipt = Some(receipt.clone());
++                minted_summary = Some((rep.chain, rep.fnv, rep.generated.len()));
+                 let wrote = write_whole_file(&mut root, "RECEIPT.TXT", receipt.as_bytes());
+                 boot_log(
+                     &mut root,
+@@ -941,6 +1048,7 @@ fn main() -> uefi::Status {
+                     a.record_receipt("mint", &rep.chain, rep.fnv, rep.generated.len(), "MINTED");
+                 }
+                 let _ = console::with_console(|st| {
++                    let _ = st.write_str("\r\n\r\nRECEIPT.TXT (witness v1-CIS, verifiable on any host):\r\n");
+                     for line in receipt.lines() {
+                         let _ = st.write_str(line);
+                         let _ = st.write_str("\r\n");
+@@ -954,6 +1062,7 @@ fn main() -> uefi::Status {
+                 false
+             }
+         };
++        let mut attest_panel: Vec<(String, u32)> = Vec::new();
+         if let Some(a) = attestor.as_mut() {
+             let qual = minted_receipt
+                 .as_ref()
+@@ -971,7 +1080,27 @@ fn main() -> uefi::Status {
+                 }
+             }
+             boot_log(&mut root, &format!("STAGE A: ATTEST.TXT written={wrote}"));
++            attest_panel = ui::attest_lines_from_report(&a.measured, &report, true);
++        } else {
++            attest_panel = ui::attest_lines_from_report(&[], "", false);
+         }
++        if let Some((chain, fnv, steps)) = minted_summary {
++            attest_panel.extend(ui::receipt_lines(
++                "mint",
++                &chain,
++                fnv,
++                steps,
++                if ok { "MINTED - chain in PCR 13" } else { "MINTED - RECEIPT.TXT NOT WRITTEN" },
++                if ok { ui::GREEN } else { ui::AMBER },
++            ));
++        } else {
++            attest_panel.push((String::from("VERDICT MINT FAILED"), ui::RED));
++        }
++        ui::attest(&attest_panel);
++        ui::stage(7, if ok { "DONE - receipt minted and quoted; safe to power off" } else { "DONE - mint failed" });
++        // Hold the finished frame long enough to be seen (and screenshotted)
++        // before the test runner exits.
++        let _ = uefi::boot::stall(core::time::Duration::from_secs(3));
+         // SAFETY: as in verifier mode — qemu-test builds exit through the
+         // debug port and never return; production builds fall through.
+         unsafe {
+@@ -1132,6 +1261,11 @@ fn main() -> uefi::Status {
+         let _ = write!(st, "[SYSTEM] Engine Online.\r\n\n");
+         core::fmt::Result::Ok(())
+     });
++    #[cfg(feature = "qemu-test")]
++    ui::set_mode("QEMU TEST - f32 engine");
++    #[cfg(not(feature = "qemu-test"))]
++    ui::set_mode("INTERACTIVE - f32 engine");
++    ui::stage(6, "engine online");
+ 
+     #[cfg(not(feature = "qemu-test"))]
+     {
+diff --git a/aegis-uefi/src/ui.rs b/aegis-uefi/src/ui.rs
+new file mode 100644
+index 0000000..36543de
+--- /dev/null
++++ b/aegis-uefi/src/ui.rs
+@@ -0,0 +1,319 @@
++//! The A.L.I.C.E. boot dashboard — what a person standing at the machine sees.
++//!
++//! A no_std, allocation-light layer over the GOP console: a header with the
++//! mark and the mode badge, three state panels (MACHINE, PAYLOAD,
++//! ATTESTATION), a scrolling transcript viewport that every existing print
++//! site writes into unchanged, and a footer stage bar. Every value shown is
++//! read from the running system (CPUID, file sizes, SHA-256s, TPM PCRs); the
++//! dashboard renders state, it never invents it (prime directive 1).
++//!
++//! GOP-only. On the firmware text console every function here is a no-op and
++//! the plain transcript remains exactly as before.
++
++use crate::console;
++use alloc::format;
++use alloc::string::String;
++use alloc::vec::Vec;
++use crate::font;
++
++// Palette: deep navy field, cyan accent, amber for attention, green/red verdicts.
++pub const BG: u32 = 0x000A_0E1A;
++pub const PANEL: u32 = 0x0011_1A2E;
++pub const EDGE: u32 = 0x0024_314F;
++pub const ACCENT: u32 = 0x0038_E1FF;
++pub const ACCENT_DIM: u32 = 0x0018_6F80;
++pub const AMBER: u32 = 0x00FF_B020;
++pub const GREEN: u32 = 0x004A_DE80;
++pub const RED: u32 = 0x00FF_5C5C;
++pub const TEXT: u32 = 0x00E6_EAF2;
++pub const MUTED: u32 = 0x008A_97B5;
++pub const INK: u32 = 0x0005_0810;
++
++/// Stages shown in the footer bar, in order.
++pub const STAGES: [&str; 8] = ["BOOT", "VOLUME", "ALLOC", "LOAD", "HEAP", "ATTEST", "INFER", "DONE"];
++
++struct Layout {
++    cols: usize,
++    rows: usize,
++    cell_w: usize,
++    cell_h: usize,
++    width_px: usize,
++    header_rows: usize,
++    footer_rows: usize,
++    left_cols: usize,
++    machine_rows: usize,
++    payload_rows: usize,
++    attest_rows: usize,
++}
++
++static mut MODE_LABEL: [u8; 40] = [0; 40];
++static mut MODE_LEN: usize = 0;
++
++fn layout(c: &crate::gop::GopConsole) -> Layout {
++    let (cols, rows) = c.cells();
++    let (width_px, _h) = c.dims();
++    let cell_w = font::FONT_W * c.scale();
++    let cell_h = font::FONT_H * c.scale();
++    // Header and footer are sized in pixels (the mark is drawn at a fixed
++    // 3x glyph scale) and rounded up to whole text rows.
++    let header_rows = (160 + cell_h - 1) / cell_h;
++    let footer_rows = (96 + cell_h - 1) / cell_h;
++    // Side column: enough for "PCR12  " + a 32-hex digest prefix, at most 40% of the width.
++    let left_cols = (cols * 2 / 5).clamp(30, 50).min(cols.saturating_sub(40).max(30));
++    let body = rows.saturating_sub(header_rows + footer_rows);
++    let machine_rows = 7.min(body / 3);
++    let payload_rows = 7.min(body / 3);
++    let attest_rows = body.saturating_sub(machine_rows + payload_rows);
++    Layout { cols, rows, cell_w, cell_h, width_px, header_rows, footer_rows, left_cols, machine_rows, payload_rows, attest_rows }
++}
++
++fn panel(c: &mut crate::gop::GopConsole, l: &Layout, col: usize, row: usize, cols: usize, rows: usize, title: &str) {
++    let x = col * l.cell_w;
++    let y = row * l.cell_h;
++    let w = cols * l.cell_w;
++    let h = rows * l.cell_h;
++    c.fill_rect(x, y, w, h, PANEL);
++    // 2-px edge + accent title underline
++    c.fill_rect(x, y, w, 2, EDGE);
++    c.fill_rect(x, y + h - 2, w, 2, EDGE);
++    c.fill_rect(x, y, 2, h, EDGE);
++    c.fill_rect(x + w - 2, y, 2, h, EDGE);
++    c.text_cell(col + 1, row, title, ACCENT, Some(PANEL));
++    c.fill_rect(x + l.cell_w, y + l.cell_h - 3, (title.chars().count() * l.cell_w).min(w - 2 * l.cell_w), 2, ACCENT_DIM);
++}
++
++fn lines_in_panel(c: &mut crate::gop::GopConsole, _l: &Layout, col: usize, row: usize, cols: usize, rows: usize, lines: &[(String, u32)]) {
++    let inner_cols = cols.saturating_sub(2);
++    for (i, (text, color)) in lines.iter().enumerate().take(rows.saturating_sub(1)) {
++        let mut t: String = text.chars().take(inner_cols).collect();
++        while t.chars().count() < inner_cols {
++            t.push(' ');
++        }
++        c.text_cell(col + 1, row + 1 + i, &t, *color, Some(PANEL));
++    }
++}
++
++/// Draw the whole frame and hand the transcript viewport to the console.
++/// Returns false on the text-console fallback.
++pub fn init(mode: &str) -> bool {
++    set_mode_label(mode);
++    console::with_gop(|c| {
++        c.set_colors(TEXT, BG);
++        let l = layout(c);
++        // Field
++        c.fill_rect(0, 0, l.width_px, l.rows * l.cell_h, BG);
++        draw_header(c, &l);
++        panel(c, &l, 0, l.header_rows, l.left_cols, l.machine_rows, "MACHINE");
++        panel(c, &l, 0, l.header_rows + l.machine_rows, l.left_cols, l.payload_rows, "PAYLOAD");
++        panel(c, &l, 0, l.header_rows + l.machine_rows + l.payload_rows, l.left_cols, l.attest_rows, "ATTESTATION");
++        let tcols = l.cols - l.left_cols;
++        let trows = l.rows - l.header_rows - l.footer_rows;
++        panel(c, &l, l.left_cols, l.header_rows, tcols, trows, "TRANSCRIPT");
++        // Transcript viewport = inside the panel, below its title.
++        c.set_colors(TEXT, PANEL);
++        c.set_viewport(l.left_cols + 1, l.header_rows + 1, tcols.saturating_sub(2), trows.saturating_sub(2));
++        draw_footer(c, &l, 0, "");
++    })
++}
++
++fn set_mode_label(mode: &str) {
++    // SAFETY: single-threaded boot-time UI state; written before any AP runs
++    // UI code (APs never touch the dashboard).
++    unsafe {
++        let b = mode.as_bytes();
++        let n = b.len().min(40);
++        MODE_LABEL[..n].copy_from_slice(&b[..n]);
++        MODE_LEN = n;
++    }
++}
++
++fn mode_label() -> String {
++    // SAFETY: see set_mode_label.
++    unsafe { String::from_utf8_lossy(&MODE_LABEL[..MODE_LEN]).into_owned() }
++}
++
++fn draw_header(c: &mut crate::gop::GopConsole, l: &Layout) {
++    let h = l.header_rows * l.cell_h;
++    c.fill_rect(0, 0, l.width_px, h, INK);
++    c.fill_rect(0, h - 3, l.width_px, 3, ACCENT);
++    // Emblem: a cyan diamond with a dark core, left margin.
++    let r = (h / 2).saturating_sub(10);
++    let cx = r + 18;
++    let cy = h / 2 - 1;
++    for dy in 0..=r {
++        let w = r - dy;
++        c.fill_rect(cx - w, cy - dy, 2 * w + 1, 1, ACCENT);
++        c.fill_rect(cx - w, cy + dy, 2 * w + 1, 1, ACCENT);
++    }
++    let r2 = r / 2;
++    for dy in 0..=r2 {
++        let w = r2 - dy;
++        c.fill_rect(cx - w, cy - dy, 2 * w + 1, 1, INK);
++        c.fill_rect(cx - w, cy + dy, 2 * w + 1, 1, INK);
++    }
++    // Mark + tagline
++    let big = if h >= 150 { 3 } else { 2 };
++    let x0 = cx + r + 24;
++    c.text_px(x0, 8, "A.L.I.C.E.", TEXT, None, big);
++    let mark_end = x0 + 10 * font::FONT_W * big;
++    let tag_y = 8 + font::FONT_H * big + 4;
++    if tag_y + font::FONT_H < h {
++        c.text_px(x0, tag_y, "Aegis Lightweight Inference Core Engine  -  no operating system  -  bit-exact  -  TPM-attested", MUTED, None, 1);
++    }
++    // Mode badge, right-aligned, 2x glyphs when the panel has room for it.
++    let m = mode_label();
++    let mut bs = if l.width_px >= 1600 { 2 } else { 1 };
++    let mut badge_w = (m.chars().count() + 2) * font::FONT_W * bs;
++    if l.width_px.saturating_sub(badge_w + 16) < mark_end + 16 {
++        bs = 1;
++        badge_w = (m.chars().count() + 2) * font::FONT_W;
++    }
++    let bx = l.width_px.saturating_sub(badge_w + 16);
++    let by = 10;
++    c.fill_rect(bx, by, badge_w, font::FONT_H * bs + 8, ACCENT);
++    c.text_px(bx + font::FONT_W * bs, by + 4, &m, INK, None, bs);
++}
++
++fn draw_footer(c: &mut crate::gop::GopConsole, l: &Layout, stage_idx: usize, status: &str) {
++    let y = (l.rows - l.footer_rows) * l.cell_h;
++    let h = l.footer_rows * l.cell_h;
++    c.fill_rect(0, y, l.width_px, h, INK);
++    c.fill_rect(0, y, l.width_px, 2, EDGE);
++    // Segmented stage bar across the top half of the footer.
++    let n = STAGES.len();
++    let gap = 6;
++    let seg_w = (l.width_px - 32 - gap * (n - 1)) / n;
++    let seg_h = (l.cell_h / 2).max(8);
++    for (i, name) in STAGES.iter().enumerate() {
++        let x = 16 + i * (seg_w + gap);
++        let color = if i < stage_idx { ACCENT } else if i == stage_idx { AMBER } else { EDGE };
++        c.fill_rect(x, y + 8, seg_w, seg_h, color);
++        let label_color = if i <= stage_idx { TEXT } else { MUTED };
++        c.text_px(x, y + 8 + seg_h + 4, name, label_color, None, 1);
++    }
++    // Status text, right half of the second row
++    if !status.is_empty() {
++        let max_chars = (l.width_px / 2) / font::FONT_W;
++        let t: String = status.chars().take(max_chars).collect();
++        let tx = l.width_px.saturating_sub(16 + t.chars().count() * font::FONT_W);
++        c.text_px(tx, y + h - font::FONT_H - 4, &t, ACCENT, Some(INK), 1);
++    }
++}
++
++/// Advance the footer stage bar. `idx` indexes `STAGES`.
++pub fn stage(idx: usize, status: &str) {
++    console::with_gop(|c| {
++        let l = layout(c);
++        draw_footer(c, &l, idx.min(STAGES.len()), status);
++    });
++}
++
++pub fn set_mode(mode: &str) {
++    set_mode_label(mode);
++    console::with_gop(|c| {
++        let l = layout(c);
++        draw_header(c, &l);
++    });
++}
++
++fn fill_panel(which: usize, lines: &[(String, u32)]) {
++    console::with_gop(|c| {
++        let l = layout(c);
++        let (row, rows, title) = match which {
++            0 => (l.header_rows, l.machine_rows, "MACHINE"),
++            1 => (l.header_rows + l.machine_rows, l.payload_rows, "PAYLOAD"),
++            _ => (l.header_rows + l.machine_rows + l.payload_rows, l.attest_rows, "ATTESTATION"),
++        };
++        panel(c, &l, 0, row, l.left_cols, rows, title);
++        lines_in_panel(c, &l, 0, row, l.left_cols, rows, lines);
++    });
++}
++
++pub fn machine(lines: &[(String, u32)]) {
++    fill_panel(0, lines);
++}
++pub fn payload(lines: &[(String, u32)]) {
++    fill_panel(1, lines);
++}
++pub fn attest(lines: &[(String, u32)]) {
++    fill_panel(2, lines);
++}
++
++/// Convenience: "KEY  value" line with the key in the muted colour.
++pub fn kv(key: &str, value: &str, color: u32) -> (String, u32) {
++    let _ = color;
++    (format!("{key:<7}{value}"), TEXT)
++}
++
++/// Short digest prefix for panel lines.
++pub fn short_hex(hex: &str, n: usize) -> String {
++    let s: String = hex.chars().take(n).collect();
++    format!("{s}..")
++}
++
++/// Human-readable byte count.
++pub fn human_bytes(b: usize) -> String {
++    if b >= 1 << 30 {
++        format!("{}.{:02} GB", b >> 30, ((b & ((1 << 30) - 1)) * 100) >> 30)
++    } else if b >= 1 << 20 {
++        format!("{}.{:01} MB", b >> 20, ((b & ((1 << 20) - 1)) * 10) >> 20)
++    } else if b >= 1 << 10 {
++        format!("{} KB", b >> 10)
++    } else {
++        format!("{b} B")
++    }
++}
++
++/// Build the attestation panel lines from the attestor's state and the
++/// report text (pcr/quote lines), so main.rs only forwards what it has.
++pub fn attest_lines_from_report(measured: &[(u32, String)], report: &str, tpm_present: bool) -> Vec<(String, u32)> {
++    let mut v: Vec<(String, u32)> = Vec::new();
++    if !tpm_present {
++        v.push((String::from("TPM    none (EFI_TCG2 absent)"), AMBER));
++        v.push((String::from("       receipts unattested this boot"), MUTED));
++        return v;
++    }
++    v.push((String::from("TPM    EFI_TCG2 present, SHA-256 bank"), GREEN));
++    let n12 = measured.iter().filter(|(p, _)| *p == 12).count();
++    let n13 = measured.iter().filter(|(p, _)| *p == 13).count();
++    v.push((format!("PCR12  {n12} payload measurement event(s)"), TEXT));
++    v.push((format!("PCR13  {n13} receipt event(s)"), TEXT));
++    for line in report.lines() {
++        if let Some(rest) = line.strip_prefix("pcr ") {
++            let mut it = rest.splitn(2, ' ');
++            let (p, hex) = (it.next().unwrap_or(""), it.next().unwrap_or(""));
++            v.push((format!("PCR{p:<4}{}", short_hex(hex, 32)), TEXT));
++        }
++    }
++    let mut quote_ok = false;
++    for line in report.lines() {
++        if line.starts_with("quote-sig-s ") {
++            quote_ok = true;
++        }
++        if let Some(e) = line.strip_prefix("quote-error ") {
++            v.push((format!("QUOTE  error: {}", e.chars().take(30).collect::<String>()), RED));
++        }
++        if let Some(r) = line.strip_prefix("quote-retries ") {
++            v.push((format!("QUOTE  TPM2_Quote PCR 4+12+13 signed, retry {r}"), GREEN));
++        }
++    }
++    if quote_ok {
++        v.push((String::from("KEY    ECC P-256 ECDSA/SHA-256 (owner)"), MUTED));
++    }
++    v
++}
++
++/// Receipt summary lines for the attestation panel (mint or verify).
++pub fn receipt_lines(mode: &str, chain: &[u8; 32], cis_digest: u64, steps: usize, verdict: &str, color: u32) -> Vec<(String, u32)> {
++    let mut buf = [0u8; 64];
++    let n = aegis_core::witness::hex_lower(chain, &mut buf);
++    let hex = core::str::from_utf8(&buf[..n]).unwrap_or("");
++    alloc::vec![
++        (String::new(), TEXT),
++        (format!("RECEIPT witness v1-CIS ({mode})"), ACCENT),
++        (format!("STEPS  {steps} tokens, CIS-1 FullInt, argmax"), TEXT),
++        (format!("DIGEST {cis_digest:016x}  FNV-1a (ids)"), TEXT),
++        (format!("CHAIN  {}", short_hex(hex, 32)), TEXT),
++        (format!("VERDICT {verdict}"), color),
++    ]
++}
+diff --git a/aegis-uefi/src/verifier.rs b/aegis-uefi/src/verifier.rs
+index d704183..2044a7b 100644
+--- a/aegis-uefi/src/verifier.rs
++++ b/aegis-uefi/src/verifier.rs
+@@ -63,6 +63,21 @@ pub fn replay(
+     hashes: (&[u8; 32], &[u8; 32], &[u8; 32]),
+     prompt: &str,
+     max_new: usize,
++) -> Result<Replay, &'static str> {
++    replay_with(model, embed, vocab, hashes, prompt, max_new, &mut |_, _, _| {})
++}
++
++/// `replay` with a per-token observer `(step, token_id, decoded_piece)`.
++/// The observer is display-only: it runs after the chain has folded the
++/// step, so it cannot influence a single bit of the receipt.
++pub fn replay_with(
++    model: &[u8],
++    embed: &[u8],
++    vocab: &[u8],
++    hashes: (&[u8; 32], &[u8; 32], &[u8; 32]),
++    prompt: &str,
++    max_new: usize,
++    on_token: &mut dyn FnMut(usize, u32, &str),
+ ) -> Result<Replay, &'static str> {
+     let tensors = SafeTensors::deserialize(model).map_err(|_| "MODEL.SAF did not parse")?;
+     let config = tensors
+@@ -96,7 +111,7 @@ pub fn replay(
+         pos += 1;
+     }
+     let mut generated: Vec<u32> = Vec::with_capacity(max_new);
+-    for _ in 0..max_new {
++    for step in 0..max_new {
+         let tok = {
+             let logits = engine.decode_logits();
+             let t = argmax_i64(logits);
+@@ -105,6 +120,7 @@ pub fn replay(
+         };
+         fnv = fnv1a64(fnv, &tok.to_le_bytes());
+         generated.push(tok);
++        on_token(step, tok, &tokenizer.decode(&[tok]));
+         engine.forward_step_int(tok, pos);
+         pos += 1;
+     }
+-- 
+2.43.0
+

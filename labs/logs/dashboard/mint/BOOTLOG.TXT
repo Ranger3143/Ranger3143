@@ -1,0 +1,20 @@
+==== A.L.I.C.E. BOOT ====
+STAGE 1: boot volume opened, AVX enable attempted
+STAGE 2: sizes OK model=2797632 embed=6291456 vocab=163954
+STAGE 3: tensor memory allocated
+H3 buffers: MODEL.SAF=0x100000+2797632 EMBED.BIN=0x1780000+6291456 VOCAB.BIN=0x3AC000+163954
+STAGE 4a: MODEL.SAF loaded
+STAGE 4b: EMBED.BIN loaded
+STAGE 4c: VOCAB.BIN loaded
+STAGE 4e: MINT.TXT loaded — receipt mint mode armed
+STAGE 5: working heap online
+TPM: EFI_TCG2_PROTOCOL present — measuring payload into PCR 12
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=2797632 sha256=23cfad0a3c7de2b676e176755f0848cd2cad8e71e2cdffea3d903a232c96e973
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=6291456 sha256=3752cd5ca2e39593cdf0910968f8ff629d79417f253e33e1a1c4faa0ce33848e
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=163954 sha256=5a1d79caf517084a73de5e5379d2995e61f23afaada91822da12ecb4ad7fcd8a
+STAGE M: minted receipt steps=64 cis-digest=67e8c0a96abc04e1 written=true
+TPM: pcr 4 00518abd1a378c155fad873aa14d280f8a2433fdd215abeb0e90d8b99991c3aa
+TPM: pcr 12 b0b2eb6b5db2f200c5db9245c55dcdd6fc5d2c45d950e5dae82779a658e5ee8c
+TPM: pcr 13 6b838ff9d3792ad8f1f3dfe23c5044a3da3b423afee0bb0a00c214102d1ba444
+TPM: quote-retries 1
+STAGE A: ATTEST.TXT written=true

@@ -1,0 +1,54 @@
+# host-side verification of the dashboard runs, 2026-10-06T15:22:10Z
+efi sha256: c3d200a30bf0e7a0ea890c82ee33cda18b1b3c3ce9e708f3d4282b2d6c8f27a6
+
+## mint run: attest_verify.py
+pcr12: replayed b0b2eb6b5db2f200c5db9245c55dcdd6.. tpm b0b2eb6b5db2f200c5db9245c55dcdd6.. PASS (3 events)
+pcr13: replayed 6b838ff9d3792ad8f1f3dfe23c5044a3.. tpm 6b838ff9d3792ad8f1f3dfe23c5044a3.. PASS (1 events)
+eventlog pcr=12 sha256=e78773e3a5793b15.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=2797632 sha256=23c
+eventlog pcr=12 sha256=ab898c2555a5a145.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=6291456 sha256=375
+eventlog pcr=12 sha256=3dbed3afc000109f.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=163954 sha256=5a1d
+eventlog pcr=13 sha256=4996522f72c4d826.. PASS :: AEGIS-RECEIPT v0 mode=mint steps=64 cis-digest=67e8c0a96abc0
+pcr4 (firmware measurement of BOOTX64.EFI): 00518abd1a378c155fad873aa14d280f8a2433fdd215abeb0e90d8b99991c3aa ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=f87bf2fb015781973a785c2ae78d0af7e47f33eba1cd623cfff71a3d34ca7f37 data=hex:18800d7e0000000000480700000000000000004001000000500000000000000002010c00d041030a00000000010
+ATTEST VERIFY PASS
+quote attest magic=ff544347 type=8018 PASS
+quote extraData == qualifying (528e205e04882437..): PASS
+quote pcrDigest over PCRs [4, 12, 13] == SHA-256(PCR values read back): PASS
+quote ECDSA-P256/SHA-256 signature over TPMS_ATTEST (openssl): Verified OK PASS
+quote tampered attest rejected: PASS
+quote pub-x e14fa053beda4987.. clockInfo/firmwareVersion present; signer qualifiedName len 34
+QUOTE VERIFY PASS
+
+## verify run: attest_verify.py
+pcr12: replayed 1406ed092930d96ae3c953fb19d3bcd6.. tpm 1406ed092930d96ae3c953fb19d3bcd6.. PASS (4 events)
+pcr13: replayed ddf1429924df2070fc00f418022b67ec.. tpm ddf1429924df2070fc00f418022b67ec.. PASS (1 events)
+eventlog pcr=12 sha256=e78773e3a5793b15.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=2797632 sha256=23c
+eventlog pcr=12 sha256=ab898c2555a5a145.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=6291456 sha256=375
+eventlog pcr=12 sha256=3dbed3afc000109f.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=163954 sha256=5a1d
+eventlog pcr=12 sha256=c2a032c607271139.. PASS :: AEGIS-MEASURE v0 artifact=RECEIPT.TXT bytes=672 sha256=528e2
+eventlog pcr=13 sha256=e8eacb7be04425d4.. PASS :: AEGIS-RECEIPT v0 mode=verify steps=64 cis-digest=67e8c0a96ab
+pcr4 (firmware measurement of BOOTX64.EFI): 00518abd1a378c155fad873aa14d280f8a2433fdd215abeb0e90d8b99991c3aa ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=f87bf2fb015781973a785c2ae78d0af7e47f33eba1cd623cfff71a3d34ca7f37 data=hex:18800d7e0000000000480700000000000000004001000000500000000000000002010c00d041030a00000000010
+ATTEST VERIFY PASS
+quote attest magic=ff544347 type=8018 PASS
+quote extraData == qualifying (528e205e04882437..): PASS
+quote pcrDigest over PCRs [4, 12, 13] == SHA-256(PCR values read back): PASS
+quote ECDSA-P256/SHA-256 signature over TPMS_ATTEST (openssl): Verified OK PASS
+quote tampered attest rejected: PASS
+quote pub-x 210600cb25d2f58c.. clockInfo/firmwareVersion present; signer qualifiedName len 34
+QUOTE VERIFY PASS
+
+## minted RECEIPT.TXT replay on host (cis_witness verify, M7 gate artifacts)
+receipt cis-digest 67e8c0a96abc04e1 chain aee25b770bd7b22e
+local   cis-digest 67e8c0a96abc04e1 chain aee25b770bd7b22e
+VERIFY PASS — replay reproduced 64 tokens, the token digest, and the full logit chain bit-for-bit
+
+## minted receipt vs receipt consumed by the verify run
+byte-identical
+
+## golden receipt in alice-aegis tests/golden
+minted RECEIPT.TXT == tests/golden/witness_v1_m7_once64.receipt (byte-identical)

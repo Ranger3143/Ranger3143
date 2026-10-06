@@ -1,0 +1,20 @@
+screendump at 24s -> ./shot_verify_final/shots/shot_024s.ppm b'{"return": {}}\r\n'
+screendump at 32s -> ./shot_verify_final/shots/shot_032s.ppm b'{"return": {}}\r\n'
+screendump at 36s -> ./shot_verify_final/shots/shot_036s.ppm b'{"return": {}}\r\n'
+screendump at 38s failed: [Errno 111] Connection refused
+screendump at 40s failed: [Errno 111] Connection refused
+screendump at 42s failed: [Errno 111] Connection refused
+screendump at 44s failed: [Errno 111] Connection refused
+qemu_exit=33 (33 = success; appearance/correctness only)
+./shot_verify_final/shots/shot_024s.png 1920x1440
+./shot_verify_final/shots/shot_032s.png 1920x1440
+./shot_verify_final/shots/shot_036s.png 1920x1440
+total 24452
+drwxr-xr-x 2 root root    4096 Oct  6 15:18 .
+drwxr-xr-x 5 root root    4096 Oct  6 15:18 ..
+-rw-r--r-- 1 root root   36201 Oct  6 15:18 shot_024s.png
+-rw-r--r-- 1 root root 8294417 Oct  6 15:18 shot_024s.ppm
+-rw-r--r-- 1 root root   36201 Oct  6 15:18 shot_032s.png
+-rw-r--r-- 1 root root 8294417 Oct  6 15:18 shot_032s.ppm
+-rw-r--r-- 1 root root   59798 Oct  6 15:18 shot_036s.png
+-rw-r--r-- 1 root root 8294417 Oct  6 15:18 shot_036s.ppm

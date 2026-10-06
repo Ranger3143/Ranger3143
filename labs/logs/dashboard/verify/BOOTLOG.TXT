@@ -1,0 +1,22 @@
+==== A.L.I.C.E. BOOT ====
+STAGE 1: boot volume opened, AVX enable attempted
+STAGE 2: sizes OK model=2797632 embed=6291456 vocab=163954
+STAGE 3: tensor memory allocated
+H3 buffers: MODEL.SAF=0x100000+2797632 EMBED.BIN=0x1780000+6291456 VOCAB.BIN=0x3AC000+163954
+STAGE 4a: MODEL.SAF loaded
+STAGE 4b: EMBED.BIN loaded
+STAGE 4c: VOCAB.BIN loaded
+STAGE 4d: RECEIPT.TXT loaded — verifier mode armed
+STAGE 5: working heap online
+TPM: EFI_TCG2_PROTOCOL present — measuring payload into PCR 12
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=2797632 sha256=23cfad0a3c7de2b676e176755f0848cd2cad8e71e2cdffea3d903a232c96e973
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=6291456 sha256=3752cd5ca2e39593cdf0910968f8ff629d79417f253e33e1a1c4faa0ce33848e
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=163954 sha256=5a1d79caf517084a73de5e5379d2995e61f23afaada91822da12ecb4ad7fcd8a
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=RECEIPT.TXT bytes=672 sha256=528e205e04882437269fb1fbc6181ba0f2f6fddc120ba25f93c0e5bf233fbaaf
+CPUID: vendor=AuthenticAMD brand="QEMU TCG CPU version 2.5+" family=6 model=6 stepping=3 feats=<avx2:1,fma:1,sse2:1>
+STAGE V: witness verify PASS — VERIFY PASS — this machine reproduced all 64 decode steps' full logit vectors bit-for-bit, with no OS underneath
+TPM: pcr 4 00518abd1a378c155fad873aa14d280f8a2433fdd215abeb0e90d8b99991c3aa
+TPM: pcr 12 1406ed092930d96ae3c953fb19d3bcd681624750bf43a2dacc4020bf71dd2276
+TPM: pcr 13 ddf1429924df2070fc00f418022b67ec512edfbe129c780226e04aad4f39d67c
+TPM: quote-retries 1
+STAGE A: ATTEST.TXT written=true

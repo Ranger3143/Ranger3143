@@ -1,0 +1,36 @@
+screendump at 20s -> ./shot_mint_final2/shots/shot_020s.ppm b'{"return": {}}\r\n'
+screendump at 27s -> ./shot_mint_final2/shots/shot_027s.ppm b'{"return": {}}\r\n'
+screendump at 30s -> ./shot_mint_final2/shots/shot_030s.ppm b'{"return": {}}\r\n'
+screendump at 31s -> ./shot_mint_final2/shots/shot_031s.ppm b'{"return": {}}\r\n'
+screendump at 32s -> ./shot_mint_final2/shots/shot_032s.ppm b'{"return": {}}\r\n'
+screendump at 33s -> ./shot_mint_final2/shots/shot_033s.ppm b'{"return": {}}\r\n'
+screendump at 34s -> ./shot_mint_final2/shots/shot_034s.ppm b'{"return": {}}\r\n'
+screendump at 35s -> ./shot_mint_final2/shots/shot_035s.ppm b'{"return": {}}\r\n'
+qemu_exit=33 (33 = success; appearance/correctness only)
+./shot_mint_final2/shots/shot_020s.png 1920x1440
+./shot_mint_final2/shots/shot_027s.png 1920x1440
+./shot_mint_final2/shots/shot_030s.png 1920x1440
+./shot_mint_final2/shots/shot_031s.png 1920x1440
+./shot_mint_final2/shots/shot_032s.png 1920x1440
+./shot_mint_final2/shots/shot_033s.png 1920x1440
+./shot_mint_final2/shots/shot_034s.png 1920x1440
+./shot_mint_final2/shots/shot_035s.png 1920x1440
+total 65240
+drwxr-xr-x 2 root root    4096 Oct  6 15:20 .
+drwxr-xr-x 5 root root    4096 Oct  6 15:20 ..
+-rw-r--r-- 1 root root   38385 Oct  6 15:20 shot_020s.png
+-rw-r--r-- 1 root root 8294417 Oct  6 15:20 shot_020s.ppm
+-rw-r--r-- 1 root root   40258 Oct  6 15:20 shot_027s.png
+-rw-r--r-- 1 root root 8294417 Oct  6 15:20 shot_027s.ppm
+-rw-r--r-- 1 root root   41049 Oct  6 15:20 shot_030s.png
+-rw-r--r-- 1 root root 8294417 Oct  6 15:20 shot_030s.ppm
+-rw-r--r-- 1 root root   41497 Oct  6 15:20 shot_031s.png
+-rw-r--r-- 1 root root 8294417 Oct  6 15:20 shot_031s.ppm
+-rw-r--r-- 1 root root   41922 Oct  6 15:20 shot_032s.png
+-rw-r--r-- 1 root root 8294417 Oct  6 15:20 shot_032s.ppm
+-rw-r--r-- 1 root root   42063 Oct  6 15:20 shot_033s.png
+-rw-r--r-- 1 root root 8294417 Oct  6 15:20 shot_033s.ppm
+-rw-r--r-- 1 root root   71534 Oct  6 15:20 shot_034s.png
+-rw-r--r-- 1 root root 8294417 Oct  6 15:20 shot_034s.ppm
+-rw-r--r-- 1 root root   71534 Oct  6 15:20 shot_035s.png
+-rw-r--r-- 1 root root 8294417 Oct  6 15:20 shot_035s.ppm
