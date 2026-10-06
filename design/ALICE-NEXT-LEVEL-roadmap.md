@@ -17,6 +17,8 @@
 | Prior-art check of every "first" | 16 hunts, 22 evidence checks: 0 novel, 16 partially novel, 8 done-in-repo (NOBODY-HAS-DONE-THIS.md) | what remains ours is the composition plus the receipts; brief sentences that failed are withdrawn |
 | Scale-sensitivity leg reproduced | 31 of 210 scales moved by 1 ulp → digest 803e07941964ed37 vs cab11400d737ac4a, divergence at token 5, both texts coherent (LAB-02 addendum, labs/logs/scaleleg/) | only the exact digest sees it |
 
+| ALICE-Next plan (replacement edge model) | nine research briefs + verification pass; design panel chose to evolve the BitNet-2B family (rung A operator-tuned, rung B pruned) with zero engine delta; 57-row audited license ledger; frozen gates; 90-day plan and first Kaggle notebook `e1-evolve-pilot` (model/README.md, model/00-05) | plan only; nothing trained; six decisions are Justin's (size-cap unit, external teacher, counsel on lineage, conversational gate, compute tier, PUBLISH?) |
+
 ## Next (ordered)
 1. **Iron first-light for attestation** — Dell i5-5200U, HP N4020, Acer: stage the attest kit (`make-kit-image.sh` + MINT.TXT or RECEIPT.TXT), boot, archive ATTEST.TXT + BOOTLOG under `docs/hardware_logs/`, run `attest_verify.py`. Gate: PCR 4 == firmware's hash of the exact `.efi`; quote verifies; EK certificate present (fTPM). Risk: firmware without TCG2 protocol or with TPM disabled → the code logs and continues (finding, not failure).
 2. **EK-certified AK** — provisioning step on Linux (`tpm2_createek`/`createak`/`makecredential`) with the AK handle persisted; unikernel uses the persistent AK handle instead of a transient primary. Gate: quote verifies against the manufacturer EK chain.
