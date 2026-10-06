@@ -1,6 +1,6 @@
 # Attested Inference Receipt — TPM Measured-Boot Profile (AIR-TPM v0) and Model Boot Manifest
 
-Status: Aefinity AI Inc. working draft v0, 2026-10-06. Reference implementation: `aegis-uefi/src/attest.rs` + `tpm2min` + `labs/attest_verify.py` (LAB-04). Intended as (a) an attestation profile for the IETF individual draft `draft-tsyrulnikov-rats-attested-inference-receipt-02` ("AIR v1"), which today profiles only AWS Nitro and Intel TDX and states it "attests the CPU-side TEE only", and (b) a CoRIM/RIM-style reference-value profile ("Model Boot Manifest") for AI appliances. Nothing here is IETF-adopted; "MUST/SHOULD" is used in the RFC 2119 sense within this document only.
+Status: Aefinity AI Inc. working draft v0, 2026-10-06. Reference implementation: `aegis-uefi/src/attest.rs` + `tpm2min` + `labs/tools/attest_verify.py` (LAB-04). Intended as (a) an attestation profile for the IETF individual draft `draft-tsyrulnikov-rats-attested-inference-receipt-02` ("AIR v1"), which today profiles only AWS Nitro and Intel TDX and states it "attests the CPU-side TEE only", and (b) a CoRIM/RIM-style reference-value profile ("Model Boot Manifest") for AI appliances. Nothing here is IETF-adopted; "MUST/SHOULD" is used in the RFC 2119 sense within this document only.
 
 ## 1. Problem
 AIR v1 binds `model_hash`, `request_hash`, `response_hash` and `attestation_doc_hash` to a confidential-computing enclave's measurement registers (48-byte SHA-384 Nitro PCRs or TDX MRTD/RTMRs). Commodity edge hardware — laptops, industrial PCs, kiosks, the machines AI appliances actually ship on — has no SGX/TDX/SEV-SNP but almost universally has a TPM 2.0 (discrete or firmware) and UEFI measured boot. No published profile covers that platform class, and none covers the case where the inference engine itself IS the booted image (no OS). Separately, no manifest format pins firmware reference values, the engine binary, and the model/tokenizer digests together (OMS signs weights+config+tokenizer; CoRIM carries firmware values; SPDX AIPackage has no runtime/firmware fields).
@@ -56,7 +56,7 @@ It is the SBOM analogue for an inference appliance: engine binary + model + toke
 4. Compare PCR 4 (and 0-7 if selected) with the Model Boot Manifest's expected values → this names the engine binary (and platform).
 5. Compare the PCR 12 artifact digests with the manifest → this names the model bytes.
 6. Optionally, replay the inference under the named semantics (CIS-1) from (artifacts, prompt, steps) and require `chain == response_hash`. This step is unique to this profile: it does not need the TPM at all, and it catches a compromised TPM or firmware that attests honestly to a wrong computation.
-Reference verifier: `labs/attest_verify.py` implements 1-3 and 5; `cis_witness verify` / the kit stick implement 6.
+Reference verifier: `labs/tools/attest_verify.py` implements 1-3 and 5; `cis_witness verify` / the kit stick implement 6.
 
 ## 6. Security considerations
 - Two independent roots. A forged TPM cannot forge a correct replay; a buggy or malicious engine cannot forge a quote over PCRs it did not extend (the firmware extends PCR 4 before the engine runs). An attacker needs both the platform and the arithmetic.

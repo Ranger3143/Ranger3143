@@ -31,3 +31,6 @@ membw on the same VM (`labs/logs/membw_1t_run2.log`, `membw_4t_run2.log`): seque
 ## Caveats
 - VM, 4 vCPUs of unknown topology (SMT siblings or distinct cores unknown); absolute tok/s are not product figures. Ratios are the result; iron re-run required (Rule A).
 - `AEGIS_THREADS` default = physical cores (ops::worker_threads); the pool is the f32 engine's, unchanged.
+
+## Addendum 2026-10-06 (evening) — regression evidence
+`labs/logs/regression_tests_after_fmt.log` predates the `cfg(feature = "parallel")` gate on `cis_decode_timed` and shows the `worker_threads` build error that gate fixed. The current state is `labs/logs/regression_tests_2026-10-06_aegis-linux_full_run3.log`: every aegis-linux target passes with and without `--features parallel`. Two earlier full runs today ended with an `agent_trace` example test failure that did not reproduce on a targeted re-run (see `…_run2_error.log` and the NOBODY-HAS-DONE-THIS addendum); it is flagged as intermittent, cause unknown.

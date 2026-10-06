@@ -43,3 +43,6 @@ Repack: `aegis-forge/repack_ternary.py <ckpt> <out> --source-packing hf1bitllm -
 ## Caveats
 - Cloud VM; no timing claims anywhere in this lab.
 - MODEL.SAF bytes differ from the canonical facb3597... so a canonical RECEIPT.TXT (which binds the artifact sha256) will fail its artifact-hash step against these files by design; a receipt minted against these artifacts verifies on any conforming host.
+
+## Addendum 2026-10-06 (evening) — raw decode logs for the scale legs
+Results 2 and 4 above now have raw logs in this repo (`labs/logs/cis_decode_2b_bitnet2b_scaleleg.log`: as-shipped reciprocal repack, digest `ac3772033c18a314`; `labs/logs/cis_decode_2b_bitnet2b_fixed_scaleleg.log`: exact scale, digest `cab11400d737ac4a`), each prefixed with the artifact SHA-256s and the command. The Result 3 artifact (double reciprocal, `803e07941964ed37`) was not retained; it is being regenerated from the exact-scale artifact by round-tripping the 210 scales through f32 reciprocals, and its log will be added when it exists. Until then Result 3 rests on this note's text.

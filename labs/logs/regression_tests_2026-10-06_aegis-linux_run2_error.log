@@ -1,0 +1,22 @@
+# aegis-linux test run, 2026-10-06T17:09:14Z, alice-aegis lab/vnni-cis1 @ a8db6a4, host env=vm (Rule A: no timing claims)
+## cargo test --release (default features)
+     Running unittests src/main.rs (target/release/deps/aegis_linux-102461967b50071f)
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/bin/msrtool.rs (target/release/deps/msrtool-5c212498e628b64e)
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/cis_selftest_digest.rs (target/release/deps/cis_selftest_digest-7be6a08fae3faa1a)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests examples/agent_trace.rs (target/release/examples/agent_trace-fa88177ad5cd8684)
+test result: ok. 152 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.52s
+     Running unittests examples/reasoning_trace.rs (target/release/examples/reasoning_trace-052f668c5feef269)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+## cargo test --release --features parallel
+     Running unittests src/main.rs (target/release/deps/aegis_linux-2c76544798a2d123)
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/bin/msrtool.rs (target/release/deps/msrtool-1b93e3906027441f)
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/cis_selftest_digest.rs (target/release/deps/cis_selftest_digest-f3d603de0bcab642)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests examples/agent_trace.rs (target/release/examples/agent_trace-54f3ad887f641a7e)
+error: test failed, to rerun pass `--example agent_trace`
+  process didn't exit successfully: `/home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/agent_trace-54f3ad887f641a7e` (signal: 11, SIGSEGV: invalid memory reference)

@@ -1,0 +1,10 @@
+# cis_decode on artifacts/bitnet2b  (env=vm, Rule A: no timing; digest only)
+MODEL.SAF sha256: 9d1fa7693043b525e38d7f630f5ff5dcb17feff283e64b2ec7f733988abaea4d
+EMBED.BIN sha256: e32b99a25e345c65054f36dedf40329a89513cdf1a8195db64fc440fd364e077
+VOCAB.BIN sha256: 5bde1b0355ef99c6875190ebfff081d985ca48977ae9269e3477f5cc2d97d9ae
+cmd: cis_decode MODEL.SAF EMBED.BIN VOCAB.BIN 64 "Once upon a time"
+model : 30 layers, hidden 2560, vocab 50256
+prompt: "Once upon a time" -> 4 tokens
+token ids: [11, 279, 323, 279, 323, 279, 323, 279, 323, 279, 323, 279, 323, 279, 323, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 279, 264, 11, 279, 264, 11, 279, 11, 279, 11, 279, 11, 279, 11, 279, 11]
+text     : ", the and the and the and the and the and the and the and the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the a, the a, the, the, the, the, the,"
+CIS_DECODE digest=ac3772033c18a314 prompt_toks=4 gen_toks=64 mode=fullint

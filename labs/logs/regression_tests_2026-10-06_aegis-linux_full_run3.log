@@ -1,0 +1,222 @@
+# aegis-linux full test run 3, 2026-10-06 (alice-aegis lab/vnni-cis1 @ a8db6a4), cargo test --release, env=vm, no timing claims (Rule A); compiler warnings filtered out
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+note: an unsafe function restricts its caller, but its body is safe by default
+...   |
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+note: an unsafe function restricts its caller, but its body is safe by default
+...   |
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `cis_vnni::tmv_i8_avx512vnni` is unsafe and requires unsafe block
+...   |
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+note: an unsafe function restricts its caller, but its body is safe by default
+...   |
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm256_loadu_si256` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm256_loadu_si256` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+For more information about this error, try `rustc --explain E0133`.
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running unittests src/main.rs (target/release/deps/aegis_linux-102461967b50071f)
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/bin/msrtool.rs (target/release/deps/msrtool-5c212498e628b64e)
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/cis_selftest_digest.rs (target/release/deps/cis_selftest_digest-7be6a08fae3faa1a)
+running 1 test
+test digest_matches_pinned_constant ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests examples/agent_trace.rs (target/release/examples/agent_trace-fa88177ad5cd8684)
+running 152 tests
+test tests::calc_finds_first_of_two ... ok
+test tests::calc_parses_basic_add ... ok
+test tests::calc_parses_negative_operands ... ok
+test tests::calc_parses_extra_whitespace ... ok
+test tests::calc_parses_tight_spacing ... ok
+test tests::calc_rejects_bad_op ... ok
+test tests::calc_rejects_missing_call ... ok
+test tests::calc_rejects_missing_operand ... ok
+test tests::calc_rejects_non_integer_operand ... ok
+test tests::calc_rejects_unclosed_call ... ok
+test tests::canonical_form_rejects_crlf ... ok
+test tests::canonical_form_rejects_k_leading_plus ... ok
+test tests::canonical_form_rejects_empty_host ... ok
+test tests::canonical_form_rejects_empty_commit ... ok
+test tests::canonical_form_rejects_leading_blank_line ... ok
+test tests::canonical_form_rejects_k_leading_zero ... ok
+test tests::canonical_form_rejects_mid_blank_line ... ok
+test tests::canonical_form_rejects_missing_final_newline ... ok
+test tests::check_header_bounds_accepts_in_range ... ok
+test tests::check_header_bounds_rejects_empty_prompt ... ok
+test tests::check_header_bounds_rejects_oversized_n_without_panic ... ok
+test tests::check_header_bounds_rejects_zero_k_or_n ... ok
+test tests::check_receipt_text_canonical_accepts_clean_text ... ok
+test tests::check_receipt_text_canonical_rejects_cr ... ok
+test tests::check_receipt_text_canonical_rejects_leading_blank_line ... ok
+test tests::check_receipt_text_canonical_rejects_mid_blank_line ... ok
+test tests::check_receipt_text_canonical_rejects_missing_final_newline ... ok
+test tests::check_receipt_text_canonical_rejects_trailing_blank_line ... ok
+test tests::check_step_label_accepts_matching_position ... ok
+test tests::check_step_label_rejects_mismatched_position ... ok
+test tests::check_step_label_rejects_non_numeric_label ... ok
+test tests::check_step_label_rejects_surrounding_whitespace ... ok
+test tests::commit_hash_is_forty_hex_or_unknown ... ok
+test tests::compute_item_ctx_is_sensitive_to_every_input ... ok
+test tests::eval_calc_basic_ops ... ok
+test tests::eval_calc_div_by_zero ... ok
+test tests::eval_calc_overflow ... ok
+test tests::canonical_form_rejects_n_trailing_space ... ok
+test tests::canonical_form_rejects_trailing_blank_line ... ok
+test tests::expect_prompt_hash_catches_truncated_prompt_hex_safe1g_gap ... ok
+test tests::extract_call_arg_rejects_unwrapped_text ... ok
+test tests::extract_call_arg_strips_calc_wrapper ... ok
+test tests::extract_call_arg_strips_lookup_wrapper ... ok
+test tests::canonical_form_round_trip_still_verifies_pass ... ok
+test tests::expect_prompt_hash_wrong_fails_fast_with_distinct_message ... ok
+test tests::file_read_is_not_scanned_without_a_table ... ok
+test tests::find_file_read_matches_valid_key ... ok
+test tests::find_file_read_rejects_bad_key ... ok
+test tests::expect_prompt_hash_correct_leaves_pass_through_unaffected ... ok
+test tests::format1_receipt_still_verifies_pass_with_no_ctx_q_fields ... ok
+test tests::fail_fast_verify_fails_at_step_0_tamper ... ok
+test tests::format2_query_tamper_fails_verify ... ok
+test tests::format2_round_trip_gen_then_verify_pass_with_ctx_q_fields ... ok
+test tests::fail_fast_pass_matches_full_mode_on_clean_receipt ... ok
+test tests::format3_commit_value_tamper_fails_verify ... ok
+test tests::format3_host_value_tamper_fails_verify ... ok
+test tests::format3_downgrade_to_v1_header_fails_verify ... ok
+test tests::format3_round_trip_verifies ... ok
+test tests::header_downgrade_corrupted_magic_is_rejected ... ok
+test tests::header_downgrade_lowercase_magic_is_rejected ... ok
+test tests::header_downgrade_missing_header_is_rejected ... ok
+test tests::last_q_line_empty_when_no_q_line ... ok
+test tests::last_q_line_picks_the_final_q_line ... ok
+test tests::header_must_be_the_first_line ... ok
+test tests::lead_line_rejects_duplicate_key ... ok
+test tests::lookup_hit_returns_table_value ... ok
+test tests::lookup_miss_returns_none_literal ... ok
+test tests::lookup_rejects_bad_key_char ... ok
+test tests::lookup_rejects_oversize_key ... ok
+test tests::lookup_without_table_is_not_scanned ... ok
+test tests::invented_warning_line_fails_verify ... ok
+test tests::malformed_k_is_rejected_without_panic ... ok
+test tests::mismatch_messages_match_the_brief_wording ... ok
+test tests::multitool_episode_folds_deterministically ... ok
+test tests::multitool_tamper_dropped_call_fails ... ok
+test tests::multitool_tamper_reordered_calls_fails ... ok
+test tests::multitool_tamper_swapped_tool_result_fails ... ok
+test tests::parse_canonical_uint_accepts_plain_digits ... ok
+test tests::parse_canonical_uint_rejects_leading_minus ... ok
+test tests::parse_canonical_uint_rejects_leading_plus ... ok
+test tests::parse_canonical_uint_rejects_leading_zero ... ok
+test tests::parse_canonical_uint_rejects_surrounding_whitespace ... ok
+test tests::parse_suite_sha256_accepts_valid_hex ... ok
+test tests::parse_suite_sha256_rejects_uppercase_and_non_hex ... ok
+test tests::parse_suite_sha256_rejects_wrong_length ... ok
+test tests::parse_table_accepts_well_formed_rows ... ok
+test tests::parse_table_rejects_bad_key_char ... ok
+test tests::parse_table_rejects_duplicate_key ... ok
+test tests::parse_table_rejects_missing_tab ... ok
+test tests::parse_table_rejects_non_utf8 ... ok
+test tests::parse_table_rejects_oversize_value ... ok
+test tests::parse_table_rejects_value_with_extra_tab ... ok
+test tests::parse_table_skips_blank_lines ... ok
+test tests::pinned_demo_vectors_are_canonical ... ok
+test tests::prompt_scan_prefix_detects_calc_opener ... ok
+test tests::prompt_scan_prefix_detects_lookup_opener ... ok
+test tests::prompt_scan_prefix_empty_when_no_trailing_opener ... ok
+test tests::prompt_scan_prefix_ignores_trailing_whitespace ... ok
+test tests::read_receipt_text_accepts_utf8 ... ok
+test tests::read_receipt_text_rejects_non_utf8_without_panic ... ok
+test tests::read_receipt_text_reports_missing_file ... ok
+test tests::lead_line_rejects_unknown_key ... ok
+test tests::run_tool_carries_calc_prefix_from_prompt ... ok
+test tests::run_tool_carries_lookup_prefix_from_prompt ... ok
+test tests::run_tool_error_is_calc_error ... ok
+test tests::run_tool_file_read_hit_and_miss ... ok
+test tests::run_tool_no_match_is_no_tool ... ok
+test tests::run_tool_no_prefix_is_unchanged ... ok
+test tests::run_tool_success_is_calc ... ok
+test tests::malformed_warning_line_is_rejected ... ok
+test tests::replay_episode_on_step_hook_stops_the_replay ... ok
+test tests::full_mode_still_fails_on_step_0_tamper ... ok
+test tests::safe2c_wrong_expected_item_id_fails_verify ... ok
+test tests::scanner_does_not_fall_back_when_earliest_call_fails_to_parse ... ok
+test tests::scanner_picks_earliest_of_calc_and_lookup ... ok
+test tests::scanner_picks_earliest_of_three_tools ... ok
+test tests::safe2c_wrong_expected_prompt_fails_verify ... ok
+test tests::safe2c_editing_item_ctx_line_directly_breaks_the_hash_chain ... ok
+test tests::safe2c_matching_ctx_passes_verify ... ok
+test tests::tool_result_text_is_deterministic_and_reflects_outcome ... ok
+test tests::tools1c_calc_argument_grounded_via_prior_lookup_result_passes ... ok
+test tests::tools1c_calc_argument_not_derivable_from_context_is_ungrounded ... ok
+test tests::trace_fold_changes_with_decode_chain ... ok
+test tests::trace_fold_changes_with_step_index ... ok
+test tests::trace_fold_changes_with_tool_input ... ok
+test tests::trace_fold_changes_with_tool_name ... ok
+test tests::trace_fold_changes_with_tool_output ... ok
+test tests::trace_fold_is_deterministic ... ok
+test tests::trace_genesis_changes_with_prompt_or_k_n ... ok
+test tests::trace_genesis_changes_with_suite ... ok
+test tests::trace_genesis_changes_with_table ... ok
+test tests::trace_genesis_differs_between_two_hosts_running_the_same_episode ... ok
+test tests::trace_genesis_suite_hash_differs_from_table_hash_of_same_bytes ... ok
+test tests::trace_genesis_table_fold_is_unchanged_from_pre_suite_hash_code ... ok
+test tests::unhex_accepts_valid_hex ... ok
+test tests::unhex_rejects_non_hex_chars ... ok
+test tests::unhex_rejects_odd_length ... ok
+test tests::step_line_rejects_duplicate_field ... ok
+test tests::unknown_commit_warning_text_is_exact ... ok
+test tests::verbatim_rule_accepts_argument_from_a_tool_result_or_no_tool ... ok
+test tests::verbatim_rule_is_sound_but_not_complete ... ok
+test tests::verbatim_rule_rejects_argument_only_present_in_model_generated_text ... ok
+test tests::verbatim_rule_step0_ignores_few_shot_examples ... ok
+test tests::step_line_rejects_trailing_junk_after_the_index ... ok
+test tests::step_line_rejects_unknown_field ... ok
+test tests::verify_rejects_k_step_count_mismatch_as_structure ... ok
+test tests::unknown_commit_receipt_still_verifies_pass ... ok
+test tests::verify_rejects_malformed_hex_in_prompt_hex_as_structure ... ok
+test tests::verify_rejects_non_utf8_receipt_as_structure_before_replay ... ok
+test tests::verify_rejects_malformed_step_hex_as_structure ... ok
+test tests::verify_rejects_truncated_trace_chain_as_structure ... ok
+test tests::verify_rejects_wrong_length_item_ctx_as_structure ... ok
+test result: ok. 152 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.03s
+     Running unittests examples/reasoning_trace.rs (target/release/examples/reasoning_trace-052f668c5feef269)
+running 15 tests
+test tests::clean_pass_verifies_ok ... ok
+test tests::duplicate_key_is_rejected ... ok
+test tests::caught_contradiction_is_flagged_and_still_verifies ... ok
+test tests::final_drift_on_clean_pass_is_a_fail ... ok
+test tests::final_ignoring_contradiction_is_a_fail ... ok
+test tests::duplicate_header_is_rejected ... ok
+test tests::missing_verify_step_is_a_parse_error ... ok
+test tests::malformed_answer_token_is_rejected ... ok
+test tests::out_of_order_step_label_is_rejected ... ok
+test tests::ref_pointing_forward_or_to_self_is_rejected ... ok
+test tests::tampered_answer_after_signing_fails_chain_check ... ok
+test tests::tampered_chain_hex_fails_chain_check ... ok
+test tests::unknown_key_is_rejected ... ok
+test tests::verify_step_lying_about_contradict_is_a_fail ... ok
+test tests::verify_step_lying_about_pass_is_a_fail ... ok
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
