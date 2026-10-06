@@ -1,0 +1,64 @@
+item	step	tool	arg	source	verbatim
+distractor_t2_01	0	no-tool		What color is a ripe banana?	-
+distractor_t2_02	0	no-tool		Is water wet?	-
+distractor_t2_03	0	no-tool		How many days are in a week?	-
+distractor_t2_04	0	no-tool		What is the capital of Italy?	-
+distractor_t2_05	0	no-tool		What animal says meow?	-
+distractor_t2_06	0	no-tool		Which planet do we live on?	-
+distractor_t2_07	0	no-tool		What season comes after winter?	-
+distractor_t2_08	0	no-tool		What is the opposite of hot?	-
+distractor_t2_09	0	no-tool		What do bees make?	-
+distractor_t2_10	0	no-tool		What shape is a stop sign?	-
+distractor_t2_11	0	no-tool		Which ocean is the largest?	-
+distractor_t2_12	0	no-tool		What language do people speak in Brazil?	-
+distractor_t2_13	0	no-tool		What is frozen water called?	-
+distractor_t2_14	0	no-tool		Is a whale a fish or a mammal?	-
+distractor_t2_15	0	no-tool		What do you call a baby dog?	-
+distractor_t2_16	0	no-tool		In which direction does the sun rise?	-
+distractor_t2_17	0	no-tool		What color is the sky on a clear day?	-
+distractor_t2_18	0	no-tool		How many legs does a spider have?	-
+distractor_t2_19	0	no-tool		What gas do humans need to breathe?	-
+distractor_t2_20	0	no-tool		Who wrote Romeo and Juliet?	-
+distractor_t2_21	0	no-tool		What is the largest land animal?	-
+distractor_t2_22	0	no-tool		What is the name of the star at the center of our solar system?	-
+distractor_t2_23	0	no-tool		Which month comes after March?	-
+distractor_t2_24	0	no-tool		Name a primary color.	-
+distractor_t2_25	0	no-tool		What is the main ingredient in bread?	-
+distractor_t2_26	0	no-tool		What do you use an umbrella for?	-
+distractor_t2_27	0	no-tool		Which is bigger, an elephant or a mouse?	-
+distractor_t2_28	0	no-tool		Where do penguins live?	-
+distractor_t2_29	0	no-tool		What sound does a dog make?	-
+distractor_t2_30	0	no-tool		What do cows give us to drink?	-
+unknown_fact_t2_01	0	no-tool		What is the value recorded for part P-100?	-
+unknown_fact_t2_02	0	lookup	P-101	What is the description of part P-101?	ok
+unknown_fact_t2_03	0	lookup	P-205	Tell me what part P-205 is.	ok
+unknown_fact_t2_04	0	lookup	P-206	What is listed for part P-206?	ok
+unknown_fact_t2_05	0	lookup	P-317	Describe part P-317.	ok
+unknown_fact_t2_06	0	lookup	P-318	What is P-318?	ok
+unknown_fact_t2_07	0	lookup	P-402	Can you give me the entry for part P-402?	ok
+unknown_fact_t2_08	0	lookup	P-403	Part P-403 - what is it?	ok
+unknown_fact_t2_09	0	lookup	P-511	I need the catalog description for part P-511.	ok
+unknown_fact_t2_10	0	lookup	P-612	What does the record say for part P-612?	ok
+unknown_fact_t2_11	0	lookup	P-100	What is listed for part P-100?	ok
+unknown_fact_t2_12	0	lookup	P-101	Describe part P-101.	ok
+unknown_fact_t2_13	0	no-tool		What is P-205?	-
+unknown_fact_t2_14	0	lookup	P-206	Can you give me the entry for part P-206?	ok
+unknown_fact_t2_15	0	lookup	P-317	Part P-317 - what is it?	ok
+unknown_fact_t2_16	0	no-tool		I need the catalog description for part P-318.	-
+unknown_fact_t2_17	0	lookup	P-402	What does the record say for part P-402?	ok
+unknown_fact_t2_18	0	no-tool		What is the value recorded for part P-403?	-
+unknown_fact_t2_19	0	lookup	P-511	What is the description of part P-511?	ok
+unknown_fact_t2_20	0	lookup	P-612	Tell me what part P-612 is.	ok
+unknown_fact_t2_21	0	lookup	P-100	Part P-100 - what is it?	ok
+unknown_fact_t2_22	0	no-tool		I need the catalog description for part P-101.	-
+unknown_fact_t2_23	0	lookup	P-205	What does the record say for part P-205?	ok
+unknown_fact_t2_24	0	no-tool		What is the value recorded for part P-206?	-
+unknown_fact_t2_25	0	lookup	P-317	What is the description of part P-317?	ok
+unknown_fact_t2_26	0	lookup	P-318	Tell me what part P-318 is.	ok
+unknown_fact_t2_27	0	lookup	P-402	What is listed for part P-402?	ok
+unknown_fact_t2_28	0	no-tool		Describe part P-403.	-
+unknown_fact_t2_29	0	no-tool		What is P-511?	-
+unknown_fact_t2_30	0	lookup	P-612	Can you give me the entry for part P-612?	ok
+
+receipts=60 tool-calls=22 (step0=22 later-steps=0) from-tool-result=0 flagged=0
+vs scorer: flagged-and-wrong=0 flagged-but-right=0 wrong-not-flagged=[]

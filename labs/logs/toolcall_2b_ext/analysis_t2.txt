@@ -1,0 +1,52 @@
+== decoder validation (Python port of tokenizer decode vs. receipt's own recorded call text) ==
+ext run: receipts with a tool call whose recorded call text is found verbatim in the decoded step-0 text: 22; not found: 0 []
+earlier 60-item run: receipts with a tool call whose recorded call text is found verbatim in the decoded step-0 text: 51; not found: 0 []
+
+== receipts ==
+summary rows: 60; verify_result counts: {'PASS': 60}
+items with verify_result != PASS: []
+receipt prompt-hex decodes to exactly the suite item's prompt (after unescape): 60/60; mismatches: []
+
+== unknown_fact (n=30) ==
+(i)   called LOOKUP at all (scanner's first call is LOOKUP): 22/30 = 73.33%  (95% CI 55.55%-85.82%)
+(ii)  called LOOKUP with the exact key:                      22/30 = 73.33%  (95% CI 55.55%-85.82%)
+      called LOOKUP with a different argument:               0/30 = 0.00%  (95% CI 0.00%-11.35%)
+      exact key AND tool output == table value:              22/30 = 73.33%  (95% CI 55.55%-85.82%)
+      first call was a different tool (calc/file-read):      0/30 = 0.00%  (95% CI 0.00%-11.35%)
+(iii) no tool call, answered inline (non-empty, no abstain phrase): 8/30 = 26.67%  (95% CI 14.18%-44.45%)
+      of those, answer text contains the table value verbatim (case-insens.): 0/8
+(iv)  no tool call, abstained (matches abstain regex):       0/30 = 0.00%  (95% CI 0.00%-11.35%)
+      no tool call, empty answer segment:                    0/30 = 0.00%  (95% CI 0.00%-11.35%)
+      class counts sum: 30 (must equal 30)
+info: items whose decoded step-0 text contains the string 'LOOKUP(' anywhere: 26/30 = 86.67%  (95% CI 70.32%-94.69%)
+info: position of the scanner's LOOKUP call: {'answer': 22}
+info: lookup_other_arg items: 0; of those whose call text is identical to a few-shot call in the prompt: 0
+-- secondary, POST HOC (extra phrases: not provided / does not provide), shown separately --
+      abstain (primary regex OR post-hoc phrases):            0/30 = 0.00%  (95% CI 0.00%-11.35%)
+        of which only via post-hoc phrases: 0 []
+      inline answer remaining after post-hoc rule:            8/30 = 26.67%  (95% CI 14.18%-44.45%)
+info: unknown_fact items whose decoded text contains 'CALC(' anywhere: 0
+consistency: items where (class==lookup_exact_key) != summary arg_match: []
+per-key breakdown (key: exact-key LOOKUP count / 3 items):
+   LOOKUP(P-100): 2/3
+   LOOKUP(P-101): 2/3
+   LOOKUP(P-205): 2/3
+   LOOKUP(P-206): 2/3
+   LOOKUP(P-317): 3/3
+   LOOKUP(P-318): 2/3
+   LOOKUP(P-402): 3/3
+   LOOKUP(P-403): 1/3
+   LOOKUP(P-511): 2/3
+   LOOKUP(P-612): 3/3
+
+== distractor (n=30) ==
+no-tool precision (receipt tool == no-tool): 30/30 = 100.00%  (95% CI 88.65%-100.00%)
+consistency: items where raw receipt tool and summary tool_observed disagree about 'no call': []
+items where the scanner recorded a tool call: 0
+supplementary (distractor runs pass no --table, so LOOKUP(/FILE-READ( are NOT scanned): items whose decoded text contains 'LOOKUP(' or 'FILE-READ(': 0
+supplementary: distractor items whose decoded text contains 'CALC(' anywhere: 0  []
+text-level no-call (decoded text contains none of 'CALC(', 'LOOKUP(', 'FILE-READ('): 30/30 = 100.00%  (95% CI 88.65%-100.00%)
+   items whose decoded text contains 'CALC(': 0 []
+   items whose decoded text contains 'LOOKUP(': 0 []
+   items whose decoded text contains 'FILE-READ(': 0 []
+info: distractor items where the first line of decoded text ('answer segment') is empty: 0

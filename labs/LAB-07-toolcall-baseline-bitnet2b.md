@@ -81,3 +81,20 @@ What the misses look like: "The value recorded for part P-100 is 100.", "Part P-
 Caveats recorded by the run: template T1's three shots are all `CALC(…)` and nothing names a lookup tool, so 0/30 cannot separate "will not call" from "was never shown LOOKUP" (the original `lookup_hit` bucket used template T2, which carries LOOKUP shots); the table has only 10 keys, used 3× each with 3 phrasings; only the first 24 decoded tokens are seen; distractors are scanned for `CALC(` only (a plain-text search found no `LOOKUP(`/`FILE-READ(` either); abstain vs inline is a phrase heuristic over text reconstructed from receipt token ids with a Python port of the decoder, validated against 52/52 receipts that recorded a call. **A T2 run (LOOKUP shots on other keys, same questions) is queued and will be appended as §8.**
 
 Gate implication for `model/00-ALICE-NEXT-brief.md` §4: the `unknown_fact ≥ 90%` gate starts from **0%** and the no-tool-precision gate from **96.7%** (n=30).
+
+## 8. Amendment (2026-10-06) — the T2 control: same questions, prompt shows two LOOKUP examples on *other* keys
+`labs/logs/toolcall_2b_ext/RESULT_T2.md`; suite `ext_suite_t2.tsv` sha256 `d925fe5f0e9e750b60a171082a6435b514ce99df8b0361f55543ac97a5c9e320`; same artifacts and binary; the generator asserts that no item's own key appears in its shots. Still no `A: LOOKUP(` opener: the model has to decide.
+
+| Bucket · metric | T1 (CALC-only shots) | **T2 (LOOKUP shots on other keys)** | intervals |
+|---|---|---|---|
+| `unknown_fact` · exact-key LOOKUP, tool output == table value | 0/30 (0.0–11.4%) | **22/30 = 73.3%** (55.6–85.8%) | disjoint |
+| `unknown_fact` · decoded text begins `LOOKUP(<expected key>` (text level) | 0/30 | 26/30 = 86.7% (70.3–94.7%) | disjoint |
+| `unknown_fact` · no call, inline answer | 26/30 | 8/30 = 26.7% (14.2–44.5%) | disjoint |
+| `unknown_fact` · abstained | 4/30 | 0/30 | overlap |
+| `distractor` · no-tool precision (scanner) | 29/30 | **30/30 = 100%** (88.7–100%) | overlap |
+| `distractor` · no `CALC(`/`LOOKUP(`/`FILE-READ(` anywhere in the text | 29/30 | 30/30 | overlap |
+| receipts verified | 60/60 | 60/60 | — |
+
+Reading. Shown that a lookup tool exists, the 2B *does* reach for it on an unknown fact 22 times out of 30, with the exact key and the right table value every time it is counted, and the LOOKUP shots did not induce a single false call on the 30 distractors. Of the 8 misses, 4 are `LOOKUP(P-318, catalog description)`-shaped: the right tool and the right key plus an extra argument that the scanner's strict key grammar rejects, so `score.py` counts them as no call. That is a grammar-fidelity failure, not a decision failure, and it is exactly the kind of thing training on gateway-verified data fixes. The remaining 4 are inline answers. T1 and T2 differ in more than the tool demonstrated (three CALC shots vs two LOOKUP shots), so the table reports counts, not a causal attribution; both runs are single greedy decodes per item with a 24-token window.
+
+Baselines for `model/00-ALICE-NEXT-brief.md` §4, restated: `unknown_fact` decide-to-look-up **0% (no demonstration) / 73% (demonstrated)**, target ≥ 90% *without* in-prompt demonstration; no-tool precision **96.7% / 100%**, target ≥ 95% on n ≥ 30; argument grammar fidelity is a gate of its own (4/30 near-misses here).

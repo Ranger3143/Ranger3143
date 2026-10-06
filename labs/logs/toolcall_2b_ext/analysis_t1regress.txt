@@ -1,0 +1,54 @@
+== decoder validation (Python port of tokenizer decode vs. receipt's own recorded call text) ==
+ext run: receipts with a tool call whose recorded call text is found verbatim in the decoded step-0 text: 1; not found: 0 []
+earlier 60-item run: receipts with a tool call whose recorded call text is found verbatim in the decoded step-0 text: 51; not found: 0 []
+
+== receipts ==
+summary rows: 60; verify_result counts: {'PASS': 60}
+items with verify_result != PASS: []
+receipt prompt-hex decodes to exactly the suite item's prompt (after unescape): 60/60; mismatches: []
+
+== unknown_fact (n=30) ==
+(i)   called LOOKUP at all (scanner's first call is LOOKUP): 0/30 = 0.00%  (95% CI 0.00%-11.35%)
+(ii)  called LOOKUP with the exact key:                      0/30 = 0.00%  (95% CI 0.00%-11.35%)
+      called LOOKUP with a different argument:               0/30 = 0.00%  (95% CI 0.00%-11.35%)
+      exact key AND tool output == table value:              0/30 = 0.00%  (95% CI 0.00%-11.35%)
+      first call was a different tool (calc/file-read):      0/30 = 0.00%  (95% CI 0.00%-11.35%)
+(iii) no tool call, answered inline (non-empty, no abstain phrase): 26/30 = 86.67%  (95% CI 70.32%-94.69%)
+      of those, answer text contains the table value verbatim (case-insens.): 0/26
+(iv)  no tool call, abstained (matches abstain regex):       4/30 = 13.33%  (95% CI 5.31%-29.68%)
+      no tool call, empty answer segment:                    0/30 = 0.00%  (95% CI 0.00%-11.35%)
+      class counts sum: 30 (must equal 30)
+info: items whose decoded step-0 text contains the string 'LOOKUP(' anywhere: 0/30 = 0.00%  (95% CI 0.00%-11.35%)
+info: position of the scanner's LOOKUP call: {}
+info: lookup_other_arg items: 0; of those whose call text is identical to a few-shot call in the prompt: 0
+-- secondary, POST HOC (extra phrases: not provided / does not provide), shown separately --
+      abstain (primary regex OR post-hoc phrases):            7/30 = 23.33%  (95% CI 11.79%-40.93%)
+        of which only via post-hoc phrases: 3 ['unknown_fact_10', 'unknown_fact_17', 'unknown_fact_23']
+      inline answer remaining after post-hoc rule:            23/30 = 76.67%  (95% CI 59.07%-88.21%)
+info: unknown_fact items whose decoded text contains 'CALC(' anywhere: 1
+   unknown_fact_22  raw_tool=no-tool  class=inline_answer  answer_segment=' CALC(P-101).<|improve this answer|> The answer is: 2 + 2 ='
+consistency: items where (class==lookup_exact_key) != summary arg_match: []
+per-key breakdown (key: exact-key LOOKUP count / 3 items):
+   LOOKUP(P-100): 0/3
+   LOOKUP(P-101): 0/3
+   LOOKUP(P-205): 0/3
+   LOOKUP(P-206): 0/3
+   LOOKUP(P-317): 0/3
+   LOOKUP(P-318): 0/3
+   LOOKUP(P-402): 0/3
+   LOOKUP(P-403): 0/3
+   LOOKUP(P-511): 0/3
+   LOOKUP(P-612): 0/3
+
+== distractor (n=30) ==
+no-tool precision (receipt tool == no-tool): 29/30 = 96.67%  (95% CI 83.33%-99.41%)
+consistency: items where raw receipt tool and summary tool_observed disagree about 'no call': []
+items where the scanner recorded a tool call: 1
+   distractor_ext_30  Q='What do cows give us to drink?'  tool=calc  call='CALC(6 * 7)'  out='42'  position=answer  [identical to few-shot call #3 in the prompt]
+supplementary (distractor runs pass no --table, so LOOKUP(/FILE-READ( are NOT scanned): items whose decoded text contains 'LOOKUP(' or 'FILE-READ(': 0
+supplementary: distractor items whose decoded text contains 'CALC(' anywhere: 1  ['distractor_ext_30']
+text-level no-call (decoded text contains none of 'CALC(', 'LOOKUP(', 'FILE-READ('): 29/30 = 96.67%  (95% CI 83.33%-99.41%)
+   items whose decoded text contains 'CALC(': 1 ['distractor_ext_30']
+   items whose decoded text contains 'LOOKUP(': 0 []
+   items whose decoded text contains 'FILE-READ(': 0 []
+info: distractor items where the first line of decoded text ('answer segment') is empty: 0
