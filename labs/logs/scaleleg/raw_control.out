@@ -1,0 +1,5 @@
+model : 30 layers, hidden 2560, vocab 50256
+prompt: "Once upon a time" -> 4 tokens
+token ids: [11, 304, 264, 2678, 6424, 2663, 7997, 2630, 11, 1070, 12439, 264, 3995, 3828, 7086, 48390, 13, 48390, 574, 264, 22999, 323, 25530, 3828, 889, 10456, 311, 13488, 323, 4048, 502, 2574, 13, 3005, 574, 2744, 24450, 311, 7142, 279, 24511, 315, 279, 1917, 2212, 1077, 382, 4054, 40798, 13658, 11, 48390, 6773, 311, 4034, 279, 2254, 6875, 311, 1505, 264, 2363, 389, 279]
+text     : ", in a small town called Greenfield, there lived a young girl named Lily. Lily was a curious and intelligent girl who loved to explore and learn new things. She was always eager to discover the secrets of the world around her.\n\nOne sunny afternoon, Lily decided to visit the local library to find a book on the"
+CIS_DECODE digest=cab11400d737ac4a prompt_toks=4 gen_toks=64 mode=fullint

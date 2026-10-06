@@ -1,0 +1,20 @@
+{
+  "n_scale_tensors": 210,
+  "n_rewritten": 210,
+  "n_value_differs": 31,
+  "max_abs_change": 2.384185791015625e-07,
+  "max_rel_change": 8.030941611842105e-08,
+  "max_ulp_change": 1,
+  "ulp_histogram": {
+    "0": 179,
+    "1": 31
+  },
+  "scale_min": 0.74609375,
+  "scale_max": 4.59375,
+  "src_sha256": "1101e472e41a012e4b1efdc124511461307f4e0e1b540a8e45c24d3d33e0c9eb",
+  "dst_sha256": "40f8c585e50a969f2993da3ba8362b1868f48c3e01b79a4f9e1f43119dfa63bf",
+  "bytes_differing": 71,
+  "shipped_reciprocal_scales_bit_equal_f32_1_over_s": true,
+  "header_identical": true,
+  "outside_slots_identical": true
+}

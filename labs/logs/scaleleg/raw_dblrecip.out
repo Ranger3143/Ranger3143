@@ -1,0 +1,5 @@
+model : 30 layers, hidden 2560, vocab 50256
+prompt: "Once upon a time" -> 4 tokens
+token ids: [11, 304, 264, 2678, 6424, 11, 1070, 574, 264, 3995, 3828, 7086, 48390, 13, 3005, 574, 3967, 369, 1077, 41328, 323, 3021, 369, 6975, 13, 3861, 1938, 11, 1077, 11326, 11, 18083, 13, 11605, 11, 7376, 430, 1070, 1053, 387, 264, 3361, 1567, 520, 279, 2254, 6875, 13, 578, 1567, 574, 264, 2363, 6762, 11, 323, 5127, 574, 12304, 382, 43, 1570, 574, 38564]
+text     : ", in a small town, there was a young girl named Lily. She was known for her curiosity and love for learning. One day, her teacher, Mrs. Johnson, announced that there would be a special event at the local library. The event was a book fair, and everyone was excited.\n\nLily was thrilled"
+CIS_DECODE digest=803e07941964ed37 prompt_toks=4 gen_toks=64 mode=fullint

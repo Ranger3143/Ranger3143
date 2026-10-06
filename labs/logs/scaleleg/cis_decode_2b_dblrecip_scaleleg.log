@@ -1,0 +1,13 @@
+# double-reciprocal: every per-tensor weight scale s -> f32(1/f32(1/s))
+# date: 2026-10-06   (identity run only; no timing recorded - Rule A)
+# MODEL.SAF sha256: 40f8c585e50a969f2993da3ba8362b1868f48c3e01b79a4f9e1f43119dfa63bf
+# EMBED.BIN sha256: e32b99a25e345c65054f36dedf40329a89513cdf1a8195db64fc440fd364e077
+# VOCAB.BIN sha256: 5bde1b0355ef99c6875190ebfff081d985ca48977ae9269e3477f5cc2d97d9ae
+# cis_decode binary sha256: bef74a017cf5a718116b715528de4f53b9c05dab9455148fa74905c995bc8d5d
+# command: /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_decode /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/labs/scaleleg/bitnet2b_dblrecip/MODEL.SAF /tmp/claude-0/-home-user-Ranger3143/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/artifacts/bitnet2b_fixed/EMBED.BIN /tmp/claude-0/-home-user-Ranger3143/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/artifacts/bitnet2b_fixed/VOCAB.BIN 64 "Once upon a time"
+# ---- decoder output (stdout verbatim; it contains no timing lines) ----
+model : 30 layers, hidden 2560, vocab 50256
+prompt: "Once upon a time" -> 4 tokens
+token ids: [11, 304, 264, 2678, 6424, 11, 1070, 574, 264, 3995, 3828, 7086, 48390, 13, 3005, 574, 3967, 369, 1077, 41328, 323, 3021, 369, 6975, 13, 3861, 1938, 11, 1077, 11326, 11, 18083, 13, 11605, 11, 7376, 430, 1070, 1053, 387, 264, 3361, 1567, 520, 279, 2254, 6875, 13, 578, 1567, 574, 264, 2363, 6762, 11, 323, 5127, 574, 12304, 382, 43, 1570, 574, 38564]
+text     : ", in a small town, there was a young girl named Lily. She was known for her curiosity and love for learning. One day, her teacher, Mrs. Johnson, announced that there would be a special event at the local library. The event was a book fair, and everyone was excited.\n\nLily was thrilled"
+CIS_DECODE digest=803e07941964ed37 prompt_toks=4 gen_toks=64 mode=fullint
