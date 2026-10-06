@@ -12,6 +12,11 @@
 | Row-parallel CIS-1 decode (Linux) | digest identical at 1/2/4 threads; 6.3 -> 9.5 -> 12.5 tok/s on the VM (ratios 1.51x / 2.0x) | first multithreaded CIS-1 path; bit-identical by construction |
 | `repack_ternary.py --scale-convention` | repack of microsoft/bitnet-b1.58-2B-4T reproduces `cab11400d737ac4a` | P1 tool bug fixed; digest reproduced from re-derived artifacts on a 4th microarchitecture |
 
+| A.L.I.C.E. boot dashboard (GOP panels, live token stream, attestation view, footer stage bar) | QEMU mint + verify boots exit 33 with swtpm; minted RECEIPT.TXT byte-identical to the golden; host verifier PASS on both quotes (LAB-06) | the screen is a view, never an input: receipts unchanged |
+| Tool-call baseline on the receipt-gated gateway (BitNet-2B, 180 items over three runs) | correct-argument 45/58 on the pre-registered suite; `unknown_fact` decide-to-look-up 0/30 (no demonstration) and 22/30 (LOOKUP demonstrated); distractor no-tool precision 29/30 and 30/30; 180/180 receipts verified (LAB-07) | the baseline ALICE-Next must beat; abstention and grammar fidelity are now gates |
+| Prior-art check of every "first" | 16 hunts, 22 evidence checks: 0 novel, 16 partially novel, 8 done-in-repo (NOBODY-HAS-DONE-THIS.md) | what remains ours is the composition plus the receipts; brief sentences that failed are withdrawn |
+| Scale-sensitivity leg reproduced | 31 of 210 scales moved by 1 ulp → digest 803e07941964ed37 vs cab11400d737ac4a, divergence at token 5, both texts coherent (LAB-02 addendum, labs/logs/scaleleg/) | only the exact digest sees it |
+
 ## Next (ordered)
 1. **Iron first-light for attestation** — Dell i5-5200U, HP N4020, Acer: stage the attest kit (`make-kit-image.sh` + MINT.TXT or RECEIPT.TXT), boot, archive ATTEST.TXT + BOOTLOG under `docs/hardware_logs/`, run `attest_verify.py`. Gate: PCR 4 == firmware's hash of the exact `.efi`; quote verifies; EK certificate present (fTPM). Risk: firmware without TCG2 protocol or with TPM disabled → the code logs and continues (finding, not failure).
 2. **EK-certified AK** — provisioning step on Linux (`tpm2_createek`/`createak`/`makecredential`) with the AK handle persisted; unikernel uses the persistent AK handle instead of a transient primary. Gate: quote verifies against the manufacturer EK chain.
