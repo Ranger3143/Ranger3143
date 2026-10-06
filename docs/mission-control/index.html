@@ -317,14 +317,47 @@ footer code { font-family: var(--mono); font-size: 0.8rem; color: var(--fg); }
     </div>
   </section>
 
+  <section id="claims">
+    <div class="sec-head">
+      <h3>Prior-art check</h3>
+      <h2>What survives when every "first" is hunted down</h2>
+      <p class="note">Twenty-two first-of-kind statements were pulled out of the research briefs and labs. Sixteen got a prior-art hunt (web, GitHub code and issue search, arXiv, IETF, crates.io) and every one of the twenty-two got a repository-evidence check. The full table with nearest prior art and the precise remaining delta is <span class="mono">NOBODY-HAS-DONE-THIS.md</span>.</p>
+    </div>
+    <div class="grid-2">
+      <div class="panel tbl">
+        <table>
+          <thead><tr><th>Verdict</th><th class="num">Claims</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>Novel</td><td class="num">0</td><td>Nothing close found. No claim earned this.</td></tr>
+            <tr><td><b>Partially novel</b></td><td class="num"><b>16</b></td><td>Prior art exists for the parts; a composition, a conformance protocol or assurance evidence remains ours.</td></tr>
+            <tr><td>Not novel</td><td class="num">0</td><td>Nobody's wholesale claim failed, but several sub-claims and brief sentences did and are withdrawn.</td></tr>
+            <tr><td>No prior-art result</td><td class="num">6</td><td>Hunter did not run or the statement restates another row. Kept out of the main table.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel tbl">
+        <table>
+          <thead><tr><th>Status after evidence check</th><th class="num">Rows</th><th>Top item</th></tr></thead>
+          <tbody>
+            <tr><td><b>Done in repo</b></td><td class="num"><b>8</b></td><td>TPM-measured OS-less engine with replayable receipts, quoted and host-verified (QEMU + swtpm, M7 model).</td></tr>
+            <tr><td>In progress</td><td class="num">2</td><td>AIR-TPM v0 profile; the exact-digest tool-bug story, now backed by raw decode logs for two of three legs.</td></tr>
+            <tr><td>Planned</td><td class="num">6</td><td>Physical TPM with Secure Boot on; bare-metal multicore with digest equality; attested fleet gating.</td></tr>
+            <tr><td>Speculative</td><td class="num">0</td><td>Two design positions sit in the unverifiable section.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px">The honest headline: nothing here is a new primitive. What is new is one no_std UEFI application that measures the model it loads, mints an integer-exact receipt, binds it into a TPM quote, and ships the verifier, and the fact that every number on this page traces to a log. Statements the briefs made as firsts and that failed the hunt are listed in the file and withdrawn.</p>
+  </section>
+
   <section id="next">
     <div class="sec-head">
       <h3>Flight plan</h3>
       <h2>What is moving now</h2>
     </div>
     <div class="next">
-      <div class="panel"><span class="status run">in progress</span><h4>ALICE-Next edge model plan</h4><p>Research sweep on ternary pretraining, distillation, tool-use training and calibrated abstention; then a design panel and a training/distillation plan with provenance, eval gates and air-gapped vs connected variants. Lands in <span class="mono">model/</span>.</p></div>
-      <div class="panel"><span class="status run">in progress</span><h4>"Nobody has done this yet", verified</h4><p>Every first-of-kind claim from the briefs gets a prior-art hunt and a repo-evidence check before it is listed. Lands as <span class="mono">NOBODY-HAS-DONE-THIS.md</span>.</p></div>
+      <div class="panel"><span class="status run">in progress</span><h4>ALICE-Next edge model plan</h4><p>Nine research briefs with cited claims and gap lists are in <span class="mono">model/research/</span>; a design panel (three proposals, three judges, synthesis, license audit, completeness check) is writing the training/distillation plan with provenance, eval gates and air-gapped vs connected variants into <span class="mono">model/01-05</span>.</p></div>
+      <div class="panel"><span class="status done">done today</span><h4>"Nobody has done this yet", verified</h4><p>22 statements, 16 prior-art hunts, 22 evidence checks: 0 novel, 16 partially novel, 8 done in repo. Corrections owed to the briefs are listed. <span class="mono">NOBODY-HAS-DONE-THIS.md</span>.</p></div>
       <div class="panel"><span class="status done">done today</span><h4>Boot dashboard</h4><p>GOP panels, live token stream, attestation view, receipt summary; receipts unchanged (byte-identical to golden). labs/LAB-06.</p></div>
       <div class="panel"><span class="status done">done today</span><h4>Attested receipts, end to end</h4><p>Mint and verify boots under QEMU + swtpm, TPM2_Quote over PCR 4/12/13, host verification with OpenSSL. labs/LAB-04, LAB-06.</p></div>
       <div class="panel"><span class="status plan">next on iron</span><h4>Physical TPM run</h4><p>Dell / HP / Acer kit with their discrete or firmware TPMs; EK-certified attestation key; Secure Boot on with a signed .efi.</p></div>

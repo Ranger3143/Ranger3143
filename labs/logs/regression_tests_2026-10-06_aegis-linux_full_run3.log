@@ -220,3 +220,68 @@ test tests::unknown_key_is_rejected ... ok
 test tests::verify_step_lying_about_contradict_is_a_fail ... ok
 test tests::verify_step_lying_about_pass_is_a_fail ... ok
 test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+## cargo test --release --features parallel (same session, appended)
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+note: an unsafe function restricts its caller, but its body is safe by default
+...   |
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+note: an unsafe function restricts its caller, but its body is safe by default
+...   |
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `cis_vnni::tmv_i8_avx512vnni` is unsafe and requires unsafe block
+...   |
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+note: an unsafe function restricts its caller, but its body is safe by default
+...   |
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm256_loadu_si256` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::arch::x86_64::_mm256_loadu_si256` is unsafe and requires unsafe block
+warning[E0133]: call to unsafe function `std::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+For more information about this error, try `rustc --explain E0133`.
+    Finished `release` profile [optimized] target(s) in 0.01s
+     Running unittests src/main.rs (target/release/deps/aegis_linux-2c76544798a2d123)
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/bin/msrtool.rs (target/release/deps/msrtool-1b93e3906027441f)
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/cis_selftest_digest.rs (target/release/deps/cis_selftest_digest-f3d603de0bcab642)
+running 1 test
+test digest_matches_pinned_constant ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests examples/agent_trace.rs (target/release/examples/agent_trace-54f3ad887f641a7e)
+running 152 tests
+test tests::calc_finds_first_of_two ... ok
+test tests::calc_parses_negative_operands ... ok
+test tests::calc_parses_extra_whitespace ... ok
+test tests::calc_parses_tight_spacing ... ok
+test tests::calc_parses_basic_add ... ok
+test tests::calc_rejects_missing_call ... ok
+test tests::calc_rejects_bad_op ... ok
+test tests::calc_rejects_missing_operand ... ok
+test tests::calc_rejects_non_integer_operand ... ok
+test tests::calc_rejects_unclosed_call ... ok
+error: test failed, to rerun pass `--example agent_trace`
+Caused by:
+  process didn't exit successfully: `/home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/agent_trace-54f3ad887f641a7e` (signal: 11, SIGSEGV: invalid memory reference)
