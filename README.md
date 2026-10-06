@@ -4,6 +4,15 @@
 
 > PUBLISH NOTE — this branch is on a PUBLIC repository because the session was configured to push here. Under Aefinity's 2026-08-28 publish policy several items below (the attestation capability, the AIR-TPM spec draft, the VNNI kernel) are "new technique / product-shaped" and would normally sit on a private branch until Justin answers a PUBLISH? item. Delete the branch and ask for a re-push to a private repository if that is the preference; nothing here has been announced anywhere else.
 
+## What ALICE looks like now
+![A.L.I.C.E. mint boot, DONE: live decode, full witness receipt, PCR 4/12/13, signed TPM2_Quote, receipt digest and chain](labs/screenshots/dashboard/04_mint_done_receipt_quoted.png)
+
+| Verify boot: receipt replayed bit for bit, quoted again | During decode: tokens streamed by the integer engine | Before: the firmware text console |
+|---|---|---|
+| ![verify pass](labs/screenshots/dashboard/05_verify_pass_quoted.png) | ![live decode](labs/screenshots/dashboard/02_mint_decoding_live.png) | ![before](labs/screenshots/dashboard/00_before_text_console.png) |
+
+Every value on these screens is read from the running system (CPUID, file bytes, SHA-256s, TPM PCRs). The mission-control view of the whole sprint is in `docs/mission-control/` (published privately at https://claude.ai/artifact/WTgGXZGsYWT3m7tidfNtCL).
+
 ## What was found and built
 
 | # | Result | Evidence |
