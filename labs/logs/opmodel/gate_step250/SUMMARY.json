@@ -1,0 +1,29 @@
+{
+ "ckpt": "checkpoints/op12k.pt",
+ "step": 250,
+ "params": 17319296,
+ "heldout_tokens_ours": 448,
+ "engine_tokens": 448,
+ "torch_ppl": 176.68649291992188,
+ "engine_ppl": 177.279,
+ "rel_diff": 0.003342229367709212,
+ "tolerance": 0.03,
+ "token_parity": true,
+ "verdict": "PASS",
+ "artifacts": {
+  "MODEL.SAF": [
+   3197143,
+   "9e74d53d6e39804e440676e0f2e2fb4fced414081ede29174a60a9d763c09ff7"
+  ],
+  "EMBED.BIN": [
+   9437184,
+   "3ff917ea44060002e5bb8103f958740daa26c1301e56d3445cfeed1368ced117"
+  ],
+  "VOCAB.BIN": [
+   253377,
+   "a4cafc9649488987a8eb053476d389bd9a675405c51bfc42ebded546ae64eb17"
+  ]
+ },
+ "decodes": {},
+ "assets": "/tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/step_early2/assets"
+}

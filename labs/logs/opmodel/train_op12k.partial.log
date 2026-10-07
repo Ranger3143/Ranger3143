@@ -1,0 +1,21 @@
+[train] model params: 17319296 (17.32M) | linear=bitlinear | sched=two_stage | B=8 T=512 threads=4
+step     0/12000 | loss 9.4728 | lr 0.00e+00 | wd 0.100 | gnorm 4.80 | 6.3s
+step    20/12000 | loss 8.8186 | lr 8.00e-05 | wd 0.100 | gnorm 1.97 | 53.4s
+step    40/12000 | loss 8.1279 | lr 1.60e-04 | wd 0.100 | gnorm 1.56 | 93.8s
+step    60/12000 | loss 7.4238 | lr 2.40e-04 | wd 0.100 | gnorm 0.90 | 134.2s
+step    80/12000 | loss 7.3282 | lr 3.20e-04 | wd 0.100 | gnorm 0.84 | 174.5s
+step   100/12000 | loss 7.1571 | lr 4.00e-04 | wd 0.100 | gnorm 0.90 | 213.5s
+step   120/12000 | loss 6.6475 | lr 4.80e-04 | wd 0.100 | gnorm 1.60 | 253.0s
+step   140/12000 | loss 6.6706 | lr 5.60e-04 | wd 0.100 | gnorm 1.72 | 296.4s
+step   160/12000 | loss 5.9091 | lr 6.40e-04 | wd 0.100 | gnorm 2.77 | 335.6s
+step   180/12000 | loss 5.4864 | lr 7.20e-04 | wd 0.100 | gnorm 1.55 | 375.1s
+step   200/12000 | loss 5.8562 | lr 8.00e-04 | wd 0.100 | gnorm 1.07 | 414.2s
+step   220/12000 | loss 5.5742 | lr 8.80e-04 | wd 0.100 | gnorm 1.02 | 453.6s
+step   240/12000 | loss 5.4794 | lr 9.60e-04 | wd 0.100 | gnorm 0.82 | 492.9s
+step   260/12000 | loss 5.4475 | lr 1.04e-03 | wd 0.100 | gnorm 1.07 | 534.0s
+step   280/12000 | loss 5.2297 | lr 1.12e-03 | wd 0.100 | gnorm 0.92 | 573.4s
+step   300/12000 | loss 5.1404 | lr 1.20e-03 | wd 0.100 | gnorm 1.19 | 615.2s
+step   320/12000 | loss 5.9836 | lr 1.28e-03 | wd 0.100 | gnorm 1.15 | 672.9s
+step   340/12000 | loss 4.6350 | lr 1.36e-03 | wd 0.100 | gnorm 0.95 | 724.2s
+step   360/12000 | loss 5.4473 | lr 1.44e-03 | wd 0.100 | gnorm 0.78 | 782.8s
+step   380/12000 | loss 5.2655 | lr 1.52e-03 | wd 0.100 | gnorm 1.09 | 829.7s

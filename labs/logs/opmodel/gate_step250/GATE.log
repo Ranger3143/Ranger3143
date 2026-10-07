@@ -1,0 +1,37 @@
+[gate] ckpt=checkpoints/op12k.pt step=250 params=17319296
+[a] heldout 2026 chars -> 448 tokens (ours); torch QAT PPL 176.6865
+$ /usr/bin/python3 /home/user/aefinity-ai/alice-aegis/model-lab/tinybit/export_hf.py checkpoints/op12k.pt /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/step_early2/hf --tokenizer /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/tokenizer_op12k.json
+  | [export] 146 tensors -> /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/step_early2/hf/model.safetensors
+  | [export] scale round-trip max rel err 3.53e-08 (need <1e-5)
+  | [export] tie_word_embeddings=True -> no lm_head.weight written
+$ /usr/bin/python3 /home/user/aefinity-ai/alice-aegis/aegis-forge/repack_ternary.py /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/step_early2/hf /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/step_early2/artifacts --max-seq 512 --scale-convention reciprocal --chat-template none
+  | VOCAB.BIN: 12288 tokens, 12031 merges
+  | EMBED.BIN: 9437184 bytes (12288 x 384 BF16)
+  | layer 0: repacked
+  | layer 1: repacked
+  | layer 2: repacked
+  | layer 3: repacked
+  | layer 4: repacked
+  | layer 5: repacked
+  | layer 6: repacked
+  | layer 7: repacked
+  | MODEL.SAF: 145 tensors, 3197143 bytes
+  | Repack complete. Next gates: loader asserts (cargo test), reference parity (tests/reference_parity.rs), then G4a PPL agreement.
+[b] MODEL.SAF: 3197143 bytes sha256 9e74d53d6e39804e440676e0f2e2fb4fced414081ede29174a60a9d763c09ff7
+[b] EMBED.BIN: 9437184 bytes sha256 3ff917ea44060002e5bb8103f958740daa26c1301e56d3445cfeed1368ced117
+[b] VOCAB.BIN: 253377 bytes sha256 a4cafc9649488987a8eb053476d389bd9a675405c51bfc42ebded546ae64eb17
+$ /home/user/aefinity-ai/alice-aegis/aegis-eval/target/release/aegis-eval /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/step_early2/artifacts/MODEL.SAF /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/step_early2/artifacts/EMBED.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/step_early2/artifacts/VOCAB.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/step_early2/heldout.txt 512 --sample
+  | ==================================================
+  |  A.L.I.C.E. Perplexity Evaluator (measured)
+  | ==================================================
+  | Engine online. SIMD level: AVX2+FMA
+  | Dataset: /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/step_early2/heldout.txt | sample: 2026 chars -> 448 tokens
+  | --------------------------------------------------
+  | Perplexity (teacher-forced, 448 tokens): 177.279
+  | Eval wall time: 1.2s (369.81 tok/s)
+  | --------------------------------------------------
+  | NOTE: vocab 12288 tokens (full source vocab; cross-tokenizer PPLs are not comparable).
+  | Report this number only alongside that caveat.
+[c] engine tokens 448 (ours 448, parity=True); engine PPL 177.2790; rel diff 0.33% (tol 3%)
+>>> ROUND-TRIP GATE PASS <<<
+[done] /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/step_early2/SUMMARY.json

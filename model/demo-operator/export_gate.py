@@ -51,7 +51,14 @@ def build_heldout(tok, valid_txt, ctx, k_target=480):
     chunk = episode + "\n" + faq + "\n" + prose
     chunk = "".join(c for c in chunk if ord(c) < 128)
     ids = tok.encode(chunk, add_special_tokens=False).ids[: min(k_target, ctx - 16)]
-    text = "".join(c for c in tok.decode(ids) if ord(c) < 128)
+    # aegis-eval --sample scores at most max_tokens*4 CHARACTERS (sample_tokens in
+    # aegis-eval/src/main.rs), so keep the slice inside that budget or the two
+    # stacks score different windows.
+    while True:
+        text = "".join(c for c in tok.decode(ids) if ord(c) < 128)
+        if len(text) <= ctx * 4 - 8 or len(ids) < 64:
+            break
+        ids = ids[:-8]
     re_ids = tok.encode(text, add_special_tokens=False).ids
     return re_ids, text
 

@@ -1,0 +1,42 @@
+{
+ "sources": {
+  "oasst2": {
+   "docs": 5949,
+   "train_docs": 5890,
+   "repeat": 2,
+   "valid_docs": 59,
+   "train_bytes": 4687298
+  },
+  "cosmopedia": {
+   "docs": 24815,
+   "train_docs": 24567,
+   "repeat": 1,
+   "valid_docs": 248,
+   "train_bytes": 89129299
+  },
+  "episodes": {
+   "docs": 150000,
+   "train_docs": 148500,
+   "repeat": 1,
+   "valid_docs": 1500,
+   "train_bytes": 18441113
+  },
+  "faq": {
+   "docs": 330,
+   "train_docs": 280,
+   "repeat": 8,
+   "valid_docs": 50,
+   "train_bytes": 721224
+  }
+ },
+ "train.txt": {
+  "docs": 187087,
+  "bytes": 115598152,
+  "sha256": "ed70ad208c15df16088611d755537257aae11d6f998cc1f5187051130c5850b6"
+ },
+ "valid.txt": {
+  "docs": 1857,
+  "bytes": 1145405,
+  "sha256": "044bdfd270ecb5aea3eb62b55a1cb56463af9dabff2f0bd242907abb1831326b"
+ }
+}
