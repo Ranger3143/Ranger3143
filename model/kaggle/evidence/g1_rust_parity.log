@@ -1,0 +1,12 @@
+# G1 tokenizer parity: Python port (e1-evolve-pilot.ipynb Cell 2) vs the Rust AegisTokenizer::encode (aegis-core/src/tokenizer.rs, unmodified)
+# run date (UTC): 2026-10-07T21:42:42Z   host: sandbox VM (no timing is reported)
+# rustc: rustc 1.97.0 (2d8144b78 2026-07-07)
+# tokenizer.rs sha256: a1cb2975651c4242e0a72ffec2db482783d824e9be148d144ce52e4d7fcd7da3
+# encoder build: TOKENIZER_RS=.../aegis-core/src/tokenizer.rs rustc --edition 2024 -O tools/g1_encode_dump.rs -o g1_encode_dump ; sha256 66019f0b835414476f74a7a93b2e16c657c6b3a91d30d54f9b1a374718ebdb57
+# VOCAB.BIN = rebuilt from the base repo's tokenizer.json by the notebook's port; pinned incumbent VOCAB.BIN sha256 = 5bde1b0355ef99c6875190ebfff081d985ca48977ae9269e3477f5cc2d97d9ae
+# corpus (g1 vectors, sha256 0c6276195316eb74f018afaba4e17d3691c191b8a6b33ddb8118577f5c6f39ad): 11 MB of generated episodes (train+dev families) + 60,000 random ASCII strings (all whitespace classes, brackets, operators)
+#   + the 60 LAB-07 suite prompts (T1/T2/mixed) each also with call+TOOL line appended + ext_suite.tsv + ext_suite_t2.tsv + chain.tsv prompts + whitespace/number edge cases
+$ python3 tools/g1_rust_parity.py g1_vectors.jsonl VOCAB.BIN ./g1_encode_dump
+VOCAB.BIN sha256 5bde1b0355ef99c6875190ebfff081d985ca48977ae9269e3477f5cc2d97d9ae
+G1 parity vs Rust encode(): texts=146258 bytes=13655023 mismatches=0
+exit code: 0

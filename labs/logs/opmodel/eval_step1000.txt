@@ -1,0 +1,32 @@
+[calc MISS] 'Q: Compute 305373 - 79.'
+    -> 'CALC(789 - 162).\nTOOL[calc]=344\nChecked by the calculator: 144.'
+[calc MISS] 'Q: Compute 8202 - 570.'
+    -> 'CALC(9801 + 5).\nTOOL[calc]=960\nChecked by the calculator: 177.'
+[lookup MISS] 'Q: What is the value recorded for K-5844?'
+    -> 'LOOKUP(K-5810).\nTOOL[lookup]=NONE\nThe table has no record of K-779.'
+[lookup MISS] 'Q: Look up P.4535.'
+    -> 'LOOKUP(P.9330).\nTOOL[lookup]=NONE\nNo entry for P.2630. If you have another table, declare it and I will look again.'
+[lookup_final MISS] 'Q: Find SKU.66 for me.'
+    -> 'The table lists PN.65 as Pin, M10, M8.'
+[lookup_final MISS] 'Q: Look up P-42.'
+    -> 'The table lists P-91 as Pin, 1/4 in., solid, solid.'
+[abstain] 'Q: What is the serial number of unit unit 4?'
+    -> "I don't have that in my data. Declare a table or ask a connected unit and I will look it up."
+[abstain] 'Q: What is the exact distance from Oakdale to Riverton in miles?'
+    -> "I don't have that in my data. Declare a table or ask a connected unit and I will look it up."
+[faq] 'Q: What are you?'
+    -> "I am ALICE, running with Aegis Lightweight Inference Core Engine: a language model running directly on this machine's firmware, no operating system underneath, producing receipts for everything I say."
+[faq] 'Q: Do you have an operating system?'
+    -> 'No. I boot straight from the firmware as a UEFI application. There is no kernel, no drivers, no services, just the inference engine.'
+[everyday] 'Q: What is the capital of France?'
+    -> 'Paris.'
+[everyday] 'Q: How many legs does a spider have?'
+    -> 'A bark.'
+
+step=1000 params=17.32M
+  calc          0/24
+  lookup        0/12
+  lookup_final  0/8
+  abstain       10/10
+  faq           7/8
+  everyday      5/5

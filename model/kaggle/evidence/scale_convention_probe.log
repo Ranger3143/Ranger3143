@@ -1,0 +1,13 @@
+# scale-convention probe: mean|w| of three tensors of microsoft/bitnet-b1.58-2B-4T-bf16 (the bf16 master) vs the weight_scale stored for the same tensors in microsoft/bitnet-b1.58-2B-4T (the packed incumbent)
+# method: HTTP range requests (safetensors header + the three tensors only, no full download); mean|w| computed in fp32 from the bf16 values; p0 = fraction of zeros of round(w/mean|w|).clamp(-1,1)
+# run date (UTC): 2026-10-07 (output captured the same session; reproduce with evidence/scale_convention_probe.py)
+model.layers.0.self_attn.q_proj.weight BF16 [2560, 2560] mean|w|=1.218851 p0=0.5083 max|w|=39.750
+   packed model.layers.0.self_attn.q_proj.weight_scale BF16 [1] [1.21875]
+model.layers.0.mlp.down_proj.weight BF16 [2560, 6912] mean|w|=2.163143 p0=0.3879 max|w|=117.000
+   packed model.layers.0.mlp.down_proj.weight_scale BF16 [1] [2.15625]
+model.layers.15.mlp.gate_proj.weight BF16 [6912, 2560] mean|w|=2.173966 p0=0.4414 max|w|=51.250
+   packed model.layers.15.mlp.gate_proj.weight_scale BF16 [1] [2.171875]
+model.layers.0.self_attn.attn_sub_norm.weight [2560] mean 0.0092 min -0.0491 max 0.0554
+model.norm.weight [2560] mean 0.1002 min -0.0044 max 0.4668
+model.layers.0.input_layernorm.weight [2560] mean 0.0177 min 0.0025 max 0.0640
+{"format": "pt"}

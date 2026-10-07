@@ -1,0 +1,36 @@
+# trit agreement: absmean ternarization (tinybit rule: gamma = mean|w| in fp32, round-half-even) of the bf16 master vs the trits stored in the packed incumbent, 3 tensors
+# source: the notebook's own function trit_agreement_vs_packed() (Cell 0), run standalone; HTTP range requests to microsoft/bitnet-b1.58-2B-4T-bf16 and microsoft/bitnet-b1.58-2B-4T
+# run date (UTC): 2026-10-07T21:48:43Z
+{
+ "checked": true,
+ "tensors": [
+  {
+   "tensor": "model.layers.0.self_attn.q_proj.weight",
+   "n": 6553600,
+   "trit_agreement": 0.9878358244895935,
+   "mismatches": 79719,
+   "mismatches_within_0.01_of_threshold": 1.0,
+   "mean_abs_w_fp32": 1.2188506126403809,
+   "packed_weight_scale": 1.21875
+  },
+  {
+   "tensor": "model.layers.7.self_attn.k_proj.weight",
+   "n": 1638400,
+   "trit_agreement": 0.9658355712890625,
+   "mismatches": 55975,
+   "mismatches_within_0.01_of_threshold": 1.0,
+   "mean_abs_w_fp32": 2.2624480724334717,
+   "packed_weight_scale": 2.265625
+  },
+  {
+   "tensor": "model.layers.15.mlp.gate_proj.weight",
+   "n": 17694720,
+   "trit_agreement": 0.9731021523475647,
+   "mismatches": 475950,
+   "mismatches_within_0.01_of_threshold": 1.0,
+   "mean_abs_w_fp32": 2.1739659309387207,
+   "packed_weight_scale": 2.171875
+  }
+ ],
+ "reading": "every mismatch lies within 0.01 of the rounding threshold |w|/gamma = 0.5, i.e. in the bf16 value bin(s) that straddle it; this is consistent with the packed incumbent having been quantized from higher-precision latent weights, so the bf16 master cannot reproduce it bit for bit. Step 0 of every arm is a near-incumbent, not the incumbent (the Linux-side engine PPL of export/step0 against the incumbent artifact measures the gap). packed weight_scale == bf16(mean|w|) confirms the multiply convention."
+}
