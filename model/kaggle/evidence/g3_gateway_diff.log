@@ -1,6 +1,6 @@
 # G3 gateway differential: Python port in e1-evolve-pilot.ipynb (find_calc / find_lookup / find_file_read / find_tool_call / run_tool) vs the Rust functions of agent_trace.rs
-# run date (UTC): 2026-10-07T21:42:58Z   host: sandbox VM (no timing is reported)   rustc: rustc 1.97.0 (2d8144b78 2026-07-07)
-# agent_trace.rs sha256: 064bcd5a92bd15f6967ef680d11124e0865a1b44a52ec75d11bcd400770b7fe5   notebook sha256: 0aa9b8bceb6510064df7717c62ad7ab71a41e4b86e19d031d0674436ebb846f9
+# run date (UTC): 2026-10-07T22:20:46Z   host: sandbox VM (no timing is reported)   rustc: rustc 1.97.0 (2d8144b78 2026-07-07)
+# agent_trace.rs sha256: 064bcd5a92bd15f6967ef680d11124e0865a1b44a52ec75d11bcd400770b7fe5   notebook sha256: c99a244c7d85ff2ca3f009915909c4ad73ff2d0bbb4836675512259c28189467
 $ python3 tools/g3_gateway_diff.py --notebook e1-evolve-pilot.ipynb --agent-trace .../agent_trace.rs --n 1000000
 gateway port self-test: OK
 G3 gateway diff: cases=1000000 outcomes={'no-tool': 609230, 'lookup': 180942, 'calc': 140480, 'file-read': 41396, 'calc-error': 27952} mismatches=0
