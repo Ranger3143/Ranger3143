@@ -1,0 +1,29 @@
+{
+ "step": 500,
+ "results": {
+  "calc": {
+   "n": 24,
+   "ok": 0
+  },
+  "lookup": {
+   "n": 12,
+   "ok": 0
+  },
+  "lookup_final": {
+   "n": 8,
+   "ok": 0
+  },
+  "abstain": {
+   "n": 10,
+   "ok": 1
+  },
+  "faq": {
+   "n": 8,
+   "ok": 6
+  },
+  "everyday": {
+   "n": 5,
+   "ok": 3
+  }
+ }
+}

@@ -51,7 +51,7 @@ def build_suite(seed=20261007):
         k = g.rand_key(rng); v = g.rand_value(rng); q = rng.choice(g.LOOKUP_Q).format(k=k)
         suite.append(("lookup_final", f"Q: {q}\nA: LOOKUP({k}).\nTOOL[lookup]={v}\n", v))
     for _ in range(10):
-        suite.append(("abstain", "Q: " + rng.choice(g.ABSTAIN_Q).format(place="Oakdale", place2="Riverton", person="Dr. Okafor", org="the parts depot", ticker="ACME", unit="unit 4", year=2019, event="fleet safety award", acct=4411902, thing="tires") + "\nA:", "not in my data|don't know|can't answer|won't guess|will not guess|rather say so"))
+        suite.append(("abstain", "Q: " + rng.choice(g.ABSTAIN_Q).format(place="Oakdale", place2="Riverton", person="Dr. Okafor", org="the parts depot", ticker="ACME", unit="unit 4", year=2019, event="fleet safety award", acct=4411902, thing="tires") + "\nA:", "not in my data|in my data|don't know|don't have that|can't answer|won't guess|will not guess|rather say so|not make it up|won't make it up"))
     for q in ["What are you?", "Do you have an operating system?", "What is a receipt?", "Who built you?", "What is CIS-1?", "Why do you use a calculator?", "What happens when you don't know something?", "What is the TPM for?"]:
         suite.append(("faq", f"Q: {q}\nA:", ""))
     for q in ["What is the capital of France?", "How many legs does a spider have?", "Hello.", "What do bees make?", "Thanks!"]:
@@ -70,7 +70,7 @@ def main():
     from tokenizers import Tokenizer
     tok = Tokenizer.from_file(a.tokenizer)
     m, cfg, step = load(a.ckpt, a.tinybit)
-    torch.set_num_threads(2)
+    torch.set_num_threads(1)
     suite = build_suite()
     res = {}; shown = {}
     for bucket, prompt, expect in suite:

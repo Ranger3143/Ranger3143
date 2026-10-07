@@ -19,3 +19,23 @@ step   320/12000 | loss 5.9836 | lr 1.28e-03 | wd 0.100 | gnorm 1.15 | 672.9s
 step   340/12000 | loss 4.6350 | lr 1.36e-03 | wd 0.100 | gnorm 0.95 | 724.2s
 step   360/12000 | loss 5.4473 | lr 1.44e-03 | wd 0.100 | gnorm 0.78 | 782.8s
 step   380/12000 | loss 5.2655 | lr 1.52e-03 | wd 0.100 | gnorm 1.09 | 829.7s
+step   400/12000 | loss 4.4804 | lr 1.60e-03 | wd 0.100 | gnorm 0.86 | 882.7s
+step   420/12000 | loss 5.9810 | lr 1.68e-03 | wd 0.100 | gnorm 0.77 | 921.6s
+step   440/12000 | loss 5.1862 | lr 1.76e-03 | wd 0.100 | gnorm 0.92 | 960.9s
+step   460/12000 | loss 5.2830 | lr 1.84e-03 | wd 0.100 | gnorm 0.71 | 1000.8s
+step   480/12000 | loss 5.1635 | lr 1.92e-03 | wd 0.100 | gnorm 0.90 | 1064.2s
+  [val] step 500 | val_ppl 74.347
+step   500/12000 | loss 4.3333 | lr 2.00e-03 | wd 0.100 | gnorm 0.69 | 1104.0s
+step   520/12000 | loss 4.9705 | lr 2.00e-03 | wd 0.100 | gnorm 0.85 | 1143.5s
+step   540/12000 | loss 4.7000 | lr 2.00e-03 | wd 0.100 | gnorm 0.63 | 1182.8s
+step   560/12000 | loss 4.6168 | lr 2.00e-03 | wd 0.100 | gnorm 0.78 | 1221.5s
+step   580/12000 | loss 3.6522 | lr 2.00e-03 | wd 0.100 | gnorm 0.74 | 1487.2s
+step   600/12000 | loss 4.8324 | lr 2.00e-03 | wd 0.100 | gnorm 0.70 | 1906.2s
+step   620/12000 | loss 4.5520 | lr 2.00e-03 | wd 0.100 | gnorm 0.81 | 1945.6s
+step   640/12000 | loss 4.5972 | lr 2.00e-03 | wd 0.100 | gnorm 0.60 | 1984.8s
+step   660/12000 | loss 4.2073 | lr 2.00e-03 | wd 0.100 | gnorm 0.73 | 2063.7s
+step   680/12000 | loss 5.0375 | lr 2.00e-03 | wd 0.100 | gnorm 0.73 | 2325.1s
+step   700/12000 | loss 5.1781 | lr 1.99e-03 | wd 0.100 | gnorm 0.64 | 2378.8s
+step   720/12000 | loss 4.4675 | lr 1.99e-03 | wd 0.100 | gnorm 0.61 | 2450.6s
+step   740/12000 | loss 4.5481 | lr 1.99e-03 | wd 0.100 | gnorm 0.61 | 2839.0s
+step   760/12000 | loss 3.7943 | lr 1.99e-03 | wd 0.100 | gnorm 0.62 | 2987.1s

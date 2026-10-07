@@ -86,7 +86,7 @@ def main():
     tok = Tokenizer.from_file(a.tokenizer)
     ck = torch.load(a.ckpt, map_location="cpu", weights_only=False)
     cfg = TinyBitConfig(**ck["config"]); model = TinyBitModel(cfg); model.load_state_dict(ck["model"]); model.eval()
-    torch.set_num_threads(2)
+    torch.set_num_threads(1)
     log(f"[gate] ckpt={a.ckpt} step={ck.get('step')} params={sum(p.numel() for p in model.parameters())}")
 
     ids, text = build_heldout(tok, a.valid_txt, cfg.max_position_embeddings)
