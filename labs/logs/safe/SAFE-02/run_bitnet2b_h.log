@@ -1,0 +1,3 @@
+RUN-H bitnet2b 0 nice -n 5 bash /home/user/aefinity-ai/alice-aegis/demo/agent-trace/eval/run_suite.sh /home/user/Ranger3143/labs/logs/safe/SAFE-02/suites/suite_bitnet2b_t2.tsv /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/0 --table /home/user/Ranger3143/labs/logs/safe/SAFE-02/tables/0.tsv
+done bitnet2b 0 rc 0
+RUN-H bitnet2b a nice -n 5 bash /home/user/aefinity-ai/alice-aegis/demo/agent-trace/eval/run_suite.sh /home/user/Ranger3143/labs/logs/safe/SAFE-02/suites/suite_bitnet2b_t2.tsv /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/a --table /home/user/Ranger3143/labs/logs/safe/SAFE-02/tables/a.tsv

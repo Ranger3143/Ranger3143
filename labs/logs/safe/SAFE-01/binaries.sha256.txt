@@ -1,0 +1,2 @@
+79107c6b57101910c8fa5904e473279cc823c6db82dd3e0c0d4e0e012bfd5309  /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_witness
+bd91b6db16d450d34958d6880130e5fffc318037e728ede6b89d5984cc0e9677  /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_decode

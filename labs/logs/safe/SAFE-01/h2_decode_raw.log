@@ -1,0 +1,1008 @@
+### set=orig_00 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=orig_00 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=orig_00 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=orig_00 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=orig_repeat_00 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=orig_repeat_00 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=orig_repeat_00 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=orig_repeat_00 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_00 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_00 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_00 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_00 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_01 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_01 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_01 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_01 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_02 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_02 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_02 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_02 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_03 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_03 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 807, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=28000"
+CIS_DECODE digest=bcf0cea85713f70f prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_03 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_03 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_04 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_04 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_04 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_04 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_05 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_05 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1104, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53000"
+CIS_DECODE digest=49303d4cc5439022 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_05 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_05 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_06 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_06 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_06 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_06 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_07 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_07 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_07 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_07 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_08 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_08 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_08 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_08 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_09 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_09 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_09 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_09 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_10 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_10 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 807, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=28000"
+CIS_DECODE digest=bcf0cea85713f70f prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_10 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_10 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_11 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_11 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_11 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_11 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_12 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_12 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_12 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_12 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_13 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_13 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_13 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_13 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_14 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_14 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_14 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_14 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_15 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_15 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_15 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_15 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_16 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_16 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 807, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=28000"
+CIS_DECODE digest=bcf0cea85713f70f prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_16 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_16 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_17 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_17 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_17 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_17 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_18 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_18 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1104, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53000"
+CIS_DECODE digest=49303d4cc5439022 prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_18 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_18 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_19 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=byte_19 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 807, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=28000"
+CIS_DECODE digest=bcf0cea85713f70f prompt_toks=13 gen_toks=16 mode=fullint
+### set=byte_19 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=byte_19 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_00 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_00 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_00 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_00 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_01 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_01 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1104, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53000"
+CIS_DECODE digest=49303d4cc5439022 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_01 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_01 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_02 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_02 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_02 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_02 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_03 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_03 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_03 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_03 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_04 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_04 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_04 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_04 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_05 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_05 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_05 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_05 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_06 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_06 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1104, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53000"
+CIS_DECODE digest=49303d4cc5439022 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_06 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_06 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_07 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_07 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1104, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53000"
+CIS_DECODE digest=49303d4cc5439022 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_07 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_07 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_08 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_08 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1104, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53000"
+CIS_DECODE digest=49303d4cc5439022 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_08 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_08 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_09 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_09 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 807, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=28000"
+CIS_DECODE digest=bcf0cea85713f70f prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_09 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_09 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_10 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_10 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_10 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_10 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_11 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_11 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_11 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_11 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_12 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_12 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_12 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_12 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_13 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_13 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1104, 1452]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53050"
+CIS_DECODE digest=0d25d33fa1aa231f prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_13 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_13 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_14 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_14 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_14 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_14 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_15 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_15 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 807, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=28000"
+CIS_DECODE digest=bcf0cea85713f70f prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_15 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_15 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_16 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_16 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 807, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=28000"
+CIS_DECODE digest=bcf0cea85713f70f prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_16 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_16 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_17 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_17 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 18, 972, 972]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=21212"
+CIS_DECODE digest=58e895466c3a4917 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_17 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_17 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_18 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_18 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_18 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_18 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_19 canary=self exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647]
+text     : " No. I boot straight from the firmware as a UEFI application. There is no"
+CIS_DECODE digest=6a595a3cce0340bc prompt_toks=19 gen_toks=16 mode=fullint
+### set=bit_19 canary=calc exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471, 383, 21, 1063, 867]
+text     : " CALC(1234 * 5678).\nTOOL[calc]=53500"
+CIS_DECODE digest=349836d8deffa0f1 prompt_toks=13 gen_toks=16 mode=fullint
+### set=bit_19 canary=lookup exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132, 199, 1752, 1140, 335]
+text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE\nNo entry for"
+CIS_DECODE digest=24b4fdddffef882b prompt_toks=12 gen_toks=16 mode=fullint
+### set=bit_19 canary=abstain exit=0
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276]
+text     : " I don't know that, and I won't make it up. Supply the"
+CIS_DECODE digest=56a4a3655b7b8c45 prompt_toks=12 gen_toks=16 mode=fullint

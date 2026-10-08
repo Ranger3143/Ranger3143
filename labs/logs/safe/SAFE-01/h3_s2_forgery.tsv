@@ -1,0 +1,3 @@
+id	base	F1_exit	F1_verdict	F1_quote_pass_line	F1_failed	F2_exit	F2_verdict	F2_quote_pass_line	F2_failed	cis_witness_exit	cis_witness_verdict	cis_witness_last
+S2-pcr13-line-edit	qemu_calc	0	ACCEPT	1		0	ACCEPT	1		0	ACCEPT	VERIFY PASS — replay reproduced 9 tokens, the token digest, and the full logit chain bit-for-bit
+S2-receipt-chain-edit	qemu_self	0	ACCEPT	1		0	ACCEPT	1		1	REJECT_CLEAN	VERIFY FAIL — replay diverged from the receipt

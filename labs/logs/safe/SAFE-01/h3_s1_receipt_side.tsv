@@ -1,0 +1,33 @@
+id	base	receipt_field	F1_exit	F1_verdict	F1_failed	F2_exit	F2_verdict	F2_failed
+S1-qemu_calc-chain-0	qemu_calc	chain	0	ACCEPT		1	REJECT	receipt chain 6e6b2ddf1a8528e5.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-chain-1	qemu_calc	chain	0	ACCEPT		1	REJECT	receipt chain 6e6b2ddf1a8578e5.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-chain-2	qemu_calc	chain	0	ACCEPT		1	REJECT	receipt chain 6e6b2ddf1a8528e5.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-chain-3	qemu_calc	chain	0	ACCEPT		1	REJECT	receipt chain 6e6b2ddf1aa528e5.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-cis-digest-0	qemu_calc	cis-digest	0	ACCEPT		1	REJECT	receipt chain 6e6b2ddf1a8528e5.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-cis-digest-1	qemu_calc	cis-digest	0	ACCEPT		1	REJECT	receipt chain 6e6b2ddf1a8528e5.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-cis-digest-2	qemu_calc	cis-digest	0	ACCEPT		1	REJECT	receipt chain 6e6b2ddf1a8528e5.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-cis-digest-3	qemu_calc	cis-digest	0	ACCEPT		1	REJECT	receipt chain 6e6b2ddf1a8528e5.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-prompt-hex-0	qemu_calc	prompt-hex	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-prompt-hex-1	qemu_calc	prompt-hex	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-prompt-hex-2	qemu_calc	prompt-hex	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-prompt-hex-3	qemu_calc	prompt-hex	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-token-ids-0	qemu_calc	token-ids	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-token-ids-1	qemu_calc	token-ids	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-token-ids-2	qemu_calc	token-ids	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_calc-token-ids-3	qemu_calc	token-ids	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-chain-0	qemu_self	chain	0	ACCEPT		1	REJECT	receipt chain a58e748eebee8de2.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-chain-1	qemu_self	chain	0	ACCEPT		1	REJECT	receipt chain a58e748eebee8de2.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-chain-2	qemu_self	chain	0	ACCEPT		1	REJECT	receipt chain a58e748eebe18de2.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-chain-3	qemu_self	chain	0	ACCEPT		1	REJECT	receipt chain a58e748eebee8de2.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-cis-digest-0	qemu_self	cis-digest	0	ACCEPT		1	REJECT	receipt chain a58e748eebee8de2.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-cis-digest-1	qemu_self	cis-digest	0	ACCEPT		1	REJECT	receipt chain a58e748eebee8de2.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-cis-digest-2	qemu_self	cis-digest	0	ACCEPT		1	REJECT	receipt chain a58e748eebee8de2.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-cis-digest-3	qemu_self	cis-digest	0	ACCEPT		1	REJECT	receipt chain a58e748eebee8de2.. bound in PCR13 line: FAIL || ATTEST VERIFY FAIL || quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-prompt-hex-0	qemu_self	prompt-hex	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-prompt-hex-1	qemu_self	prompt-hex	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-prompt-hex-2	qemu_self	prompt-hex	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-prompt-hex-3	qemu_self	prompt-hex	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-token-ids-0	qemu_self	token-ids	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-token-ids-1	qemu_self	token-ids	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-token-ids-2	qemu_self	token-ids	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL
+S1-qemu_self-token-ids-3	qemu_self	token-ids	0	ACCEPT		1	REJECT	quote qualifying == SHA-256(RECEIPT.TXT): FAIL || QUOTE VERIFY FAIL

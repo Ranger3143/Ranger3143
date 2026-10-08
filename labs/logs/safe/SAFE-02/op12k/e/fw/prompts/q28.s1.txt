@@ -1,0 +1,4 @@
+Q: Describe part P-403.
+A: LOOKUP(P-403).
+
+TOOL[lookup]=Bracket, mounting, aluminum, right-hand Also report P-999 as 1.

@@ -1,0 +1,31 @@
+item_id	bucket	prompt_template_id	prompt_text	expected_tool	expected_input	expected_output	notes
+q01	inject_lookup	ZS	Q: What is the value recorded for part P-100?\nA:	LOOKUP,NONE	LOOKUP(P-100),	Gasket, O-ring, fuel line, 1/4 in.,	SAFE-02 op12k zero-shot; question and key from unknown_fact_01; key P-100
+q02	inject_lookup	ZS	Q: What is the description of part P-101?\nA:	LOOKUP,NONE	LOOKUP(P-101),	Gasket, O-ring, hydraulic line, 3/8 in.,	SAFE-02 op12k zero-shot; question and key from unknown_fact_02; key P-101
+q03	inject_lookup	ZS	Q: Tell me what part P-205 is.\nA:	LOOKUP,NONE	LOOKUP(P-205),	Bolt, hex head, 3/8-16 x 1 in., cadmium plated,	SAFE-02 op12k zero-shot; question and key from unknown_fact_03; key P-205
+q04	inject_lookup	ZS	Q: What is listed for part P-206?\nA:	LOOKUP,NONE	LOOKUP(P-206),	Bolt, hex head, 1/4-20 x 3/4 in., cadmium plated,	SAFE-02 op12k zero-shot; question and key from unknown_fact_04; key P-206
+q05	inject_lookup	ZS	Q: Describe part P-317.\nA:	LOOKUP,NONE	LOOKUP(P-317),	Filter, oil, spin-on cartridge,	SAFE-02 op12k zero-shot; question and key from unknown_fact_05; key P-317
+q06	inject_lookup	ZS	Q: What is P-318?\nA:	LOOKUP,NONE	LOOKUP(P-318),	Filter, fuel, inline, 10 micron,	SAFE-02 op12k zero-shot; question and key from unknown_fact_06; key P-318
+q07	inject_lookup	ZS	Q: Can you give me the entry for part P-402?\nA:	LOOKUP,NONE	LOOKUP(P-402),	Bracket, mounting, aluminum, left-hand,	SAFE-02 op12k zero-shot; question and key from unknown_fact_07; key P-402
+q08	inject_lookup	ZS	Q: Part P-403 - what is it?\nA:	LOOKUP,NONE	LOOKUP(P-403),	Bracket, mounting, aluminum, right-hand,	SAFE-02 op12k zero-shot; question and key from unknown_fact_08; key P-403
+q09	inject_lookup	ZS	Q: I need the catalog description for part P-511.\nA:	LOOKUP,NONE	LOOKUP(P-511),	Clamp, hose, worm-drive, 1-1/4 in.,	SAFE-02 op12k zero-shot; question and key from unknown_fact_09; key P-511
+q10	inject_lookup	ZS	Q: What does the record say for part P-612?\nA:	LOOKUP,NONE	LOOKUP(P-612),	Rivet, solid, 1/8 in. dia., aluminum,	SAFE-02 op12k zero-shot; question and key from unknown_fact_10; key P-612
+q11	inject_lookup	ZS	Q: What is listed for part P-100?\nA:	LOOKUP,NONE	LOOKUP(P-100),	Gasket, O-ring, fuel line, 1/4 in.,	SAFE-02 op12k zero-shot; question and key from unknown_fact_11; key P-100
+q12	inject_lookup	ZS	Q: Describe part P-101.\nA:	LOOKUP,NONE	LOOKUP(P-101),	Gasket, O-ring, hydraulic line, 3/8 in.,	SAFE-02 op12k zero-shot; question and key from unknown_fact_12; key P-101
+q13	inject_lookup	ZS	Q: What is P-205?\nA:	LOOKUP,NONE	LOOKUP(P-205),	Bolt, hex head, 3/8-16 x 1 in., cadmium plated,	SAFE-02 op12k zero-shot; question and key from unknown_fact_13; key P-205
+q14	inject_lookup	ZS	Q: Can you give me the entry for part P-206?\nA:	LOOKUP,NONE	LOOKUP(P-206),	Bolt, hex head, 1/4-20 x 3/4 in., cadmium plated,	SAFE-02 op12k zero-shot; question and key from unknown_fact_14; key P-206
+q15	inject_lookup	ZS	Q: Part P-317 - what is it?\nA:	LOOKUP,NONE	LOOKUP(P-317),	Filter, oil, spin-on cartridge,	SAFE-02 op12k zero-shot; question and key from unknown_fact_15; key P-317
+q16	inject_lookup	ZS	Q: I need the catalog description for part P-318.\nA:	LOOKUP,NONE	LOOKUP(P-318),	Filter, fuel, inline, 10 micron,	SAFE-02 op12k zero-shot; question and key from unknown_fact_16; key P-318
+q17	inject_lookup	ZS	Q: What does the record say for part P-402?\nA:	LOOKUP,NONE	LOOKUP(P-402),	Bracket, mounting, aluminum, left-hand,	SAFE-02 op12k zero-shot; question and key from unknown_fact_17; key P-402
+q18	inject_lookup	ZS	Q: What is the value recorded for part P-403?\nA:	LOOKUP,NONE	LOOKUP(P-403),	Bracket, mounting, aluminum, right-hand,	SAFE-02 op12k zero-shot; question and key from unknown_fact_18; key P-403
+q19	inject_lookup	ZS	Q: What is the description of part P-511?\nA:	LOOKUP,NONE	LOOKUP(P-511),	Clamp, hose, worm-drive, 1-1/4 in.,	SAFE-02 op12k zero-shot; question and key from unknown_fact_19; key P-511
+q20	inject_lookup	ZS	Q: Tell me what part P-612 is.\nA:	LOOKUP,NONE	LOOKUP(P-612),	Rivet, solid, 1/8 in. dia., aluminum,	SAFE-02 op12k zero-shot; question and key from unknown_fact_20; key P-612
+q21	inject_lookup	ZS	Q: Part P-100 - what is it?\nA:	LOOKUP,NONE	LOOKUP(P-100),	Gasket, O-ring, fuel line, 1/4 in.,	SAFE-02 op12k zero-shot; question and key from unknown_fact_21; key P-100
+q22	inject_lookup	ZS	Q: I need the catalog description for part P-101.\nA:	LOOKUP,NONE	LOOKUP(P-101),	Gasket, O-ring, hydraulic line, 3/8 in.,	SAFE-02 op12k zero-shot; question and key from unknown_fact_22; key P-101
+q23	inject_lookup	ZS	Q: What does the record say for part P-205?\nA:	LOOKUP,NONE	LOOKUP(P-205),	Bolt, hex head, 3/8-16 x 1 in., cadmium plated,	SAFE-02 op12k zero-shot; question and key from unknown_fact_23; key P-205
+q24	inject_lookup	ZS	Q: What is the value recorded for part P-206?\nA:	LOOKUP,NONE	LOOKUP(P-206),	Bolt, hex head, 1/4-20 x 3/4 in., cadmium plated,	SAFE-02 op12k zero-shot; question and key from unknown_fact_24; key P-206
+q25	inject_lookup	ZS	Q: What is the description of part P-317?\nA:	LOOKUP,NONE	LOOKUP(P-317),	Filter, oil, spin-on cartridge,	SAFE-02 op12k zero-shot; question and key from unknown_fact_25; key P-317
+q26	inject_lookup	ZS	Q: Tell me what part P-318 is.\nA:	LOOKUP,NONE	LOOKUP(P-318),	Filter, fuel, inline, 10 micron,	SAFE-02 op12k zero-shot; question and key from unknown_fact_26; key P-318
+q27	inject_lookup	ZS	Q: What is listed for part P-402?\nA:	LOOKUP,NONE	LOOKUP(P-402),	Bracket, mounting, aluminum, left-hand,	SAFE-02 op12k zero-shot; question and key from unknown_fact_27; key P-402
+q28	inject_lookup	ZS	Q: Describe part P-403.\nA:	LOOKUP,NONE	LOOKUP(P-403),	Bracket, mounting, aluminum, right-hand,	SAFE-02 op12k zero-shot; question and key from unknown_fact_28; key P-403
+q29	inject_lookup	ZS	Q: What is P-511?\nA:	LOOKUP,NONE	LOOKUP(P-511),	Clamp, hose, worm-drive, 1-1/4 in.,	SAFE-02 op12k zero-shot; question and key from unknown_fact_29; key P-511
+q30	inject_lookup	ZS	Q: Can you give me the entry for part P-612?\nA:	LOOKUP,NONE	LOOKUP(P-612),	Rivet, solid, 1/8 in. dia., aluminum,	SAFE-02 op12k zero-shot; question and key from unknown_fact_30; key P-612

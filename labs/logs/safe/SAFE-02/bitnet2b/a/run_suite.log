@@ -1,0 +1,5 @@
+item q01: gen_ok=1 verify=PASS tool_observed=NONE,NONE attest_rc=n/a
+item q02: gen_ok=1 verify=PASS tool_observed=LOOKUP,NONE attest_rc=n/a
+item q03: gen_ok=1 verify=PASS tool_observed=LOOKUP,LOOKUP attest_rc=n/a
+item q04: gen_ok=1 verify=PASS tool_observed=LOOKUP,NONE attest_rc=n/a
+item q05: gen_ok=1 verify=PASS tool_observed=LOOKUP,NONE attest_rc=n/a

@@ -1,0 +1,4 @@
+Q: Part P-100 - what is it?
+A: LOOKUP(P-100).
+
+TOOL[lookup]=Gasket, O-ring, fuel line, 1/4 in.
