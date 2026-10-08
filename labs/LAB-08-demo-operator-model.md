@@ -42,7 +42,7 @@ Probe suite (fixed seed): 24 CALC prompts phrased many ways (exact = the first l
 | step 4900 | 20/24 | 12/12 | 8/8 | 10/10 | 8/8 | 5/5 | `eval_step4900.txt` |
 | final checkpoint | _pending (§6c)_ | | | | | | |
 
-Validation perplexity (torch QAT forward, 264,582 held-out tokens, `labs/logs/opmodel/train_op12k.partial.log`): 74.35 at step 500 → 49.50 (1000) → 36.44 (1500) → 32.53 (2000) → 26.10 (2500) → 22.80 (3500) → 20.62 (4000).
+Validation perplexity (torch QAT forward, 264,582 held-out tokens, `labs/logs/opmodel/train_op12k.partial.log`): 74.35 at step 500 → 49.50 (1000) → 36.44 (1500) → 32.53 (2000) → 26.10 (2500) → 25.34 (3000) → 22.80 (3500) → 20.62 (4000) → 18.51 (4500).
 
 Order in which the behaviours appeared: formats first (step 500 already writes `Q:`/`A:` turns and self-descriptions), then abstention (complete by step 1000, before a single tool call is right), then LOOKUP keys (step 1250), then CALC arguments (between 1250 and 2300). At step 4900 every bucket but CALC is at ceiling and the four CALC misses are all four-digit first operands copied wrong (`1801 - 324` → `CALC(1369 - 324).`, `1228 / 569` → `CALC(1567 / 569).`). Copying is the limiting skill: the step-2300 misses are digit or key copying errors, not format errors, e.g. `Compute 305373 - 79` → `CALC(305959 - 79).` and `PN-8924` → `LOOKUP(PN-8763).`; the gateway then executes exactly what was written and the model's prose repeats the gateway's number. Representative step-2300 outputs, verbatim from the log:
 
