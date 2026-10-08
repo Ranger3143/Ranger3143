@@ -22,9 +22,9 @@ CIS_DECODE = "/home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/exam
 DEMO_PROMPTS = {
     "self": (64, "Q: What are you, and why do you run without an operating system?\nA:"),
     "receipt": (64, "Q: What is a receipt, and how can someone check what you said?\nA:"),
-    "calc": (24, "Q: What is 1234 * 5678?\nA:"),
-    "calc_words": (24, "Q: Multiply 365 by 24.\nA:"),
-    "lookup": (24, "Q: What is part P-205?\nA:"),
+    "calc": (12, "Q: What is 1234 * 5678?\nA:"),
+    "calc_words": (12, "Q: Multiply 365 by 24.\nA:"),
+    "lookup": (12, "Q: What is part P-205?\nA:"),
     "lookup_final": (40, "Q: What is part P-205?\nA: LOOKUP(P-205).\nTOOL[lookup]=Bolt, hex head, 3/8-16 x 1 in., cadmium plated\n"),
     "abstain": (48, "Q: What is the population of Springfield?\nA:"),
     "everyday": (24, "Q: What is the capital of France?\nA:"),
@@ -128,6 +128,8 @@ def main():
         for f in ("MODEL.SAF", "EMBED.BIN", "VOCAB.BIN"):
             if not os.path.exists(os.path.join(d, f)): os.link(os.path.join(art, f), os.path.join(d, f))
         open(os.path.join(d, "MINT.TXT"), "w", encoding="ascii").write(f"{n}\n{prompt}\n")
+        # declared table for the unikernel's LOOKUP gateway (same file the Linux suite uses)
+        shutil.copy("/home/user/aefinity-ai/alice-aegis/demo/agent-trace/tables/demo.tsv", os.path.join(d, "TABLE.TSV"))
     summary = {"ckpt": a.ckpt, "step": ck.get("step"), "params": sum(p.numel() for p in model.parameters()),
                "heldout_tokens_ours": len(ids), "engine_tokens": eng_tokens, "torch_ppl": torch_ppl, "engine_ppl": eng_ppl,
                "rel_diff": rel, "tolerance": a.tol, "token_parity": parity, "verdict": verdict, "artifacts": files, "decodes": decodes,

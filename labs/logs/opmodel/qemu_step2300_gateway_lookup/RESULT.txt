@@ -1,0 +1,1 @@
+qemu_exit=33 (33 = success; appearance/correctness only)

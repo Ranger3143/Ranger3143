@@ -10,7 +10,7 @@ rm -rf "$OUT"; mkdir -p "$OUT/esp" "$OUT/shots"
 IMG="$OUT/disk.img"; truncate -s 64M "$IMG"; mformat -i "$IMG" -F ::; mmd -i "$IMG" ::/EFI ::/EFI/BOOT
 mcopy -i "$IMG" "$EFI" ::/EFI/BOOT/BOOTX64.EFI
 for f in MODEL.SAF EMBED.BIN VOCAB.BIN; do mcopy -i "$IMG" "$ASSETS/$f" ::/$f; done
-for f in RECEIPT.TXT JOB.TXT MINT.TXT; do [ -f "$ASSETS/$f" ] && mcopy -i "$IMG" "$ASSETS/$f" ::/$f; done
+for f in RECEIPT.TXT JOB.TXT MINT.TXT TABLE.TSV; do [ -f "$ASSETS/$f" ] && mcopy -i "$IMG" "$ASSETS/$f" ::/$f; done
 cp "$OVMF_VARS" "$OUT/OVMF_VARS_4M.fd"
 TPMARGS=""
 if [ "$TPM" = 1 ]; then mkdir -p "$OUT/tpm"; swtpm socket --tpm2 --tpmstate dir="$OUT/tpm" --ctrl type=unixio,path="$OUT/tpm/sock" --log file="$OUT/tpm/swtpm.log",level=1 & SWTPM_PID=$!; sleep 1

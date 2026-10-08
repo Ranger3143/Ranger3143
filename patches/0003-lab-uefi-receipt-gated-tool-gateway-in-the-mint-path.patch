@@ -1,0 +1,536 @@
+From 3d706c27ad797a1bd98809bbe4aea5bf148a918f Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 8 Oct 2026 00:39:08 +0000
+Subject: [PATCH 3/3] lab(uefi): receipt-gated tool gateway in the mint path
+ (CALC, LOOKUP over a declared TABLE.TSV)
+
+The mint path can now run one tool step with no OS underneath, mirroring
+aegis-linux/examples/agent_trace.rs: the scanner takes the earliest CALC( or
+LOOKUP( opener in the model's newly decoded text, parses only that one,
+evaluates it (checked i64 arithmetic with the gateway's fixed error strings;
+table lookup with the literal NONE on a miss; LOOKUP is not scanned for
+unless TABLE.TSV is declared), appends "\nTOOL[<name>]=<output>\n" to the
+prompt and decodes a second step.
+
+- gateway.rs (new): grammar, eval_calc, table parsing, run_tool,
+  tool_result_text, call_line_complete.
+- verifier.rs: replay_with's observer may now return `true` to end the decode
+  early; decode_tokens() helper. replay() unchanged in behaviour.
+- main.rs: TABLE.TSV loaded (<= 64 KiB) and measured into PCR 12 when present;
+  step 0 stops after a complete call line, step 1 at end-of-text; after an
+  early stop the canonical decode is re-run for exactly that many tokens so
+  RECEIPT.TXT / RECEIPT2.TXT are plain witness v1 receipts (maxtok == gen-toks)
+  that cis_witness verify accepts unchanged; the second receipt's chain is
+  extended into PCR 13 ("mint-tool"); dashboard shows the tool line and both
+  receipt summaries.
+
+QEMU gate (swtpm): calc and lookup prompts exit 33; all four receipts replay
+bit-for-bit on Linux (cis_witness verify PASS); attest_verify.py reports
+ATTEST VERIFY PASS and QUOTE VERIFY PASS with the TABLE.TSV event in PCR 12
+and two receipt events in PCR 13. Verify mode is unchanged. No performance
+claims (Rule A).
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_015rZAekjhNTVJRRHVmzz2ae
+---
+ aegis-uefi/src/gateway.rs  | 205 +++++++++++++++++++++++++++++++++++++
+ aegis-uefi/src/main.rs     | 167 +++++++++++++++++++++++++++++-
+ aegis-uefi/src/verifier.rs |  23 +++--
+ 3 files changed, 386 insertions(+), 9 deletions(-)
+ create mode 100644 aegis-uefi/src/gateway.rs
+
+diff --git a/aegis-uefi/src/gateway.rs b/aegis-uefi/src/gateway.rs
+new file mode 100644
+index 0000000..93ed81c
+--- /dev/null
++++ b/aegis-uefi/src/gateway.rs
+@@ -0,0 +1,205 @@
++//! Minimal receipt-gated tool gateway for the mint path (no OS underneath).
++//!
++//! Mirrors `aegis-linux/examples/agent_trace.rs`: the scanner looks at the
++//! model's newly decoded text only, takes the EARLIEST-starting `CALC(` or
++//! `LOOKUP(` opener, parses only that one with its own grammar, and never
++//! falls back to another occurrence. `CALC(<i64> <op> <i64>)` uses checked
++//! i64 arithmetic with the gateway's fixed error strings (`div-by-zero`,
++//! `overflow`); `LOOKUP(<key>)` with key `[A-Za-z0-9_.-]{1,64}` resolves
++//! against a declared table (`TABLE.TSV`, `key<TAB>value` rows) and returns
++//! the literal `NONE` on a miss. `LOOKUP(` is not scanned for at all when no
++//! table is declared, exactly as the Linux gateway behaves without `--table`.
++//!
++//! The tool result is appended to the prompt as `\nTOOL[<name>]=<output>\n`
++//! and the model decodes a second step; both steps are ordinary witness
++//! receipts, so any host can replay them with `cis_witness verify`.
++
++use alloc::format;
++use alloc::string::String;
++use alloc::vec::Vec;
++
++pub struct ToolOutcome {
++    pub name: &'static str, // "calc" | "calc-error" | "lookup" | "no-tool"
++    pub input: String,      // the matched call text, or empty
++    pub output: String,     // decimal result / error string / table value / NONE
++}
++
++pub struct Table {
++    pub rows: Vec<(String, String)>,
++    pub bytes: usize,
++    pub sha256: [u8; 32],
++}
++
++pub fn eval_calc(a: i64, op: u8, b: i64) -> Result<i64, &'static str> {
++    match op {
++        b'+' => a.checked_add(b).ok_or("overflow"),
++        b'-' => a.checked_sub(b).ok_or("overflow"),
++        b'*' => a.checked_mul(b).ok_or("overflow"),
++        b'/' => {
++            if b == 0 {
++                Err("div-by-zero")
++            } else {
++                a.checked_div(b).ok_or("overflow")
++            }
++        }
++        b'%' => {
++            if b == 0 {
++                Err("div-by-zero")
++            } else {
++                a.checked_rem(b).ok_or("overflow")
++            }
++        }
++        _ => Err("bad-op"),
++    }
++}
++
++pub fn is_valid_key(key: &str) -> bool {
++    !key.is_empty()
++        && key.len() <= 64
++        && key
++            .bytes()
++            .all(|c| c.is_ascii_alphanumeric() || c == b'_' || c == b'.' || c == b'-')
++}
++
++/// Parse the `CALC(...)` call that starts at `start`. Returns
++/// (matched text, a, op, b) or None if the body does not fit the grammar.
++fn parse_calc(text: &str, start: usize) -> Option<(String, i64, u8, i64)> {
++    let rest = &text[start + "CALC(".len()..];
++    let close = rest.find(')')?;
++    let body = &rest[..close];
++    let mut it = body.split_whitespace();
++    let a: i64 = it.next()?.parse().ok()?;
++    let op = match it.next()? {
++        "+" => b'+',
++        "-" => b'-',
++        "*" => b'*',
++        "/" => b'/',
++        "%" => b'%',
++        _ => return None,
++    };
++    let b: i64 = it.next()?.parse().ok()?;
++    if it.next().is_some() {
++        return None;
++    }
++    let full = &text[start..start + "CALC(".len() + close + 1];
++    Some((String::from(full), a, op, b))
++}
++
++fn parse_lookup(text: &str, start: usize) -> Option<(String, String)> {
++    let rest = &text[start + "LOOKUP(".len()..];
++    let close = rest.find(')')?;
++    let key = &rest[..close];
++    if !is_valid_key(key) {
++        return None;
++    }
++    let full = &text[start..start + "LOOKUP(".len() + close + 1];
++    Some((String::from(full), String::from(key)))
++}
++
++pub fn parse_table(bytes: &[u8]) -> Option<Table> {
++    if bytes.is_empty() {
++        return None;
++    }
++    let s = core::str::from_utf8(bytes).ok()?;
++    let mut rows = Vec::new();
++    for line in s.lines() {
++        let line = line.trim_end_matches('\r');
++        if line.is_empty() {
++            continue;
++        }
++        if let Some((k, v)) = line.split_once('\t')
++            && is_valid_key(k)
++        {
++            rows.push((String::from(k), String::from(v)));
++        }
++    }
++    Some(Table {
++        rows,
++        bytes: bytes.len(),
++        sha256: aegis_core::witness::sha256(bytes),
++    })
++}
++
++fn no_tool() -> ToolOutcome {
++    ToolOutcome {
++        name: "no-tool",
++        input: String::new(),
++        output: String::new(),
++    }
++}
++
++/// Scan `decoded` for the earliest `CALC(` / `LOOKUP(` opener and run it.
++pub fn run_tool(decoded: &str, table: Option<&Table>) -> ToolOutcome {
++    let calc_pos = decoded.find("CALC(");
++    let lookup_pos = if table.is_some() {
++        decoded.find("LOOKUP(")
++    } else {
++        None
++    };
++    let pick_lookup = match (calc_pos, lookup_pos) {
++        (Some(c), Some(l)) => l < c,
++        (None, Some(_)) => true,
++        _ => false,
++    };
++    if pick_lookup {
++        let start = lookup_pos.unwrap();
++        let Some((full, key)) = parse_lookup(decoded, start) else {
++            return no_tool();
++        };
++        let table = table.unwrap();
++        let value = table
++            .rows
++            .iter()
++            .find(|(k, _)| *k == key)
++            .map(|(_, v)| v.clone())
++            .unwrap_or_else(|| String::from("NONE"));
++        return ToolOutcome {
++            name: "lookup",
++            input: full,
++            output: value,
++        };
++    }
++    let Some(start) = calc_pos else {
++        return no_tool();
++    };
++    let Some((full, a, op, b)) = parse_calc(decoded, start) else {
++        return no_tool();
++    };
++    match eval_calc(a, op, b) {
++        Ok(v) => ToolOutcome {
++            name: "calc",
++            input: full,
++            output: format!("{v}"),
++        },
++        Err(msg) => ToolOutcome {
++            name: "calc-error",
++            input: full,
++            output: String::from(msg),
++        },
++    }
++}
++
++/// True once `text` holds a complete `CALC(...)`/`LOOKUP(...)` call followed by
++/// a newline (the model has finished its call line). Used to end step 0 early.
++pub fn call_line_complete(text: &str) -> bool {
++    for opener in ["CALC(", "LOOKUP("] {
++        if let Some(start) = text.find(opener)
++            && let Some(close) = text[start..].find(')')
++            && text[start + close..].contains('\n')
++        {
++            return true;
++        }
++    }
++    false
++}
++
++/// Exactly the text the Linux gateway appends to the running prompt.
++pub fn tool_result_text(o: &ToolOutcome) -> String {
++    format!("\nTOOL[{}]={}\n", o.name, o.output)
++}
++
++pub fn hex32(d: &[u8; 32]) -> String {
++    let mut buf = [0u8; 64];
++    let n = aegis_core::witness::hex_lower(d, &mut buf);
++    String::from(core::str::from_utf8(&buf[..n]).unwrap_or(""))
++}
+diff --git a/aegis-uefi/src/main.rs b/aegis-uefi/src/main.rs
+index 69a2ed3..d311040 100644
+--- a/aegis-uefi/src/main.rs
++++ b/aegis-uefi/src/main.rs
+@@ -11,6 +11,7 @@ use core::fmt::Write;
+ 
+ mod allocator;
+ mod attest;
++mod gateway;
+ mod console;
+ mod cpu;
+ mod font;
+@@ -761,6 +762,23 @@ fn main() -> uefi::Status {
+         }
+     }
+ 
++    // 4f. Declared table for the mint path's LOOKUP gateway (optional):
++    // TABLE.TSV, `key<TAB>value` rows, the same file format the Linux
++    // agent_trace --table takes. Measured into PCR 12 before any lookup.
++    let mut table_bytes: alloc::vec::Vec<u8> = alloc::vec::Vec::new();
++    if !mint_bytes.is_empty()
++        && let Some(tsize) = get_file_size(&mut root, "TABLE.TSV")
++        && tsize > 0
++        && tsize <= 64 * 1024
++    {
++        table_bytes.resize(tsize, 0);
++        if load_file_into(&mut root, "TABLE.TSV", bounce_slice, &mut table_bytes) {
++            boot_log(&mut root, "STAGE 4f: TABLE.TSV loaded — LOOKUP gateway armed");
++        } else {
++            table_bytes.clear();
++        }
++    }
++
+     // 5. Initialize the massive second block LAST so large files got priority for contiguous physical RAM
+     allocator::init_uefi_alloc_large();
+     boot_log(&mut root, "STAGE 5: working heap online");
+@@ -996,6 +1014,7 @@ fn main() -> uefi::Status {
+         let hashes = (&model_sha, &embed_sha, &vocab_sha);
+         let mut minted_receipt: Option<String> = None;
+         let mut minted_summary: Option<([u8; 32], u64, usize)> = None;
++        let mut minted_tokens: Option<Vec<u32>> = None;
+         let _ = console::with_console(|st| {
+             let _ = st.write_str("\r\n");
+             let _ = st.write_str("PROMPT  ");
+@@ -1006,7 +1025,15 @@ fn main() -> uefi::Status {
+         // Display-only observer: streams each decoded piece into the
+         // transcript and ticks the footer. It runs after the chain fold, so
+         // the receipt is byte-identical with or without a screen.
+-        let mut on_token = |step: usize, _tok: u32, piece: &str| {
++        // The observer also watches for a complete tool call followed by a
++        // newline and stops the decode there, so the gateway (below) sees a
++        // clean call instead of the model's guess at the tool's result. The
++        // receipt records exactly the steps taken (maxtok == gen-toks).
++        let mut seen = String::new();
++        let mut on_token = |step: usize, tok: u32, piece: &str| -> bool {
++            if tok == 0 {
++                return true; // <|endoftext|>
++            }
+             let _ = console::with_console(|st| {
+                 for ch in piece.chars() {
+                     if ch == '\n' {
+@@ -1021,6 +1048,8 @@ fn main() -> uefi::Status {
+             if step % 8 == 7 || step + 1 == max_new {
+                 ui::stage(6, &format!("token {}/{max_new}  CIS-1 FullInt  argmax", step + 1));
+             }
++            seen.push_str(piece);
++            gateway::call_line_complete(&seen)
+         };
+         let ok = match verifier::replay_with(
+             model_slice,
+@@ -1031,10 +1060,24 @@ fn main() -> uefi::Status {
+             max_new,
+             &mut on_token,
+         ) {
+-            Ok(rep) => {
+-                let receipt = verifier::render_receipt(hashes, &prompt, max_new, &rep);
++            Ok(rep_streamed) => {
++                // If the observer stopped the decode early, re-run the canonical
++                // decode for exactly that many tokens so the receipt's header
++                // (maxtok) and chain are those of a plain `maxtok`-token decode,
++                // verifiable by cis_witness / cis-verify unchanged. Greedy CIS-1
++                // decode is deterministic, so the tokens are identical.
++                let rep = if rep_streamed.generated.len() < max_new {
++                    match verifier::replay(model_slice, embeddings_slice, vocab_slice, hashes, &prompt, rep_streamed.generated.len()) {
++                        Ok(r) if r.generated == rep_streamed.generated => r,
++                        _ => rep_streamed,
++                    }
++                } else {
++                    rep_streamed
++                };
++                let receipt = verifier::render_receipt(hashes, &prompt, rep.generated.len(), &rep);
+                 minted_receipt = Some(receipt.clone());
+                 minted_summary = Some((rep.chain, rep.fnv, rep.generated.len()));
++                minted_tokens = Some(rep.generated.clone());
+                 let wrote = write_whole_file(&mut root, "RECEIPT.TXT", receipt.as_bytes());
+                 boot_log(
+                     &mut root,
+@@ -1062,6 +1105,112 @@ fn main() -> uefi::Status {
+                 false
+             }
+         };
++        // ---- receipt-gated tool step (CALC / LOOKUP), mirroring agent_trace ----
++        // The gateway runs on the model's newly decoded text only, appends the
++        // real tool result to the prompt, and the model decodes a second step.
++        // Both steps are ordinary witness receipts (RECEIPT.TXT, RECEIPT2.TXT).
++        let mut tool_summary: Option<(String, String, String, [u8; 32], u64, usize, bool)> = None;
++        if ok && let Some(toks) = minted_tokens.as_ref() {
++            let decoded0 = verifier::decode_tokens(vocab_slice, toks).unwrap_or_default();
++            let table = gateway::parse_table(&table_bytes);
++            if let (Some(t), Some(a)) = (table.as_ref(), attestor.as_mut()) {
++                a.extend(
++                    12,
++                    &format!(
++                        "AEGIS-MEASURE v0 artifact=TABLE.TSV bytes={} sha256={}",
++                        t.bytes,
++                        gateway::hex32(&t.sha256)
++                    ),
++                );
++            }
++            let outcome = gateway::run_tool(&decoded0, table.as_ref());
++            if outcome.name != "no-tool" {
++                let tool_line = gateway::tool_result_text(&outcome);
++                boot_log(
++                    &mut root,
++                    &format!(
++                        "STAGE T: gateway tool={} in={} out={}",
++                        outcome.name, outcome.input, outcome.output
++                    ),
++                );
++                let _ = console::with_console(|st| {
++                    let _ = st.write_str("\r\nTOOL    ");
++                    let _ = st.write_str(outcome.name);
++                    let _ = st.write_str(" -> ");
++                    let _ = st.write_str(&outcome.output);
++                    let _ = st.write_str("   (executed by the firmware gateway, no OS)\r\nANSWER  ");
++                    core::fmt::Result::Ok(())
++                });
++                let prompt2 = format!("{prompt}{decoded0}{tool_line}");
++                let max2: usize = 32;
++                ui::stage(6, &format!("tool {} executed; decoding the answer", outcome.name));
++                // Second step: stop at the end of the answer's first line.
++                let mut seen2 = String::new();
++                let mut on_token2 = |_step: usize, tok: u32, piece: &str| -> bool {
++                    if tok == 0 {
++                        return true; // <|endoftext|>: the answer is complete
++                    }
++                    let _ = console::with_console(|st| {
++                        for ch in piece.chars() {
++                            if ch == '\n' {
++                                let _ = st.write_str("\r\n        ");
++                            } else if !ch.is_control() {
++                                let mut b = [0u8; 4];
++                                let _ = st.write_str(ch.encode_utf8(&mut b));
++                            }
++                        }
++                        core::fmt::Result::Ok(())
++                    });
++                    seen2.push_str(piece);
++                    seen2.trim_start().contains('\n')
++                };
++                match verifier::replay_with(
++                    model_slice,
++                    embeddings_slice,
++                    vocab_slice,
++                    hashes,
++                    &prompt2,
++                    max2,
++                    &mut on_token2,
++                ) {
++                    Ok(rep2_streamed) => {
++                        let rep2 = if rep2_streamed.generated.len() < max2 {
++                            match verifier::replay(model_slice, embeddings_slice, vocab_slice, hashes, &prompt2, rep2_streamed.generated.len()) {
++                                Ok(r) if r.generated == rep2_streamed.generated => r,
++                                _ => rep2_streamed,
++                            }
++                        } else {
++                            rep2_streamed
++                        };
++                        let receipt2 = verifier::render_receipt(hashes, &prompt2, rep2.generated.len(), &rep2);
++                        let wrote2 = write_whole_file(&mut root, "RECEIPT2.TXT", receipt2.as_bytes());
++                        boot_log(
++                            &mut root,
++                            &format!(
++                                "STAGE M2: minted tool-step receipt steps={} cis-digest={:016x} written={wrote2}",
++                                rep2.generated.len(),
++                                rep2.fnv
++                            ),
++                        );
++                        if let Some(a) = attestor.as_mut() {
++                            a.record_receipt("mint-tool", &rep2.chain, rep2.fnv, rep2.generated.len(), "MINTED");
++                        }
++                        tool_summary = Some((
++                            String::from(outcome.name),
++                            outcome.input.clone(),
++                            outcome.output.clone(),
++                            rep2.chain,
++                            rep2.fnv,
++                            rep2.generated.len(),
++                            wrote2,
++                        ));
++                    }
++                    Err(e) => {
++                        boot_log(&mut root, &format!("STAGE M2 FAILED: {e}"));
++                    }
++                }
++            }
++        }
+         let mut attest_panel: Vec<(String, u32)> = Vec::new();
+         if let Some(a) = attestor.as_mut() {
+             let qual = minted_receipt
+@@ -1096,6 +1245,18 @@ fn main() -> uefi::Status {
+         } else {
+             attest_panel.push((String::from("VERDICT MINT FAILED"), ui::RED));
+         }
++        if let Some((name, input, output, chain2, fnv2, steps2, wrote2)) = tool_summary.as_ref() {
++            attest_panel.push((String::new(), ui::TEXT));
++            attest_panel.push((format!("TOOL   {name}: {input} -> {output}"), ui::ACCENT));
++            attest_panel.extend(ui::receipt_lines(
++                "mint-tool",
++                chain2,
++                *fnv2,
++                *steps2,
++                if *wrote2 { "MINTED - RECEIPT2.TXT, chain in PCR 13" } else { "MINTED - RECEIPT2.TXT NOT WRITTEN" },
++                if *wrote2 { ui::GREEN } else { ui::AMBER },
++            ));
++        }
+         ui::attest(&attest_panel);
+         ui::stage(7, if ok { "DONE - receipt minted and quoted; safe to power off" } else { "DONE - mint failed" });
+         // Hold the finished frame long enough to be seen (and screenshotted)
+diff --git a/aegis-uefi/src/verifier.rs b/aegis-uefi/src/verifier.rs
+index 2044a7b..0e275ee 100644
+--- a/aegis-uefi/src/verifier.rs
++++ b/aegis-uefi/src/verifier.rs
+@@ -64,12 +64,20 @@ pub fn replay(
+     prompt: &str,
+     max_new: usize,
+ ) -> Result<Replay, &'static str> {
+-    replay_with(model, embed, vocab, hashes, prompt, max_new, &mut |_, _, _| {})
++    replay_with(model, embed, vocab, hashes, prompt, max_new, &mut |_, _, _| false)
+ }
+ 
+-/// `replay` with a per-token observer `(step, token_id, decoded_piece)`.
+-/// The observer is display-only: it runs after the chain has folded the
+-/// step, so it cannot influence a single bit of the receipt.
++/// Decode token ids with the engine tokenizer (display and prompt
++/// construction for the gateway step; byte-level BPE, ASCII-safe).
++pub fn decode_tokens(vocab: &[u8], ids: &[u32]) -> Result<String, &'static str> {
++    let tokenizer = AegisTokenizer::new(vocab).map_err(|_| "VOCAB.BIN did not parse")?;
++    Ok(tokenizer.decode(ids))
++}
++
++/// `replay` with a per-token observer `(step, token_id, decoded_piece) -> stop`.
++/// The observer runs after the chain has folded the step, so it cannot
++/// influence a single bit of any step; returning `true` ends the decode early
++/// (the receipt then records exactly the steps that were taken).
+ pub fn replay_with(
+     model: &[u8],
+     embed: &[u8],
+@@ -77,7 +85,7 @@ pub fn replay_with(
+     hashes: (&[u8; 32], &[u8; 32], &[u8; 32]),
+     prompt: &str,
+     max_new: usize,
+-    on_token: &mut dyn FnMut(usize, u32, &str),
++    on_token: &mut dyn FnMut(usize, u32, &str) -> bool,
+ ) -> Result<Replay, &'static str> {
+     let tensors = SafeTensors::deserialize(model).map_err(|_| "MODEL.SAF did not parse")?;
+     let config = tensors
+@@ -120,9 +128,12 @@ pub fn replay_with(
+         };
+         fnv = fnv1a64(fnv, &tok.to_le_bytes());
+         generated.push(tok);
+-        on_token(step, tok, &tokenizer.decode(&[tok]));
++        let stop = on_token(step, tok, &tokenizer.decode(&[tok]));
+         engine.forward_step_int(tok, pos);
+         pos += 1;
++        if stop {
++            break;
++        }
+     }
+     Ok(Replay {
+         prompt_toks: prompt_ids.len(),
+-- 
+2.43.0
+

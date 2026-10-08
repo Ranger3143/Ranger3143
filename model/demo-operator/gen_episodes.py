@@ -33,7 +33,7 @@ def trunc_rem(a, b):
 def eval_calc(a, op, b):
     """Returns (name, output) exactly like the Rust gateway."""
     if op in ("/", "%") and b == 0:
-        return "calc-error", "division by zero"
+        return "calc-error", "div-by-zero"
     if op == "+": r = a + b
     elif op == "-": r = a - b
     elif op == "*": r = a * b
@@ -41,7 +41,7 @@ def eval_calc(a, op, b):
     elif op == "%": r = trunc_rem(a, b)
     else: raise ValueError(op)
     if r < I64_MIN or r > I64_MAX:
-        return "calc-error", "integer overflow"
+        return "calc-error", "overflow"
     return "calc", str(r)
 
 # ---- phrasing -------------------------------------------------------------------
@@ -91,12 +91,12 @@ CALC_FINAL = [
     "Checked by the calculator: {r}.",
 ]
 CALC_ERR_FINAL = {
-    "division by zero": [
+    "div-by-zero": [
         "Division by zero is undefined, so the calculator reports an error.",
         "That cannot be computed: dividing by zero is undefined.",
         "The calculator refuses division by zero; the result is undefined.",
     ],
-    "integer overflow": [
+    "overflow": [
         "That result does not fit in a 64-bit integer, so the calculator reports an overflow.",
         "The exact value overflows the calculator's 64-bit range; I will not guess a number.",
         "Integer overflow: the answer is outside the range the calculator can represent.",

@@ -1,7 +1,7 @@
 From a8db6a4f35a887f50f0c570de3df60c840474539 Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Tue, 6 Oct 2026 15:23:53 +0000
-Subject: [PATCH 2/2] lab(uefi): A.L.I.C.E. boot dashboard - GOP panels, live
+Subject: [PATCH 2/3] lab(uefi): A.L.I.C.E. boot dashboard - GOP panels, live
  CIS-1 decode, attestation view
 
 What a person at the machine sees is now a designed dashboard instead of a
