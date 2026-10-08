@@ -34,7 +34,27 @@ Repack convention: tinybit exports `weight_scale = 1/gamma`; `repack_ternary.py 
 _(filled in at each check-in: calc exact-call rate, lookup exact-key rate, lookup final-sentence copy rate, abstention rate, no-tool rate on FAQ and everyday prompts, with samples)_
 
 ## 6. Final export, engine digests and the boot demo
-_(filled in when training finishes: artifact sizes and SHA-256s, cis_decode digests for the demo prompts, QEMU mint/verify runs with the dashboard, screenshots, agent_trace episodes with receipts)_
+_(final-checkpoint rows are filled in when training finishes)_
+
+### 6a. Interim: the demo path proven on the step-2300 checkpoint (2026-10-08)
+| Check | Result | Evidence |
+|---|---|---|
+| Round-trip gate, step 2300 | torch PPL 19.3938 vs engine 19.3780, rel diff **0.08%**, tokens 448 = 448 | `labs/logs/opmodel/gate_step2300/` |
+| First boot of the operator model in ALICE (dashboard build, swtpm), prompt "What are you, and why do you run without an operating system?" | exit 33; 64-token receipt minted with no OS, `cis-digest 5e6125501869f0d8` — **identical to the Linux `cis_decode` digest for the same prompt** | `labs/logs/opmodel/qemu_step2300_self/`, `labs/screenshots/dashboard/10_opmodel_step2300_self_boot.png` |
+
+### 6b. A receipt-gated tool gateway inside the boot image (alice-aegis patch 0003)
+Without a gateway the unikernel could only *display* a tool call; the model, trained on gateway episodes, would then invent the `TOOL[...]` line itself. Patch 0003 adds `aegis-uefi/src/gateway.rs`: the mint path scans the model's newly decoded text for the earliest `CALC(` / `LOOKUP(` opener exactly as the Linux `agent_trace` scanner does, evaluates it (checked i64 arithmetic with the gateway's fixed error strings; `LOOKUP` against a `TABLE.TSV` declared on the boot volume, measured into PCR 12, literal `NONE` on a miss), appends the real `\nTOOL[<name>]=<output>\n` line, and decodes a second step. Step 0 stops after a complete call line and step 1 at end-of-text; after an early stop the canonical decode is re-run for exactly that many tokens, so both `RECEIPT.TXT` and `RECEIPT2.TXT` are plain witness v1 receipts (`maxtok == gen-toks`) that the unchanged Linux verifier accepts. The second receipt's chain is extended into PCR 13.
+
+| Prompt (step-2300 model) | Step 0 (model) | Gateway | Step 1 (model) | Receipts replay on Linux | Attestation |
+|---|---|---|---|---|---|
+| `Q: What is 1234 * 5678?` | `CALC(1234 * 5678).` (9 tokens, digest `fddebefc84f1ad58`) | `TOOL[calc]=7006652` | 9 tokens, digest `e478f917f6f1d97e` | **PASS, PASS** | ATTEST PASS, QUOTE PASS; PCR 12 has the TABLE.TSV event, PCR 13 two receipt events |
+| `Q: What is part P-205?` | `LOOKUP(P-178).` (7 tokens; wrong key at this checkpoint) | `TOOL[lookup]=NONE` | 22 tokens | **PASS, PASS** | ATTEST PASS, QUOTE PASS |
+
+Evidence: `labs/logs/opmodel/qemu_step2300_gateway_{calc,lookup}/` (BOOTLOG, ATTEST, both receipts, QEMU exit), `labs/screenshots/dashboard/11_opmodel_step2300_gateway_{calc,lookup}.png`, `patches/0003-*.patch`. The step-2300 model still copies arguments imperfectly (the answer step wrote 755662 for 7006652; the lookup key was wrong); the gateway recorded exactly what it did either way, which is the point. The final checkpoint is evaluated in 6c.
+
+Bug found and fixed on the way: the first version wrote `maxtok` = actual steps while the chain header had been folded with the token budget; `cis_witness verify` rejected those receipts. The canonical re-decode closes it with the receipt format unchanged.
+
+Note for future corpora: `gen_episodes.py` originally used the error strings "division by zero" / "integer overflow"; the gateway's are `div-by-zero` / `overflow`. The generator now matches the gateway; the model trained in this lab saw the old strings on the error path only.
 
 ## 7. Reproduce
 ```
