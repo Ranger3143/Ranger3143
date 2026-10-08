@@ -1,6 +1,6 @@
 # ALICE-Next — decision memo and index (read this first)
 
-**Date:** 2026-10-06 · **For:** Justin · **Status:** plan, not a result. No ALICE-Next weights exist; no quality number is claimed anywhere in this directory.
+**Date:** 2026-10-06 · **For:** Justin · **Status:** plan, not a result. No ALICE-Next weights exist; no quality number is claimed anywhere in this directory. (2026-10-08: a small *demo* operator model now exists, see `demo-operator/` and `../labs/LAB-08`; it is the QEMU demo model, not a rung of this plan.)
 
 ## What was asked and what was built today
 You asked for a bold new class of edge model to replace BitNet-b1.58-2B-4T inside ALICE: a tool expert that can converse, knows what it doesn't know, with an air-gapped variant and a connected variant that fact-checks herself. Today produced the research base, the measured baseline, the design decision and the plan, in that order:
@@ -16,6 +16,8 @@ You asked for a bold new class of edge model to replace BitNet-b1.58-2B-4T insid
 | `05-risks-and-90-day-plan.md` | risk register, 30/60/90 plan, the first Kaggle notebook, Plan C, NEEDS candidates, and the completeness check's open gaps |
 | `../labs/LAB-07-toolcall-baseline-bitnet2b.md` | the measured baseline the new model must beat (180 items over three runs, 180/180 receipts verified) |
 | `../spec/AEGIS-FETCH-SNAPSHOT-v0.md` | how the connected variant fetches without breaking replayable receipts |
+| `kaggle/` | the first notebook of the plan (E1 evolve pilot), smoke-executed on CPU; nothing run on a GPU yet |
+| `demo-operator/` | the 17M-parameter ternary operator model trained on this CPU for the QEMU demo (`../labs/LAB-08`): corpus builders, gateway-verified episode generator, tokenizer, config, gate and probe scripts. A demo model, not an ALICE-Next candidate |
 
 ## The decision, and my reading of it
 A panel of three independent proposals (evolve the incumbent; distill an Apache-2.0 Qwen3-1.7B into a ternary student; a purpose-built 0.3–0.8B operator model) was scored by three judges (engineering fit against the actual engine sources, licence and provenance, training risk against the cited evidence). The judges were unanimous: **evolve the BitNet-2B family** (operator-tune it as rung A, then structurally prune it to a ~1.0B body as rung B), zero engine change, with the operator model's data factory and the student plan's measurement discipline grafted in.

@@ -2,7 +2,7 @@
 
 **Status:** written and smoke-executed on 2026-10-07; **nothing in this directory has been run on a GPU**. Every number below is either labelled [meas] with the evidence file that holds it, [arith], or [est] with its basis.
 Labels follow `model/01-ALICE-NEXT-design.md` s0. Plan source: `model/05-risks-and-90-day-plan.md` s3 (the notebook spec), `model/02-training-and-distillation-plan.md` (S0-S3, QAT s3, register s4).
-Nothing here is committed or pushed. Keep the Kaggle kernel **private** (publish policy: weights, recipe and factory stay private until a `PUBLISH?` item is answered).
+This directory is pushed with the sprint branch (Justin asked for everything to be pushed and will move it to a private repository); keep the Kaggle kernel itself **private** (publish policy: weights, recipe and factory stay private until a `PUBLISH?` item is answered).
 
 | File | What |
 |---|---|

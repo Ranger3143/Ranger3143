@@ -31,7 +31,24 @@ Finding recorded on the way: the first gate attempt reported 480 → 452 tokens 
 Repack convention: tinybit exports `weight_scale = 1/gamma`; `repack_ternary.py --scale-convention auto` resolves to `reciprocal` for an export without `quantization_config` (the gate passes it explicitly), so the engine multiplies by gamma, as the training forward did.
 
 ## 5. Behaviour at checkpoints (`eval_ops.py`, greedy, torch QAT forward; `labs/logs/opmodel/eval_step*.txt`)
-_(filled in at each check-in: calc exact-call rate, lookup exact-key rate, lookup final-sentence copy rate, abstention rate, no-tool rate on FAQ and everyday prompts, with samples)_
+Probe suite (fixed seed): 24 CALC prompts phrased many ways (exact = the first line equals the oracle's `CALC(a op b).`), 12 LOOKUP prompts over randomised keys (exact = first line equals `LOOKUP(<key>).`), 8 LOOKUP-final prompts that hand the model a real `TOOL[lookup]=<value>` line (pass = the value appears in the first sentence and no new call is made), 10 specific-fact questions (pass = an abstention phrase and no call), 8 ALICE self-knowledge and 5 everyday questions (pass = a non-empty answer with no tool call). The suite is small on purpose: the gate for this model is the firmware demo in §6, not a benchmark, and none of these rates is a product number.
+
+| Checkpoint | CALC exact call | LOOKUP exact key | LOOKUP final copy | abstain | FAQ, no tool | everyday, no tool | log |
+|---|---|---|---|---|---|---|---|
+| step 500 | 0/24 | 0/12 | 0/8 | 1/10 | 6/8 | 3/5 | `eval_step500.txt` |
+| step 1000 | 0/24 | 0/12 | 0/8 | 10/10 | 7/8 | 5/5 | `eval_step1000.txt` |
+| step 1250 | 1/24 | 6/12 | 2/8 | 10/10 | 7/8 | 3/5 | `eval_step1250.txt` |
+| step 2300 | 20/24 | 10/12 | 8/8 | 10/10 | 7/8 | 5/5 | `eval_step2300.txt` |
+| final checkpoint | _pending (§6c)_ | | | | | | |
+
+Validation perplexity (torch QAT forward, 264,582 held-out tokens, `labs/logs/opmodel/train_op12k.partial.log`): 74.35 at step 500 → 49.50 (1000) → 36.44 (1500) → 32.53 (2000) → 26.10 (2500).
+
+Order in which the behaviours appeared: formats first (step 500 already writes `Q:`/`A:` turns and self-descriptions), then abstention (complete by step 1000, before a single tool call is right), then LOOKUP keys (step 1250), then CALC arguments (between 1250 and 2300). Copying is the limiting skill: the step-2300 misses are digit or key copying errors, not format errors, e.g. `Compute 305373 - 79` → `CALC(305959 - 79).` and `PN-8924` → `LOOKUP(PN-8763).`; the gateway then executes exactly what was written and the model's prose repeats the gateway's number. Representative step-2300 outputs, verbatim from the log:
+
+- "What are you?" → "I am ALICE, the Aegis Lightweight Inference Core Engine: a language model running directly on this machine's firmware, with no operating system underneath, producing receipts for everything I say."
+- "What is the exact distance from Oakdale to Riverton in miles?" → "Not in my data. I would rather say so than invent a number."
+- "Look up P.4535." → `LOOKUP(P.4535).` / `TOOL[lookup]=NONE` / "No entry for P.4535. If you have another table, declare it and I will look again."
+- "Do you have an operating system?" → "No. I boot straight from the firmware as a UEFI application. There is no kernel, no drivers, no services, just the inference engine." followed by an invented next `Q:` turn. The model does not always emit end-of-text after an answer, which is why the firmware gateway's second step stops at the first newline (§6b) and why every demo prompt carries a token budget.
 
 ## 6. Final export, engine digests and the boot demo
 _(final-checkpoint rows are filled in when training finishes)_
