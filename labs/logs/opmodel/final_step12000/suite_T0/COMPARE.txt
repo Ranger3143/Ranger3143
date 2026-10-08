@@ -1,0 +1,16 @@
+[MISS] calc_hard_06           expected CALC 'CALC(199 + 217)'            observed CALC 'CALC(158 + 217)' -> '375'  verify=PASS
+[MISS] calc_hard_11           expected CALC 'CALC(938 + 892)'            observed CALC 'CALC(92 + 892)' -> '984'  verify=PASS
+[MISS] calc_hard_14           expected CALC 'CALC(128 % 747)'            observed CALC 'CALC(156 % 747)' -> '156'  verify=PASS
+[MISS] calc_overflow_03       expected CALC 'CALC(999999999 + 999999999)' observed CALC 'CALC(9709999999 + 999999999)' -> '10709999998'  verify=PASS
+[MISS] calc_overflow_06       expected CALC 'CALC(-9223372036854775808 - 1)' observed CALC 'CALC(-9223372036854775808 - -92233720360)' -> '-9223371944621055448'  verify=PASS
+[MISS] calc_overflow_07       expected CALC 'CALC(9223372036854775807 - -1)' observed CALC 'CALC(9223372036854775807 + 1)' -> 'overflow'  verify=PASS
+[MISS] calc_overflow_08       expected CALC 'CALC(-9223372036854775808 / -1)' observed CALC 'CALC(-9223372036854775808 - -1302)' -> '-9223372036854774506'  verify=PASS
+[MISS] lookup_miss_03         expected LOOKUP 'LOOKUP(Z-100)'              observed LOOKUP 'LOOKUP(K-100)' -> 'NONE'  verify=PASS
+[MISS] lookup_miss_05         expected LOOKUP 'LOOKUP(part.local)'         observed NONE '' -> ''  verify=PASS
+[MISS] lookup_near_01         expected LOOKUP 'LOOKUP(p-100)'              observed LOOKUP 'LOOKUP(X-100)' -> 'NONE'  verify=PASS
+[MISS] lookup_near_03         expected LOOKUP 'LOOKUP(Q-205)'              observed LOOKUP 'LOOKUP(K-205)' -> 'NONE'  verify=PASS
+[MISS] mixed_01               expected CALC,LOOKUP 'CALC(3 + 5),LOOKUP(P-318)'  observed CALC,NONE 'CALC(3 + 5)' -> '8'  verify=PASS
+[MISS] mixed_02               expected LOOKUP,CALC 'LOOKUP(P-206),CALC(12 - 4)' observed LOOKUP,NONE 'LOOKUP(P-206)' -> 'Bolt, hex head, 1/4-20 x 3/4 in., cadmium plated'  verify=PASS
+[MISS] mixed_03               expected CALC,LOOKUP 'CALC(6 * 6),LOOKUP(P-205)'  observed CALC,NONE 'CALC(6 * 6)' -> '36'  verify=PASS
+[MISS] distractor_02          expected NONE ''                           observed CALC 'CALC(5 + 60)' -> '65'  verify=PASS
+misses: 15/60

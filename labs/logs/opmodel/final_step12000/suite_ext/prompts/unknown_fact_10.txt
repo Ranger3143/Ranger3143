@@ -1,0 +1,8 @@
+Q: 2 + 2
+A: CALC(2 + 2).
+Q: 10 + 10
+A: CALC(10 + 10).
+Q: 6 * 7
+A: CALC(6 * 7).
+Q: What does the record say for part P-612?
+A:

@@ -1,0 +1,23 @@
+==== A.L.I.C.E. BOOT ====
+STAGE 1: boot volume opened, AVX enable attempted
+STAGE 2: sizes OK model=3197143 embed=9437184 vocab=253377
+STAGE 3: tensor memory allocated
+H3 buffers: MODEL.SAF=0x100000+3197143 EMBED.BIN=0x1780000+9437184 VOCAB.BIN=0x40D000+253377
+STAGE 4a: MODEL.SAF loaded
+STAGE 4b: EMBED.BIN loaded
+STAGE 4c: VOCAB.BIN loaded
+STAGE 4e: MINT.TXT loaded — receipt mint mode armed
+STAGE 4f: TABLE.TSV loaded — LOOKUP gateway armed
+STAGE 5: working heap online
+TPM: EFI_TCG2_PROTOCOL present — measuring payload into PCR 12
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=3197143 sha256=a44e48965c641b81994a670001c76a8bebd38857f9455cc5008acac8d2b2897a
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=9437184 sha256=8cbcd6b69df03539cd4638440fb903910325b7f6853349c5bb5778e413fafef0
+TPM: extended pcr12 <- AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=253377 sha256=a4cafc9649488987a8eb053476d389bd9a675405c51bfc42ebded546ae64eb17
+STAGE M: minted receipt steps=7 cis-digest=5a7fbbaf34604dab written=true
+STAGE T: gateway tool=lookup in=LOOKUP(P-205) out=Bolt, hex head, 3/8-16 x 1 in., cadmium plated
+STAGE M2: minted tool-step receipt steps=23 cis-digest=876bb84068ef95c5 written=true
+TPM: pcr 4 0743db46b102047e7cc04ce1402ffc8d72f4fb4361770a843420a8bbd5ea54bc
+TPM: pcr 12 72e1c6afd8f440bcc1e46e2f9e7b9ec120523cb7764bd90287fd9f8d41cd906c
+TPM: pcr 13 345588e8bdde1830252494181e2d9a25efe0d9be7a4f60548b8d8c5668b95408
+TPM: quote-retries 1
+STAGE A: ATTEST.TXT written=true

@@ -1,0 +1,75 @@
+bucket               n  metric: value
+------------------------------------------------------------------------
+
+[calc_easy] n=15
+  call rate:          15/15 = 100.00%  (95% CI 79.61%-100.00%)
+  well-formed rate:   15/15 = 100.00%  (95% CI 79.61%-100.00%)
+  correct-tool rate:  15/15 = 100.00%  (95% CI 79.61%-100.00%)
+  correct-arg rate:   15/15 = 100.00%  (95% CI 79.61%-100.00%)
+  exact-output rate:  15/15 = 100.00%  (95% CI 79.61%-100.00%)
+
+[calc_hard] n=15
+  call rate:          15/15 = 100.00%  (95% CI 79.61%-100.00%)
+  well-formed rate:   15/15 = 100.00%  (95% CI 79.61%-100.00%)
+  correct-tool rate:  15/15 = 100.00%  (95% CI 79.61%-100.00%)
+  correct-arg rate:   12/15 = 80.00%  (95% CI 54.81%-92.95%)
+  exact-output rate:  12/15 = 80.00%  (95% CI 54.81%-92.95%)
+
+[calc_overflow] n=8
+  call rate:          8/8 = 100.00%  (95% CI 67.56%-100.00%)
+  well-formed rate:   8/8 = 100.00%  (95% CI 67.56%-100.00%)
+  correct-tool rate:  8/8 = 100.00%  (95% CI 67.56%-100.00%)
+  correct-arg rate:   4/8 = 50.00%  (95% CI 21.52%-78.48%)
+  exact-output rate:  5/8 = 62.50%  (95% CI 30.57%-86.32%)
+
+[distractor] n=2
+  no-tool precision:  1/2 = 50.00%  (95% CI 9.45%-90.55%)
+
+[lookup_hit] n=8
+  call rate:          8/8 = 100.00%  (95% CI 67.56%-100.00%)
+  well-formed rate:   8/8 = 100.00%  (95% CI 67.56%-100.00%)
+  correct-tool rate:  8/8 = 100.00%  (95% CI 67.56%-100.00%)
+  correct-arg rate:   8/8 = 100.00%  (95% CI 67.56%-100.00%)
+  exact-output rate:  8/8 = 100.00%  (95% CI 67.56%-100.00%)
+
+[lookup_miss] n=5
+  call rate:          4/5 = 80.00%  (95% CI 37.55%-96.38%)
+  well-formed rate:   4/5 = 80.00%  (95% CI 37.55%-96.38%)
+  correct-tool rate:  4/5 = 80.00%  (95% CI 37.55%-96.38%)
+  correct-arg rate:   3/5 = 60.00%  (95% CI 23.07%-88.24%)
+  exact-output rate:  4/5 = 80.00%  (95% CI 37.55%-96.38%)
+
+[lookup_near_miss] n=4
+  call rate:          4/4 = 100.00%  (95% CI 51.01%-100.00%)
+  well-formed rate:   4/4 = 100.00%  (95% CI 51.01%-100.00%)
+  correct-tool rate:  4/4 = 100.00%  (95% CI 51.01%-100.00%)
+  correct-arg rate:   2/4 = 50.00%  (95% CI 15.00%-85.00%)
+  exact-output rate:  4/4 = 100.00%  (95% CI 51.01%-100.00%)
+
+[mixed] n=3
+  call rate:          3/3 = 100.00%  (95% CI 43.85%-100.00%)
+  well-formed rate:   3/3 = 100.00%  (95% CI 43.85%-100.00%)
+  correct-tool rate:  0/3 = 0.00%  (95% CI 0.00%-56.15%)
+  correct-arg rate:   0/3 = 0.00%  (95% CI 0.00%-56.15%)
+  exact-output rate:  0/3 = 0.00%  (95% CI 0.00%-56.15%)
+
+========================================================================
+OVERALL (tool-expected items) n=58
+  call rate:          57/58 = 98.28%  (95% CI 90.86%-99.69%)
+  well-formed rate:   57/58 = 98.28%  (95% CI 90.86%-99.69%)
+  correct-tool rate:  54/58 = 93.10%  (95% CI 83.57%-97.29%)
+  correct-arg rate:   44/58 = 75.86%  (95% CI 63.47%-85.04%)
+  exact-output rate:  48/58 = 82.76%  (95% CI 71.09%-90.36%)
+
+OVERALL (distractor items) n=2
+  no-tool precision:  1/2 = 50.00%  (95% CI 9.45%-90.55%)
+
+========================================================================
+PRE-REGISTERED RED FLAGS TRIPPED:
+  - bucket 'calc_overflow': correct-argument Wilson lower bound 21.52% < 50%
+  - bucket 'distractor': no-tool precision Wilson lower bound 9.45% < 50%
+  - bucket 'lookup_miss': correct-argument Wilson lower bound 23.07% < 50%
+  - bucket 'lookup_near_miss': correct-argument Wilson lower bound 15.00% < 50%
+  - bucket 'mixed': correct-argument Wilson lower bound 0.00% < 50%
+
+(scored 60 rows from summary.tsv; partial summaries are expected mid-run)

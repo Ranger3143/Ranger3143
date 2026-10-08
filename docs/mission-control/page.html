@@ -146,6 +146,7 @@ footer code { font-family: var(--mono); font-size: 0.8rem; color: var(--fg); }
       <span class="chip ok"><span class="dot"></span>Receipt replay · 64 steps · full logit chain · PASS</span>
       <span class="chip ok"><span class="dot"></span>Minted receipt == golden fixture · byte-identical</span>
       <span class="chip ok"><span class="dot"></span>PCR 12/13 replayed from event log · PASS</span>
+      <span class="chip ok"><span class="dot"></span>Operator model · 17M ternary · trained on this CPU · firmware tool loop · 240/240 receipts verified</span>
       <span class="chip warn"><span class="dot"></span>Environment: QEMU + swtpm · correctness only · no iron yet</span>
     </div>
   </section>
@@ -284,7 +285,7 @@ footer code { font-family: var(--mono); font-size: 0.8rem; color: var(--fg); }
     <div class="sec-head">
       <h3>Tool-call baseline</h3>
       <h2>BitNet-2B on the receipt-gated gateway: the number the next model has to beat</h2>
-      <p class="note">60 pre-registered items through the unchanged <span class="mono">agent_trace</span> suite (labs/LAB-07). Bars show the correct-argument rate per bucket; whiskers are the Wilson 95% interval from <span class="mono">score.py</span>. Every one of the 60 trace receipts verified, including the misses: the receipt records what the model did, right or wrong.</p>
+      <p class="note">60 pre-registered items through the unchanged <span class="mono">agent_trace</span> suite (labs/LAB-07). The operator model section below runs the same items on the model trained overnight. Bars show the correct-argument rate per bucket; whiskers are the Wilson 95% interval from <span class="mono">score.py</span>. Every one of the 60 trace receipts verified, including the misses: the receipt records what the model did, right or wrong.</p>
     </div>
     <div class="panel">
       <div class="bars">
@@ -309,6 +310,52 @@ footer code { font-family: var(--mono); font-size: 0.8rem; color: var(--fg); }
       <p class="note" style="margin-top:12px">Call rate 50/58 (86.2%), correct tool 49/58 (84.5%). Hard and overflow arithmetic fail mostly by not calling the tool at all; when the 2B does call, the argument is right. The four bottom rows are the extended runs (labs/LAB-07 §7-8): asked for a value that sits in the table, with no LOOKUP opener, the 2B never looks it up under a calculator-only prompt and invents a fluent answer 26 times out of 30 ("The value recorded for part P-100 is 100."). Shown two LOOKUP examples on other keys, it looks it up with the exact key 22 times out of 30; four more misses were the right key with an extra argument the strict grammar rejects. On 30 general-knowledge distractors it stays quiet 29 and 30 times. Receipts verified 180/180 across the three runs.</p>
     </div>
   </section>
+
+  <section id="operator">
+    <div class="sec-head">
+      <h3>Operator model</h3>
+      <h2>A 17M-parameter model trained on this CPU overnight answers as ALICE, hands arithmetic and lookups to the firmware, and refuses to guess</h2>
+      <p class="note">17,319,296 parameters, ternary quantization-aware training, 12,000 steps on a 4-vCPU VM with no GPU (labs/LAB-08). Corpus: educational prose, human-written Q/A, 148,500 tool episodes labelled by the gateway's own oracle, and ALICE self-knowledge. Round-trip gate on the step-12000 export: torch PPL 9.0524 vs engine 9.0910 (0.42%, tolerance 3%), 448 = 448 tokens, <b>PASS</b>. Rule A: no speed figure here.</p>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h4 style="margin:0 0 8px;font-family:var(--display);font-size:1.1rem">Arithmetic: the model asks, the firmware computes</h4>
+        <div class="val" style="display:block;font-family:var(--mono);font-size:0.82rem;line-height:1.7;white-space:pre-wrap">PROMPT   Q: What is 1234 * 5678?
+MODEL    CALC(1234 * 5678).      <span style="color:var(--muted)">receipt 1 · 9 tokens · cis-digest fddebefc84f1ad58</span>
+GATEWAY  TOOL[calc]=7006652      <span style="color:var(--muted)">executed by the firmware, no OS</span>
+MODEL    The product is 7006652.      <span style="color:var(--muted)">receipt 2 · 9 tokens · cis-digest 594d2cc5f77e0006</span></div>
+        <p class="note" style="margin-top:8px">PCR 13 took both receipt events; both receipts replay on Linux with the unchanged verifier (labs/logs/opmodel/final_step12000/FINALIZE.log).</p></div>
+      <div class="panel">
+        <h4 style="margin:0 0 8px;font-family:var(--display);font-size:1.1rem">Lookup: a table declared on the boot volume, measured into PCR 12</h4>
+        <div class="val" style="display:block;font-family:var(--mono);font-size:0.82rem;line-height:1.7;white-space:pre-wrap">PROMPT   Q: What is part P-205?
+MODEL    LOOKUP(P-205).      <span style="color:var(--muted)">receipt 1 · 7 tokens · cis-digest 5a7fbbaf34604dab</span>
+GATEWAY  TOOL[lookup]=Bolt, hex head, 3/8-16 x 1 in., cadmium plated      <span style="color:var(--muted)">executed by the firmware, no OS</span>
+MODEL    According to the table, P-205 is Bolt, hex head, 3/8 in., cadmium plated.      <span style="color:var(--muted)">receipt 2 · 23 tokens · cis-digest 876bb84068ef95c5</span></div>
+        <p class="note" style="margin-top:8px">TABLE.TSV is hashed into PCR 12 before the lookup runs, so the quote covers the data the model read.</p></div>
+    </div>
+    <div class="panel" style="margin-top:16px">
+      <h4 style="margin:0 0 6px;font-family:var(--display);font-size:1.1rem">Same 60 pre-registered items, same harness, same binary as the 2B baseline (labs/LAB-07)</h4>
+      <p class="note" style="margin-bottom:12px">Bar: the operator model, zero-shot in its native <span class="mono">Q:/A:</span> format (labs/logs/opmodel/final_step12000/suite_T0), with the Wilson 95% interval. Amber tick: BitNet-2B with three few-shot examples (labs/logs/toolcall_2b). The last two rows are the extended items (unknown fact whose answer is in the table under calculator-only shots; distractors) exactly as the 2B saw them.</p>
+      <div class="bars">
+        <div class="bar"><span>calc, easy (n=15)</span><div class="track"><div class="fill" style="width:100.0%"></div><div class="ci" style="left:79.6%;width:20.4%"></div><div class="tick" style="left:100.0%"></div></div><span class="v">15/15 <span style="color:var(--muted)">· 2B 15/15</span></span></div><div class="bar"><span>calc, hard (n=15)</span><div class="track"><div class="fill" style="width:80.0%"></div><div class="ci" style="left:54.8%;width:38.1%"></div><div class="tick" style="left:73.3%"></div></div><span class="v">12/15 <span style="color:var(--muted)">· 2B 11/15</span></span></div><div class="bar"><span>calc, overflow (n=8)</span><div class="track"><div class="fill" style="width:50.0%"></div><div class="ci" style="left:21.5%;width:57.0%"></div><div class="tick" style="left:62.5%"></div></div><span class="v">4/8 <span style="color:var(--muted)">· 2B 5/8</span></span></div><div class="bar"><span>lookup, hit (n=8)</span><div class="track"><div class="fill" style="width:100.0%"></div><div class="ci" style="left:67.6%;width:32.4%"></div><div class="tick" style="left:100.0%"></div></div><span class="v">8/8 <span style="color:var(--muted)">· 2B 8/8</span></span></div><div class="bar"><span>lookup, miss (n=5)</span><div class="track"><div class="fill" style="width:60.0%"></div><div class="ci" style="left:23.1%;width:65.2%"></div><div class="tick" style="left:80.0%"></div></div><span class="v">3/5 <span style="color:var(--muted)">· 2B 4/5</span></span></div><div class="bar"><span>lookup, near miss (n=4)</span><div class="track"><div class="fill" style="width:50.0%"></div><div class="ci" style="left:15.0%;width:70.0%"></div><div class="tick" style="left:50.0%"></div></div><span class="v">2/4 <span style="color:var(--muted)">· 2B 2/4</span></span></div><div class="bar"><span>mixed, two tools (n=3)</span><div class="track"><div class="fill" style="width:0.0%"></div><div class="ci" style="left:0.0%;width:56.2%"></div><div class="tick" style="left:0.0%"></div></div><span class="v">0/3 <span style="color:var(--muted)">· 2B 0/3</span></span></div><div class="bar"><span><b>overall, correct argument</b> (n=58)</span><div class="track"><div class="fill" style="width:75.9%"></div><div class="ci" style="left:63.5%;width:21.6%"></div><div class="tick" style="left:77.6%"></div></div><span class="v">44/58 <span style="color:var(--muted)">· 2B 45/58</span></span></div><div class="bar"><span>unknown fact, decides to LOOKUP (n=30)</span><div class="track"><div class="fill" style="width:100.0%"></div><div class="ci" style="left:88.6%;width:11.4%"></div><div class="tick" style="left:0.0%"></div></div><span class="v">30/30 <span style="color:var(--muted)">· 2B 0/30</span></span></div><div class="bar"><span>distractor, stays quiet (n=30)</span><div class="track"><div class="fill" style="width:100.0%"></div><div class="ci" style="left:88.6%;width:11.4%"></div><div class="tick" style="left:96.7%"></div></div><span class="v">30/30 <span style="color:var(--muted)">· 2B 29/30</span></span></div>
+      </div>
+      <div class="axis"><span></span><div class="ticks"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div><span></span></div>
+      <p class="note" style="margin-top:12px"><b>Caveat first:</b> the operator model was trained on this call grammar (random operands and keys; the demo table's key→value pairs were never seen), the 2B met it only in its prompt and knows incomparably more about the world. What the bars show is the thesis of the model plan: the one behaviour ALICE-Next must have is learnable at tiny scale when the labels come from the gateway itself. Receipts verified: 120/120 on the two operator-model runs shown, 240/240 across all four of its runs (labs/logs/opmodel/final_step12000/FINALIZE.log), 120/120 for the 2B. Shown the same three few-shot examples the 2B had, the small model does worse (suite_T1: it copies the example's operator), which is why the demo is zero-shot.</p>
+    </div>
+    <div class="gallery" style="margin-top:16px">
+      <figure class="wide"><img src="img/10_op_self.png" alt="ALICE dashboard, operator model, mint mode DONE: the transcript shows the self-description answer and the full receipt; attestation panel shows PCR 4, 12, 13 and the signed quote." width="1920" height="1440"><figcaption><b>The operator model booted in ALICE.</b> Prompt: what are you, and why do you run without an operating system. The firmware digest equals the Linux digest for the same prompt.</figcaption></figure>
+      <figure><img src="img/11_op_calc.png" alt="ALICE dashboard, operator model, calc gateway: OUTPUT shows the CALC call, the TOOL line executed by the firmware gateway, and the ANSWER step; two receipts minted." width="1920" height="1440"><figcaption><b>Calculator through the firmware gateway.</b> Two receipts, both extended into PCR 13.</figcaption></figure>
+      <figure><img src="img/12_op_lookup.png" alt="ALICE dashboard, operator model, lookup gateway: OUTPUT shows the LOOKUP call, the TOOL line with the table value, and the ANSWER step." width="1920" height="1440"><figcaption><b>Lookup against the declared table.</b> TABLE.TSV measured into PCR 12 before the gateway reads it.</figcaption></figure>
+    </div>
+    <div class="panel tbl" style="margin-top:16px">
+      <table>
+        <thead><tr><th>Checkpoint</th><th class="num">calc, exact call (24)</th><th class="num">lookup, exact key (12)</th><th class="num">copies the looked-up value (8)</th><th class="num">abstains on unknown facts (10)</th><th class="num">ALICE self-knowledge (8)</th><th class="num">everyday, no tool (5)</th></tr></thead>
+        <tbody><tr><td>step 500</td><td class="num">0/24</td><td class="num">0/12</td><td class="num">0/8</td><td class="num">1/10</td><td class="num">6/8</td><td class="num">3/5</td></tr><tr><td>step 1000</td><td class="num">0/24</td><td class="num">0/12</td><td class="num">0/8</td><td class="num">10/10</td><td class="num">7/8</td><td class="num">5/5</td></tr><tr><td>step 1250</td><td class="num">1/24</td><td class="num">6/12</td><td class="num">2/8</td><td class="num">10/10</td><td class="num">7/8</td><td class="num">3/5</td></tr><tr><td>step 2300</td><td class="num">20/24</td><td class="num">10/12</td><td class="num">8/8</td><td class="num">10/10</td><td class="num">7/8</td><td class="num">5/5</td></tr><tr><td>step 4900</td><td class="num">20/24</td><td class="num">12/12</td><td class="num">8/8</td><td class="num">10/10</td><td class="num">8/8</td><td class="num">5/5</td></tr><tr><td>step 7700</td><td class="num">20/24</td><td class="num">12/12</td><td class="num">8/8</td><td class="num">10/10</td><td class="num">8/8</td><td class="num">5/5</td></tr></tbody>
+      </table>
+      <p class="note" style="margin-top:10px">Greedy probes in the torch QAT forward (labs/logs/opmodel/eval_step*.txt). Abstention arrived before any tool call was right; lookups before arithmetic; the remaining arithmetic misses are copied operands. Validation perplexity (torch QAT forward): 74.3 (500) → 49.5 (1000) → 36.4 (1500) → 32.5 (2000) → 26.1 (2500) → 25.3 (3000) → 22.8 (3500) → 20.6 (4000) → 18.5 (4500) → 17.9 (5000) → 17.2 (5500) → 16.8 (6000) → 17.4 (6500) → 17.2 (7000) → 16.8 (7500) → 16.5 (8000) → 16.5 (8500) → 15.8 (9000) → 15.9 (9500) → 16.0 (10000) → 15.6 (10500) → 15.6 (11000) → 15.5 (11500) → 15.6 (12000).</p>
+    </div>
+  </section>
+
 
   <section id="claims">
     <div class="sec-head">
@@ -349,6 +396,7 @@ footer code { font-family: var(--mono); font-size: 0.8rem; color: var(--fg); }
       <h2>What is moving now</h2>
     </div>
     <div class="next">
+      <div class="panel"><span class="status done">done overnight</span><h4>Operator model in the boot image</h4><p>A 17M-parameter ternary model trained on this 4-vCPU VM answers as ALICE and calls the firmware gateway for arithmetic and lookups (alice-aegis patch 0003). On the LAB-07 items it ties the 2B on correct arguments and looks up every unknown fact unprompted; 240/240 receipts verified. labs/LAB-08.</p></div>
       <div class="panel"><span class="status done">plan written today</span><h4>ALICE-Next edge model plan</h4><p>Nine research briefs, a verification pass, and a design panel (three proposals, three judges, synthesis, row-by-row license audit, completeness check). Decision: evolve the BitNet-2B family with zero engine change, graft in the gateway-verified data factory, tool-state discipline and the snapshot fact-check loop. Nothing is trained yet; the first Kaggle notebook and six decisions for Justin are in <span class="mono">model/README.md</span>.</p></div>
       <div class="panel"><span class="status done">done today</span><h4>"Nobody has done this yet", verified</h4><p>22 statements, 16 prior-art hunts, 22 evidence checks: 0 novel, 16 partially novel, 8 done in repo. Corrections owed to the briefs are listed. <span class="mono">NOBODY-HAS-DONE-THIS.md</span>.</p></div>
       <div class="panel"><span class="status done">done today</span><h4>Boot dashboard</h4><p>GOP panels, live token stream, attestation view, receipt summary; receipts unchanged (byte-identical to golden). labs/LAB-06.</p></div>
@@ -360,7 +408,7 @@ footer code { font-family: var(--mono); font-size: 0.8rem; color: var(--fg); }
 
   <footer>
     <div><b>Rule A.</b> Every run here was on a QEMU/TCG guest or a 4-vCPU cloud VM. No absolute performance figure on this page is a product number; ratios from same-process interleaved runs and bit-identity results are the admissible outputs.</div>
-    <div><b>Rule B.</b> Every digest, PCR value and rate above traces to a file: <code>labs/logs/dashboard/</code>, <code>labs/logs/toolcall_2b/</code>, <code>labs/logs/vnni_vs_avx2_*.log</code>, <code>labs/logs/cis_decode_timed_threads_run1.log</code>, <code>labs/logs/repack_*.log</code>.</div>
+    <div><b>Rule B.</b> Every digest, PCR value and rate above traces to a file: <code>labs/logs/dashboard/</code>, <code>labs/logs/opmodel/</code>, <code>labs/logs/toolcall_2b/</code>, <code>labs/logs/vnni_vs_avx2_*.log</code>, <code>labs/logs/cis_decode_timed_threads_run1.log</code>, <code>labs/logs/repack_*.log</code>.</div>
     <div>Source of this page: <code>docs/mission-control/page.html</code> on branch <code>claude/keen-cray-6odygo</code> of the Ranger3143 repository.</div>
   </footer>
 </div>

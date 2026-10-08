@@ -1,0 +1,6 @@
+Q: part P-100
+A: LOOKUP(P-100).
+Q: part P-101
+A: LOOKUP(P-101).
+Q: What color is the sky on a clear day?
+A:

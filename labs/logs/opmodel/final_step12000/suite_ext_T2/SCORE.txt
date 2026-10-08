@@ -1,0 +1,28 @@
+bucket               n  metric: value
+------------------------------------------------------------------------
+
+[distractor_t2] n=30
+  no-tool precision:  30/30 = 100.00%  (95% CI 88.65%-100.00%)
+
+[unknown_fact_t2] n=30
+  call rate:          30/30 = 100.00%  (95% CI 88.65%-100.00%)
+  well-formed rate:   30/30 = 100.00%  (95% CI 88.65%-100.00%)
+  correct-tool rate:  30/30 = 100.00%  (95% CI 88.65%-100.00%)
+  correct-arg rate:   30/30 = 100.00%  (95% CI 88.65%-100.00%)
+  exact-output rate:  30/30 = 100.00%  (95% CI 88.65%-100.00%)
+
+========================================================================
+OVERALL (tool-expected items) n=30
+  call rate:          30/30 = 100.00%  (95% CI 88.65%-100.00%)
+  well-formed rate:   30/30 = 100.00%  (95% CI 88.65%-100.00%)
+  correct-tool rate:  30/30 = 100.00%  (95% CI 88.65%-100.00%)
+  correct-arg rate:   30/30 = 100.00%  (95% CI 88.65%-100.00%)
+  exact-output rate:  30/30 = 100.00%  (95% CI 88.65%-100.00%)
+
+OVERALL (distractor items) n=30
+  no-tool precision:  30/30 = 100.00%  (95% CI 88.65%-100.00%)
+
+========================================================================
+No pre-registered red flags tripped (on the data present).
+
+(scored 60 rows from summary.tsv; partial summaries are expected mid-run)
