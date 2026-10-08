@@ -50,6 +50,44 @@ Order in which the behaviours appeared: formats first (step 500 already writes `
 - "Look up P.4535." → `LOOKUP(P.4535).` / `TOOL[lookup]=NONE` / "No entry for P.4535. If you have another table, declare it and I will look again."
 - "Do you have an operating system?" → "No. I boot straight from the firmware as a UEFI application. There is no kernel, no drivers, no services, just the inference engine." followed by an invented next `Q:` turn. The model does not always emit end-of-text after an answer, which is why the firmware gateway's second step stops at the first newline (§6b) and why every demo prompt carries a token budget.
 
+### 5b. Same items, same harness, same binary: the LAB-07 suite on the step-2300 operator model (interim)
+Harness: alice-aegis `demo/agent-trace/eval/run_suite.sh` + `score.py`, unchanged; `agent_trace` binary sha256 `f9e19d8a…` (the LAB-07 binary), N = 24 tokens per step, demo table `demo.tsv`. Three runs, all on the step-2300 engine artifacts (`model-sha256 b7b357af…` in each `RUN.txt`):
+- **T1** – the 60 pre-registered LAB-07 items exactly as the 2B saw them (`suite.tsv`, sha256 `5ecf5fbf…`: three `CALC` few-shot examples, then the question);
+- **T0** – the same 60 questions with the few-shot examples removed (`suite_t0.tsv`, sha256 `5a1bee3c…`), i.e. the operator model's native `Q:`/`A:` format; expected tools, arguments and outputs unchanged;
+- **ext** – LAB-07 §7's 60 extended items as the 2B saw them in its T1 run (`ext_suite.tsv`, sha256 `c9491dff…`: 30 questions whose answer is in the declared table, under CALC-only shots; 30 distractors).
+
+| Bucket (n) | BitNet-2B, T1 (LAB-07) | op12k step 2300, T1 (identical prompts) | op12k step 2300, T0 (no examples) |
+|---|---|---|---|
+| calc_easy (15) | 15/15 | 12/15 | 14/15 |
+| calc_hard (15) | 11/15 | **1/15** | **15/15** |
+| calc_overflow (8) | 5/8 | 1/8 | 5/8 |
+| lookup_hit (8) | 8/8 | 6/8 | 6/8 |
+| lookup_miss (5) | 4/5 | 3/5 | 3/5 |
+| lookup_near_miss (4) | 2/4 | 2/4 | 2/4 |
+| mixed, two tools (3) | 0/3 | 0/3 | 0/3 |
+| **correct argument, overall (58)** | **45/58 = 77.6%** | 25/58 = 43.1% | **45/58 = 77.6%** |
+| call rate (58) | 50/58 | 58/58 | 57/58 |
+| correct tool (58) | 49/58 | 55/58 | 53/58 |
+| distractor, no tool (2) | 1/2 | 1/2 | 1/2 |
+| receipts verified | 60/60 | 60/60 | 60/60 |
+
+| Extended items (ext, identical prompts) | BitNet-2B (LAB-07 §7) | op12k step 2300 |
+|---|---|---|
+| unknown fact in the table, CALC-only shots: decides to `LOOKUP`, right key (30) | **0/30** (invented an answer 26/30 times) | **25/30** |
+| distractor, no tool (30) | 29/30 | 30/30 |
+| receipts verified | 60/60 | 60/60 |
+
+Logs: `labs/logs/opmodel/suite_step2300_{T1,T0,ext}/` (`summary.tsv`, `SCORE.txt`, `RUN.txt`, `prompts/`, `receipts/`), `labs/logs/opmodel/suite_t0.tsv`, per-item view by `model/demo-operator/suite_compare.py`.
+
+Reading, with the caveat first. **This is not a fair measure of general capability.** The operator model was trained on 148,500 episodes in exactly this call grammar (random operands; random keys and values drawn from the same part-description vocabulary as `demo.tsv`, not its key→value pairs), while the 2B met the grammar only in its prompt and knows incomparably more about the world. The suite was built to measure the one behaviour ALICE-Next must have, and on that behaviour the result is:
+
+1. **Few-shot examples hurt the small model.** With three `CALC(a op b).` examples in front of the question it copies the last example's operator and truncates the first operand to one digit on 14 of 15 hard items (`758 + 927` → `CALC(7 * 927)`, `938 + 892` → `CALC(9 * 892)`). On the identical questions without the examples it writes all 15 correctly. The 2B had the opposite dependence (LAB-07 §8: it would not call `LOOKUP` at all unless shown one). The demo prompts are zero-shot, which is the format the model was trained on.
+2. **Zero-shot, at 19% of its training budget, the 17M model equals the 2B's correct-argument total on these 58 items (45/58 each):** ahead on hard arithmetic (15/15 vs 11/15), level on overflow (5/8), behind on lookups (11/17 vs 14/17), both 0/3 on two-tool items (the operator model stops after its first call; the corpus has no two-tool episodes).
+3. **Unknown facts: 25/30 lookups decided and keyed correctly vs the 2B's 0/30 under identical prompts.** The five misses are two deterministic key confusions at this checkpoint (`P-205` → `LOOKUP(P-178)` three times, `P-402` → `LOOKUP(P-868)` twice); both happen in every run that asks for those keys. Distractors 30/30 (the 2B 29/30). The ALICE-Next brief's target for this row is ≥ 90% without demonstration.
+4. **Every receipt verified, misses included: 180/180.** The misses are legible in the receipts (`suite_compare.py` prints expected vs executed call per item), which is the property the gateway exists for.
+
+The final-checkpoint rows for all three suites are in §6c.
+
 ## 6. Final export, engine digests and the boot demo
 _(final-checkpoint rows are filled in when training finishes)_
 

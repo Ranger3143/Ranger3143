@@ -1,0 +1,6 @@
+Q: part P-100
+A: LOOKUP(P-100).
+Q: 2 + 2
+A: CALC(2 + 2).
+Q: part P-206
+A:

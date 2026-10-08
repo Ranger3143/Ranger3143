@@ -1,0 +1,6 @@
+Q: 2 + 2
+A: CALC(2 + 2).
+Q: part P-205
+A: LOOKUP(P-205).
+Q: 6 * 6
+A:
