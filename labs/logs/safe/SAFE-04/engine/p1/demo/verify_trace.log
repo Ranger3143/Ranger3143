@@ -1,0 +1,46 @@
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/demo/hit035.trace.txt
+receipt trace-chain 74a36f435f645966
+local   trace-chain 74a36f435f645966
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/demo/hit053.trace.txt
+receipt trace-chain db66774dace1928d
+local   trace-chain db66774dace1928d
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/demo/hittwin035.trace.txt
+receipt trace-chain f2325295c354135a
+local   trace-chain f2325295c354135a
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/demo/hittwin053.trace.txt
+receipt trace-chain 96b93fd0d54ddadc
+local   trace-chain 96b93fd0d54ddadc
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/demo/trig000.trace.txt
+receipt trace-chain 9ab523944bb09ec5
+local   trace-chain 9ab523944bb09ec5
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/demo/trig001.trace.txt
+receipt trace-chain 54da8398cdc3ac19
+local   trace-chain 54da8398cdc3ac19
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/demo/trig002.trace.txt
+receipt trace-chain 792fd2eda8782a00
+local   trace-chain 792fd2eda8782a00
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/demo/twin000.trace.txt
+receipt trace-chain 4e227b6700782d89
+local   trace-chain 4e227b6700782d89
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/demo/twin001.trace.txt
+receipt trace-chain 5b852b4177a7fe0e
+local   trace-chain 5b852b4177a7fe0e
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/demo/twin002.trace.txt
+receipt trace-chain 0e9d34cee9be1a90
+local   trace-chain 0e9d34cee9be1a90
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+SUMMARY pass=10 fail=0

@@ -1,0 +1,211 @@
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q01.s0.txt
+receipt trace-chain 88a48828d4a41a83
+local   trace-chain 88a48828d4a41a83
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q02.s0.txt
+receipt trace-chain ddfdac4c81dcd408
+local   trace-chain ddfdac4c81dcd408
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q02.s1.txt
+receipt trace-chain b6589c8937d0f4eb
+local   trace-chain b6589c8937d0f4eb
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q03.s0.txt
+receipt trace-chain cc5d2688b0ad57df
+local   trace-chain cc5d2688b0ad57df
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q03.s1.txt
+receipt trace-chain 44acf629c1d9a07b
+local   trace-chain 44acf629c1d9a07b
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q04.s0.txt
+receipt trace-chain 89c5d6f561799b7c
+local   trace-chain 89c5d6f561799b7c
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q04.s1.txt
+receipt trace-chain 8edf48f3e3a6c7a2
+local   trace-chain 8edf48f3e3a6c7a2
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q05.s0.txt
+receipt trace-chain 1ff4fbb50879bc5c
+local   trace-chain 1ff4fbb50879bc5c
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q05.s1.txt
+receipt trace-chain 4f2e4e26850c6ab7
+local   trace-chain 4f2e4e26850c6ab7
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q06.s0.txt
+receipt trace-chain ffc7503d2d6dc5ae
+local   trace-chain ffc7503d2d6dc5ae
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q06.s1.txt
+receipt trace-chain 2d104a387b7e378a
+local   trace-chain 2d104a387b7e378a
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q07.s0.txt
+receipt trace-chain 3cc24b9a61df6889
+local   trace-chain 3cc24b9a61df6889
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q07.s1.txt
+receipt trace-chain fb7aeca0b51f6b8a
+local   trace-chain fb7aeca0b51f6b8a
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q08.s0.txt
+receipt trace-chain 0ed589b35008be57
+local   trace-chain 0ed589b35008be57
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q08.s1.txt
+receipt trace-chain d008d4116b44221e
+local   trace-chain d008d4116b44221e
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q09.s0.txt
+receipt trace-chain d49a9de6afa1b62d
+local   trace-chain d49a9de6afa1b62d
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q09.s1.txt
+receipt trace-chain 0608190d167d0174
+local   trace-chain 0608190d167d0174
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q10.s0.txt
+receipt trace-chain 85b2ff3279f2cf56
+local   trace-chain 85b2ff3279f2cf56
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q10.s1.txt
+receipt trace-chain f31bf0d1efbe8eb1
+local   trace-chain f31bf0d1efbe8eb1
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q11.s0.txt
+receipt trace-chain d1fa45eadbb5c8f0
+local   trace-chain d1fa45eadbb5c8f0
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q11.s1.txt
+receipt trace-chain 918969f337450a66
+local   trace-chain 918969f337450a66
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q12.s0.txt
+receipt trace-chain 037feed7fe7f14ee
+local   trace-chain 037feed7fe7f14ee
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q12.s1.txt
+receipt trace-chain ab89a1769a544c52
+local   trace-chain ab89a1769a544c52
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q13.s0.txt
+receipt trace-chain 071a94f75c1c933a
+local   trace-chain 071a94f75c1c933a
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q14.s0.txt
+receipt trace-chain a847638b3e2d7d5a
+local   trace-chain a847638b3e2d7d5a
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q14.s1.txt
+receipt trace-chain 263e632669684385
+local   trace-chain 263e632669684385
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q15.s0.txt
+receipt trace-chain eb8390f8fec4f320
+local   trace-chain eb8390f8fec4f320
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q15.s1.txt
+receipt trace-chain b415db6a3124acc3
+local   trace-chain b415db6a3124acc3
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q16.s0.txt
+receipt trace-chain df16fc1924f50205
+local   trace-chain df16fc1924f50205
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q17.s0.txt
+receipt trace-chain fb6ba28e058743b5
+local   trace-chain fb6ba28e058743b5
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q17.s1.txt
+receipt trace-chain d3db3f95f714946e
+local   trace-chain d3db3f95f714946e
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q18.s0.txt
+receipt trace-chain 1448e9c707c66891
+local   trace-chain 1448e9c707c66891
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q19.s0.txt
+receipt trace-chain 1c0af7d454955cdf
+local   trace-chain 1c0af7d454955cdf
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q19.s1.txt
+receipt trace-chain 55075ed49c67e7a0
+local   trace-chain 55075ed49c67e7a0
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q20.s0.txt
+receipt trace-chain 93b708de8b522e46
+local   trace-chain 93b708de8b522e46
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q20.s1.txt
+receipt trace-chain 351e958838bdd488
+local   trace-chain 351e958838bdd488
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q21.s0.txt
+receipt trace-chain 064eda3b35cf2fd1
+local   trace-chain 064eda3b35cf2fd1
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q21.s1.txt
+receipt trace-chain 5beca91e2c3f8014
+local   trace-chain 5beca91e2c3f8014
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q22.s0.txt
+receipt trace-chain 25c031ff295853ff
+local   trace-chain 25c031ff295853ff
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q23.s0.txt
+receipt trace-chain de0fcf6255a4f25b
+local   trace-chain de0fcf6255a4f25b
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q23.s1.txt
+receipt trace-chain 8db8c16df926eaa9
+local   trace-chain 8db8c16df926eaa9
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q24.s0.txt
+receipt trace-chain a287d7fd9bb000aa
+local   trace-chain a287d7fd9bb000aa
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q25.s0.txt
+receipt trace-chain d9d9a67c9049a507
+local   trace-chain d9d9a67c9049a507
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q25.s1.txt
+receipt trace-chain e4a42afed5f748bb
+local   trace-chain e4a42afed5f748bb
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q26.s0.txt
+receipt trace-chain c1178db79d08ccd7
+local   trace-chain c1178db79d08ccd7
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q26.s1.txt
+receipt trace-chain b4dd15db7a63cce7
+local   trace-chain b4dd15db7a63cce7
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q27.s0.txt
+receipt trace-chain 4d790e62e25c8de0
+local   trace-chain 4d790e62e25c8de0
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q27.s1.txt
+receipt trace-chain 71c9be774b41c1b2
+local   trace-chain 71c9be774b41c1b2
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q28.s0.txt
+receipt trace-chain 36d0719e3bcc851e
+local   trace-chain 36d0719e3bcc851e
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q29.s0.txt
+receipt trace-chain e43cfa744af35f5e
+local   trace-chain e43cfa744af35f5e
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q30.s0.txt
+receipt trace-chain ad52f27602fb8bf1
+local   trace-chain ad52f27602fb8bf1
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d/fw/receipts/q30.s1.txt
+receipt trace-chain 767a1a85a99069eb
+local   trace-chain 767a1a85a99069eb
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+SUMMARY pass=52 fail=0

@@ -1,0 +1,1176 @@
+
+
+
+
+Network Working Group                                        A. Chueayen
+Internet-Draft                                 Aqta Technologies Limited
+Intended status: Informational                         20 September 2026
+Expires: 24 March 2027
+
+
+      Enforcement Attestation Receipts for AI Inference Decisions
+                 draft-chueayen-attestation-receipts-03
+
+Abstract
+
+   This document specifies a compact JSON attestation receipt for an AI
+   inference decision.  A receipt binds an outcome to a request hash
+   under a published Ed25519 public key, so a party that does not trust
+   the issuer's infrastructure can still verify offline what the
+   issuer's signing key attested was decided.  The format is
+   intentionally small and version-selected, so independent verifiers
+   stay easy to implement and audit.  It is intended for settings where
+   an operator-controlled log is not, on its own, sufficient evidence of
+   the decision.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 24 March 2027.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.
+
+
+
+Chueayen                  Expires 24 March 2027                 [Page 1]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+     1.1.  Relationship to Other Work  . . . . . . . . . . . . . . .   5
+     1.2.  Sibling Record Type for Agent Actions . . . . . . . . . .   6
+     1.3.  Key Lifecycle . . . . . . . . . . . . . . . . . . . . . .   6
+     1.4.  Non-Goals . . . . . . . . . . . . . . . . . . . . . . . .   7
+     1.5.  Requirements Language . . . . . . . . . . . . . . . . . .   7
+     1.6.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   7
+   2.  Receipt Structure . . . . . . . . . . . . . . . . . . . . . .   8
+     2.1.  Required Fields . . . . . . . . . . . . . . . . . . . . .   8
+     2.2.  Optional Fields . . . . . . . . . . . . . . . . . . . . .   9
+     2.3.  cost_prevented_eur  . . . . . . . . . . . . . . . . . . .  10
+   3.  Outcome Values  . . . . . . . . . . . . . . . . . . . . . . .  10
+   4.  What a Verified Receipt Proves  . . . . . . . . . . . . . . .  10
+   5.  Canonical Payload and Signing . . . . . . . . . . . . . . . .  11
+     5.1.  Signature Suite and Algorithm Agility . . . . . . . . . .  12
+     5.2.  Request Hash  . . . . . . . . . . . . . . . . . . . . . .  12
+     5.3.  String Canonicalisation . . . . . . . . . . . . . . . . .  12
+     5.4.  Ordering  . . . . . . . . . . . . . . . . . . . . . . . .  13
+   6.  Verification  . . . . . . . . . . . . . . . . . . . . . . . .  13
+   7.  Conformance . . . . . . . . . . . . . . . . . . . . . . . . .  14
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
+     8.1.  Issuer Identity . . . . . . . . . . . . . . . . . . . . .  16
+     8.2.  Confidentiality of Requests . . . . . . . . . . . . . . .  16
+     8.3.  Integrity Versus Correctness  . . . . . . . . . . . . . .  16
+     8.4.  Post-Quantum Considerations . . . . . . . . . . . . . . .  16
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  16
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  17
+   Appendix A.  Example Receipt  . . . . . . . . . . . . . . . . . .  18
+   Appendix B.  Conformance Vectors  . . . . . . . . . . . . . . . .  19
+   Appendix C.  Reference Implementations  . . . . . . . . . . . . .  19
+   Appendix D.  Changes From
+           draft-chueayen-attestation-receipts-02  . . . . . . . . .  20
+   Appendix E.  Changes From
+           draft-chueayen-attestation-receipts-00  . . . . . . . . .  20
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  21
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  21
+
+
+
+
+
+
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                 [Page 2]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+1.  Introduction
+
+   AI systems that take or influence consequential actions are
+   increasingly deployed in regulated settings.  When such a decision is
+   later questioned, the party being questioned is frequently also the
+   party that produced the record of the decision.  A log an operator
+   controls does not, on its own, let an independent reviewer confirm
+   what was asked or what was decided.
+
+   This document defines a compact receipt that an issuer signs for an
+   LLM inference decision.  The receipt is verifiable offline by any
+   holder of the issuer's public key.  The verifier need not contact the
+   issuer at verification time.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                 [Page 3]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+           Request
+              |
+              v
+      +-------------------+
+      |      Issuer       |
+      |                   |
+      |  SHA-256 over the |
+      |  request body     |
+      |        |          |
+      |        v          |
+      |  build receipt    |
+      |        |          |
+      |        v          |
+      |  canonicalise     |
+      |  (Section 5)      |
+      |        |          |
+      |        v          |
+      |  sign, Ed25519    |
+      +---------+---------+
+                |
+          signed receipt
+                |
+                v
+      +-------------------+
+      |     Verifier      |
+      |                   |
+      |  trusted public   |
+      |  key, obtained    |
+      |  out of band      |
+      |        |          |
+      |        v          |
+      |  recompute the    |
+      |  canonical bytes  |
+      |        |          |
+      |        v          |
+      |  verify signature |
+      |  (Section 6)      |
+      +---------+---------+
+                |
+                v
+            VERIFIED
+
+        Figure 1: Receipt generation and verification (informative)
+
+   The figure is informative.  The normative processing rules are in
+   Section 5 and Section 6.  Note that the verifier obtains the public
+   key out of band; the key carried in the receipt establishes
+   integrity, not the identity of the issuer.
+
+
+
+Chueayen                  Expires 24 March 2027                 [Page 4]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+1.1.  Relationship to Other Work
+
+   Related Internet-Drafts address neighbouring problems.
+   [I-D.marques-asqav-compliance-receipts] profiles signed action
+   receipts for AI agents.  [I-D.farley-acta-signed-receipts] defines
+   signed decision receipts for machine-to-machine access control, using
+   RFC 8785 for canonicalisation.
+   [I-D.tsyrulnikov-rats-attested-inference-receipt] profiles COSE and
+   CWT to bind model identity, input and output hashes and platform
+   attestation evidence into one signed artefact for inference inside a
+   trusted execution environment.  It answers a question this document
+   explicitly does not, namely what a TEE-resident workload can assert
+   about the environment that executed a particular inference.  These
+   documents address adjacent or overlapping receipt problems, and AIR
+   in particular solves a different one: it binds a receipt to a
+   confidential workload and requires a verifier to appraise platform
+   attestation before execution provenance is established.  This
+   document instead specifies one deliberately smaller application-layer
+   receipt shape for the LLM inference decision case, with an explicit
+   verification algorithm, a version-selected signature suite, and
+   published conformance vectors.  Implementations MAY also implement
+   the related drafts; this document does not redefine them.
+
+   The wider literature has moved quickly and this document does not
+   claim the mechanism.  [AFR] records agent actions as canonically
+   serialised, hash-chained events with Merkle batching and periodic
+   external anchoring, and reports detection of edit, delete, reorder
+   and fork tampering under its stated system model.  [NOTARIZED]
+   inverts the trust boundary, having the receiving service sign what it
+   observed rather than relying on the caller's account of it.
+   [EXECGOV] sets out pre-effect authorisation and authorisation-bound
+   execution for agent tool calls, including a receiver-signed effect
+   receipt and replay blocking, and is directly adjacent to Section 1.2.
+   [I-D.sharif-agent-audit-trail] specifies agent audit records with
+   pre-execution recording, recording independence from the acting
+   component, deny reasons, replay protection and external anchoring.
+   [I-D.das-drip-uas-act-finality] draws the distinction between a broad
+   permission and whether one exact act against one exact destination is
+   authorised to take effect, and binds a receipt to the candidate act
+   at the last control point before physical consequence.
+
+   Taken together, these works establish substantial prior art for agent
+   audit trails, tamper-evident action histories, act-scoped authority
+   and execution-bound evidence.  This document therefore claims no
+   novelty for signed records, audit trails, transparency mechanisms or
+   pre-execution authorisation in isolation.  Its subject is the
+   specific record semantics and verification model set out here, and
+   nothing wider.
+
+
+
+Chueayen                  Expires 24 March 2027                 [Page 5]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+   What this document contributes is narrower than the category and is
+   stated as such: one small payload format for the inference-decision
+   case, with an explicit verification algorithm, a version-selected
+   signature suite, published conformance vectors, and two separately
+   written reference implementations that are required to return the
+   same verdict on the same bytes.  The value claimed is reproducibility
+   by a third party, not novelty of construction.
+
+1.2.  Sibling Record Type for Agent Actions
+
+   The deployment this document describes has since grown a second
+   record type, ACTION-v1, for the authorisation of an agent tool action
+   before it runs, as distinct from a model inference decision.  It is a
+   sibling of this format rather than a successor: it is signed by the
+   same key, verified by the same implementations, and reuses the
+   canonicalisation of Section 5 and Section 5.4 unchanged.  The receipt
+   described in this document is untouched by its existence, and every
+   receipt that verified before it was defined verifies identically now.
+
+   Two points about that pairing matter to any implementer of this
+   document.  First, the two record types both carry signature and
+   public_key in the same shape, so they cannot be told apart by
+   inspecting field names.  A verifier that guesses which type it holds
+   from the shape of the object will misclassify one as the other and
+   skip checks specific to the type it actually received.  Selection of
+   the record type MUST therefore be explicit, supplied by the caller,
+   and a verifier MUST reject a record whose type tag does not match the
+   type it was asked to verify.  Second, a conformant verifier for this
+   document MUST reject an ACTION-v1 record, and the reverse.
+
+   ACTION-v1 is specified outside this document.  It is described here
+   only so that an implementer of this format knows the discrimination
+   rule, which is a property of this format's own verification and not
+   of the other one.
+
+1.3.  Key Lifecycle
+
+   This document assumes the verifier already holds a public key it has
+   reason to trust, and does not define how that key is distributed,
+   rotated, revoked, or evaluated for validity at a past point in time.
+   For evidence retained over years these are load-bearing: a key
+   compromised in a later year casts doubt on receipts nominally issued
+   before it, and this format alone provides no way to distinguish them.
+   Addressing that requires mechanisms outside this document, such as
+   key transparency, an append-only log of issuance, or third-party
+   witnesses.  A later version may profile one.
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                 [Page 6]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+1.4.  Non-Goals
+
+   This document does not:
+
+   *  Claim that a decision was correct, safe, lawful, or free of model
+      error.
+
+   *  Define policy language, agent tool protocols, or model evaluation
+      methods.
+
+   *  Require a Trusted Execution Environment, hardware root of trust,
+      or qualified timestamp authority.
+
+   *  Define deployment topology, commercial packaging, or product
+      features beyond the receipt bytes.
+
+   *  Replace platform attestation documents (for example TEE quotes).
+      A receipt is application-layer evidence of a decision, not
+      hardware evidence of the runtime.
+
+   A receipt that verifies proves only what Section 4 states.
+
+1.5.  Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+1.6.  Terminology
+
+   Issuer:  The system that produces and signs a receipt.
+
+   Subject:  The organisation, identified by org_id, for which the
+      decision was made.
+
+   Verifier:  Any party that checks a receipt's signature against a
+      public key it trusts for the issuer.
+
+   Trusted public key:  The Ed25519 public key the verifier has obtained
+      out of band for the issuer.  It is not sufficient to trust only
+      the public_key field embedded in a receipt.
+
+
+
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                 [Page 7]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+2.  Receipt Structure
+
+   A receipt is a single JSON object [RFC8259].  Version 1 defines the
+   required fields in Section 2.1 and the optional fields in
+   Section 2.2.
+
+   Unless a field is listed in this document for version 1, it MUST NOT
+   appear at the top level.  Verifiers MUST reject receipts that contain
+   unknown top-level fields.  This closed set keeps independent
+   verifiers simple and prevents silent semantic drift.
+
+2.1.  Required Fields
+
+   +====================+=========+====================================+
+   | Field              | Type    | Description                        |
+   +====================+=========+====================================+
+   | v                  | integer | Format and suite version.          |
+   |                    |         | MUST be 1 for this                 |
+   |                    |         | document.                          |
+   +--------------------+---------+------------------------------------+
+   | attestation_id     | string  | UUID string, unique per            |
+   |                    |         | receipt.  Production               |
+   |                    |         | issuers SHOULD use UUID            |
+   |                    |         | version 4.                         |
+   +--------------------+---------+------------------------------------+
+   | trace_id           | string  | Issuer-assigned identifier         |
+   |                    |         | for the LLM call.                  |
+   +--------------------+---------+------------------------------------+
+   | org_id             | string  | Identifier of the subject          |
+   |                    |         | organisation.                      |
+   +--------------------+---------+------------------------------------+
+   | request_hash       | string  | SHA-256 [RFC6234] digest of        |
+   |                    |         | the canonicalised request          |
+   |                    |         | body, 64 lowercase hex             |
+   |                    |         | characters.                        |
+   +--------------------+---------+------------------------------------+
+   | model              | string  | Provider-qualified model           |
+   |                    |         | identifier.                        |
+   +--------------------+---------+------------------------------------+
+   | outcome            | string  | One of the values in               |
+   |                    |         | Section 3.                         |
+   +--------------------+---------+------------------------------------+
+   | policy_applied     | array   | Array of UTF-8 string              |
+   |                    |         | policy identifiers, sorted         |
+   |                    |         | lexicographically by UTF-16        |
+   |                    |         | code unit (Section 5.4).           |
+   |                    |         | MAY be empty.                      |
+   +--------------------+---------+------------------------------------+
+
+
+
+Chueayen                  Expires 24 March 2027                 [Page 8]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+   | cost_prevented_eur | number  | Non-negative number.  MUST         |
+   |                    |         | be 0 when not computed.            |
+   |                    |         | See Section 2.3.                   |
+   +--------------------+---------+------------------------------------+
+   | timestamp          | string  | RFC 3339 datetime with an          |
+   |                    |         | explicit timezone offset.          |
+   +--------------------+---------+------------------------------------+
+   | public_key         | string  | base64url-encoded raw              |
+   |                    |         | 32-byte Ed25519 public key,        |
+   |                    |         | no padding.                        |
+   +--------------------+---------+------------------------------------+
+   | signature          | string  | base64url-encoded 64-byte          |
+   |                    |         | Ed25519 signature, no              |
+   |                    |         | padding.  Omitted from the         |
+   |                    |         | canonical payload.                 |
+   +--------------------+---------+------------------------------------+
+
+                                  Table 1
+
+2.2.  Optional Fields
+
+   The following fields MAY appear.  If present, they MUST match the
+   types below.  They are ignored by signature verification except that
+   they participate in the canonical payload when present (see
+   Section 5).
+
+   +=======================+========+=================================+
+   | Field                 | Type   | Description                     |
+   +=======================+========+=================================+
+   | prev_attestation_id   | string | attestation_id of a prior       |
+   |                       |        | receipt in an issuer-defined    |
+   |                       |        | chain.                          |
+   +-----------------------+--------+---------------------------------+
+   | prev_attestation_hash | string | SHA-256 hex digest binding this |
+   |                       |        | receipt to prior receipt bytes, |
+   |                       |        | as defined by the issuer.       |
+   +-----------------------+--------+---------------------------------+
+   | spec_version          | string | If present, MUST be the ASCII   |
+   |                       |        | string "ATTESTATION-v1".        |
+   +-----------------------+--------+---------------------------------+
+
+                                 Table 2
+
+   If prev_attestation_id is present, prev_attestation_hash MUST also be
+   present.  Verifiers that do not implement chaining MUST still accept
+   well-formed receipts that include these fields, and MUST still
+   enforce the signature and required field checks.
+
+
+
+
+Chueayen                  Expires 24 March 2027                 [Page 9]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+   Because these fields are optional and issuer-populated, they make a
+   sequence tamper-evident to a party that follows the whole sequence.
+   They do not make an individual receipt tamper-proof, and they do not
+   constrain an issuer that emits unchained receipts or that omits a
+   decision from the chain entirely.  Detecting omission requires
+   evidence outside this format.
+
+2.3.  cost_prevented_eur
+
+   cost_prevented_eur is retained for wire compatibility with existing
+   version-1 issuers.  It is an issuer estimate only.  It is not part of
+   the security claim of the receipt.  New issuers SHOULD emit 0.
+   Verifiers MUST NOT treat a non-zero value as proof of savings, risk
+   reduction, or policy quality.
+
+3.  Outcome Values
+
+   The outcome field MUST be one of:
+
+   ALLOWED:  The request was permitted to proceed to the model provider.
+
+   BLOCKED:  The request was not sent to the model provider.
+
+   SUPPRESSED:  The request was not sent because the issuer detected a
+      runaway or loop condition.
+
+   PASSED:  A synonym of ALLOWED retained for backward compatibility.
+      New issuers SHOULD emit ALLOWED.
+
+4.  What a Verified Receipt Proves
+
+   A receipt that verifies under a trusted public key proves that the
+   holder of the corresponding private key attested to the included
+   fields, including outcome, request_hash and the stated timestamp
+   value.  It does not prove that the underlying model output was
+   correct, that the policy identifiers were appropriate, or that the
+   issuer's process was fair.
+
+   The request_hash is a commitment, not a disclosure.  It does not
+   reveal the request, and it does not on its own establish that any
+   particular request was the one presented to the issuer.  It lets a
+   verifier that already holds a candidate request test whether that
+   candidate matches the commitment.  What was decided is established by
+   the signed outcome field, not by the hash.  See Section 8 for the
+   case where the request is low-entropy enough to be recovered by
+   hashing candidates.
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 10]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+   The receipt does not independently establish when the attestation was
+   made.  The timestamp is a field chosen by the issuer and covered by
+   the signature, so a verifying receipt shows that the issuer signed
+   that value, not that signing occurred at that time.  Establishing
+   when a receipt existed requires evidence outside this format, such as
+   inclusion in an append-only log observed by a third party, or a
+   timestamp from an authority this document does not define.
+
+5.  Canonical Payload and Signing
+
+   The canonical payload is produced by:
+
+   1.  Rejecting the receipt if the JSON object contains duplicate
+       member names at any level, or if any input byte sequence is not
+       well-formed UTF-8.  A verifier MUST decode strictly: it MUST NOT
+       substitute U+FFFD REPLACEMENT CHARACTER for an ill-formed
+       sequence, because a lossy decode turns bytes that were never
+       signed into a payload that verifies.  [RFC8259] notes that
+       implementations disagree over which value wins when names repeat,
+       so a receipt containing them has no single canonical payload and
+       MUST NOT be treated as verifiable.
+
+   2.  Removing the signature field, if present.
+
+   3.  Serialising the remaining fields to JSON with all object keys
+       sorted lexicographically by UTF-16 code unit as specified in
+       [RFC8785] Section 3.2.3, and no whitespace between tokens.  See
+       Section 5.4: "lexicographic" without a named encoding is not
+       sufficient to make two implementations agree.
+
+   4.  Encoding the result as UTF-8, with non-ASCII characters emitted
+       literally as UTF-8 and never as \uXXXX escapes (see Section 5.3).
+
+   5.  Serialising every integer-valued number, including a float such
+       as 1.0, as an integer with no decimal point or trailing zero, and
+       every other number as the shortest decimal representation that
+       round-trips to the same IEEE 754 binary64 value.
+
+   A number whose shortest representation requires exponential notation,
+   meaning a magnitude below 1e-4 or at or above 1e21, is outside the
+   range that common implementations serialise identically.  An issuer
+   MUST NOT sign such a value directly; where one would arise it MUST
+   first be rounded into the safe range (for cost_prevented_eur, to two
+   decimal places).
+
+   Within that permitted range the rule above is the rule of [RFC8785]
+   Section 3.2.2.3, which is the ECMA-262 Number::toString algorithm:
+   both produce the shortest decimal that round-trips to the same
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 11]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+   binary64 value.  This format differs from RFC 8785 only in forbidding
+   the values RFC 8785 would serialise in exponential notation, rather
+   than in how any permitted value is written.  Earlier revisions of
+   this document said that the format "does not adopt" RFC 8785 number
+   serialisation, which overstated the difference and disagreed with the
+   implementation specification; that wording is corrected here.
+
+5.1.  Signature Suite and Algorithm Agility
+
+   The version field v identifies the complete cryptographic suite, not
+   only the field layout.  In version 1 the suite is Ed25519 [RFC8032]
+   over the canonical payload.  The issuer signs the canonical payload
+   bytes and places the base64url-encoded signature, without padding, in
+   the signature field.
+
+   A verifier MUST select the signature algorithm from v and MUST NOT
+   infer it from the length or contents of the signature field.  A
+   future version MAY define a post-quantum suite.  A verifier that does
+   not implement the suite named by v MUST reject the receipt rather
+   than guess.
+
+5.2.  Request Hash
+
+   The request_hash field is the SHA-256 digest [RFC6234], encoded as 64
+   lowercase hexadecimal characters, of the request body serialised by
+   applying the same canonicalisation algorithm defined in Section 5 to
+   the request JSON, including its number rule.  The algorithm is
+   identical; only the input differs.  Request bodies often carry non-
+   integer sampling parameters such as temperature or top_p, so an
+   issuer whose requests can contain numbers in the exponential range
+   SHOULD round them before hashing.
+
+   The digest is computed over the request body as received from the
+   caller, before any redaction, so that a verifier holding the original
+   request can reproduce it.  A verifier that does not hold the original
+   request treats request_hash as an opaque commitment.
+
+5.3.  String Canonicalisation
+
+   Strings MUST be serialised as literal UTF-8.  Escaping non-ASCII
+   characters as \uXXXX produces different canonical bytes and MUST NOT
+   be done; only the escapes required by [RFC8259] are permitted.
+   Mainstream JSON serialisers disagree by default on this point.
+   Issuers and verifiers MUST both emit literal UTF-8.
+
+
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 12]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+5.4.  Ordering
+
+   Wherever this document requires strings to be in lexicographic order,
+   whether object keys under Section 5 or the members of policy_applied,
+   the comparison MUST be by UTF-16 code unit, as [RFC8785]
+   Section 3.2.3 specifies for object keys.  Implementations MUST NOT
+   compare by Unicode code point or by locale.
+
+   The two orderings agree across the whole Basic Multilingual Plane and
+   diverge only when a character outside it is present, because such a
+   character is represented in UTF-16 by a surrogate pair whose leading
+   unit is numerically lower than U+E000.  U+E000 therefore sorts after
+   U+1F600 by code unit and before it by code point.
+
+   This is stated normatively because the ambiguity has already produced
+   a real divergence.  Two independently written reference verifiers for
+   this format, one in TypeScript and one in Python, disagreed on signed
+   receipts carrying a non-Basic-Multilingual-Plane policy identifier:
+   the first used its language's native string comparison, which is by
+   UTF-16 code unit, and the second used its language's native
+   comparison, which is by code point.  Both implementations were
+   faithful to the text of earlier revisions, which said only
+   "lexicographically".  A conformance suite containing only ASCII
+   policy identifiers could not distinguish them.
+
+6.  Verification
+
+   A verifier that holds a trusted public key for the issuer:
+
+   1.  Confirms all required fields are present and well-typed for
+       Section 2.1, including: request_hash is 64 lowercase hex
+       characters; public_key and signature decode as unpadded base64url
+       to 32 and 64 bytes respectively; cost_prevented_eur is a non-
+       negative number; timestamp is an RFC 3339 datetime with an
+       explicit timezone offset; and policy_applied is an array of
+       strings in lexicographic order by UTF-16 code unit (Section 5.4).
+
+   2.  Confirms no unknown top-level fields exist.
+
+   3.  Confirms optional fields, if present, satisfy Section 2.2.
+
+   4.  Confirms outcome is one of the values in Section 3.
+
+   5.  Confirms the embedded public_key equals the trusted public key.
+
+   6.  Reconstructs the canonical payload per Section 5.
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 13]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+   7.  Verifies the signature over the canonical bytes using the suite
+       named by v and the trusted public key.
+
+   Verifying only against the embedded public_key, without an out-of-
+   band trust decision, proves integrity of the object but not issuer
+   identity.
+
+7.  Conformance
+
+   An implementation claiming conformance to this document MUST:
+
+   *  Produce or accept receipts matching Section 2.
+
+   *  Implement canonicalisation and verification as specified in
+      Section 5 and Section 6.
+
+   *  Reject the invalid cases described by the published conformance
+      vectors referenced in Appendix B.
+
+   Informative interoperability artefacts, including valid and invalid
+   receipts and a fixed test public key, are published with the
+   ATTESTATION-v1 specification repository.  Those vectors are not
+   normative text of this document; if a vector and this document
+   disagree, this document prevails, and the vector set SHOULD be
+   corrected.
+
+8.  Security Considerations
+
+   The trust boundary this format establishes, and the questions it
+   leaves open, are summarised below.  The figure is informative; the
+   normative rules are in Section 5 and Section 6.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 14]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+                       +-------------------------+
+                       |         Issuer          |
+       Request ------->|  creates the receipt    |
+                       |  chooses the timestamp  |
+                       |  holds the signing key  |
+                       +------------+------------+
+                                    |
+                             signed receipt
+                                    |
+                                    v
+                       +-------------------------+
+                       |        Verifier         |
+                       |  holds a trusted key    |
+                       |  recomputes the payload |
+                       |  checks the signature   |
+                       +------------+------------+
+                                    |
+                                    v
+                     the signed fields are authentic
+                     and have not been altered
+
+              NOT ESTABLISHED BY THIS FORMAT ALONE
+      +-------------------------------------------------------+
+      | when the receipt existed        -> append-only log,    |
+      |                                    witness, or a       |
+      |                                    timestamp authority |
+      | that the claimed model ran      -> platform attestation|
+      | that no decision was omitted    -> reconciliation      |
+      |                                    against a record    |
+      |                                    the issuer does not |
+      |                                    produce             |
+      | that the decision was correct   -> outside any         |
+      |                                    evidence format     |
+      | that a later key compromise     -> key transparency,   |
+      |   does not undermine old        ->   revocation, or    |
+      |   receipts                      ->   historical status |
+      +-------------------------------------------------------+
+
+        Figure 2: Trust boundary of a verified receipt (informative)
+
+   Note that the issuer controls both the signing key and the timestamp,
+   so a verifier that trusts the key learns what the issuer asserted and
+   that nobody altered it afterwards.  Every item in the lower box
+   requires a mechanism this document does not define.
+
+
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 15]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+8.1.  Issuer Identity
+
+   A receipt proves that the holder of a private key signed the stated
+   fields.  It does not, on its own, prove which organisation that key
+   represents.  Verifiers MUST pin the issuer's public key out of band
+   (for example via a published key URL, an enterprise configuration, or
+   a trust list).
+
+8.2.  Confidentiality of Requests
+
+   Receipts contain no plaintext prompt or response, only a request
+   hash.  For a high-entropy request body the hash reveals nothing
+   useful by inversion.  Where the request body is low-entropy or
+   guessable, an attacker can hash candidates and match.  Deployments
+   MUST treat request_hash as potentially personal data and apply their
+   own data-protection controls.  Issuers that require pseudonymity
+   SHOULD hash with a key kept secret from verifiers, at the cost of
+   offline reproducibility by third parties.
+
+8.3.  Integrity Versus Correctness
+
+   Signature verification establishes integrity and issuer attribution
+   under a pinned key.  It does not establish that the decision was the
+   right decision.
+
+8.4.  Post-Quantum Considerations
+
+   Ed25519 is not post-quantum secure.  An adversary with a
+   cryptographically relevant quantum computer could forge signatures
+   under an issuer key that was active before migration, which matters
+   where long audit retention intersects that horizon.  SHA-256 request
+   binding remains useful as a tamper-detection commitment for detecting
+   alteration of past receipt bytes under known attacks on hashes.
+   Because v selects the whole suite (Section 5.1), a later version can
+   introduce a post-quantum signature suite without changing the field
+   names.  This document does not define such a suite.
+
+9.  IANA Considerations
+
+   This document has no IANA actions.  A future revision may request
+   registration of a media type for the receipt object.
+
+10.  References
+
+10.1.  Normative References
+
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 16]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC6234]  Eastlake 3rd, D. and T. Hansen, "US Secure Hash Algorithms
+              (SHA and SHA-based HMAC and HKDF)", RFC 6234,
+              DOI 10.17487/RFC6234, May 2011,
+              <https://www.rfc-editor.org/rfc/rfc6234>.
+
+   [RFC8032]  Josefsson, S. and I. Liusvaara, "Edwards-Curve Digital
+              Signature Algorithm (EdDSA)", RFC 8032,
+              DOI 10.17487/RFC8032, January 2017,
+              <https://www.rfc-editor.org/rfc/rfc8032>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8259]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
+              Interchange Format", STD 90, RFC 8259,
+              DOI 10.17487/RFC8259, December 2017,
+              <https://www.rfc-editor.org/rfc/rfc8259>.
+
+   [RFC8785]  Rundgren, A., Jordan, B., and S. Erdtman, "JSON
+              Canonicalization Scheme (JCS)", RFC 8785,
+              DOI 10.17487/RFC8785, June 2020,
+              <https://www.rfc-editor.org/rfc/rfc8785>.
+
+10.2.  Informative References
+
+   [AFR]      "Agent Flight Recorder: Tamper-Evident Audit Trails with
+              On-Chain Anchoring for Long-Horizon Tool-Using Agents",
+              September 2026, <https://arxiv.org/abs/2609.01931>.
+
+   [EXECGOV]  "Execution Governance 3.0: From Pre-Effect Authorization
+              to Authorization-Bound Execution", August 2026,
+              <https://doi.org/10.2139/ssrn.7414079>.
+
+   [I-D.das-drip-uas-act-finality]
+              Das, S., "Cleared to Fly or Drive Is Not Cleared to Act:
+              Actuator-Level Execution Finality and Compact Act Evidence
+              for UAS and Autonomous Vehicles", Work in Progress,
+              Internet-Draft, draft-das-drip-uas-act-finality-01, 18
+              September 2026, <https://datatracker.ietf.org/doc/html/
+              draft-das-drip-uas-act-finality-01>.
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 17]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+   [I-D.farley-acta-signed-receipts]
+              Farley, T., "Signed Decision Receipts for Machine-to-
+              Machine Access Control", Work in Progress, Internet-Draft,
+              draft-farley-acta-signed-receipts-03, 3 September 2026,
+              <https://datatracker.ietf.org/doc/html/draft-farley-acta-
+              signed-receipts-03>.
+
+   [I-D.marques-asqav-compliance-receipts]
+              Marques, J. A. G., "Compliance Profile of Signed Action
+              Receipts for AI Agents", Work in Progress, Internet-Draft,
+              draft-marques-asqav-compliance-receipts-08, 31 August
+              2026, <https://datatracker.ietf.org/doc/html/draft-
+              marques-asqav-compliance-receipts-08>.
+
+   [I-D.sharif-agent-audit-trail]
+              Sharif, R., "Agent Audit Trail: A Standard Logging Format
+              for Autonomous AI Systems", Work in Progress, Internet-
+              Draft, draft-sharif-agent-audit-trail-04, 15 September
+              2026, <https://datatracker.ietf.org/doc/html/draft-sharif-
+              agent-audit-trail-04>.
+
+   [I-D.tsyrulnikov-rats-attested-inference-receipt]
+              Tsyrulnikov, B., "Attested Inference Receipt (AIR): A
+              COSE/CWT Profile for Confidential AI Inference", Work in
+              Progress, Internet-Draft, draft-tsyrulnikov-rats-attested-
+              inference-receipt-02, 5 July 2026,
+              <https://datatracker.ietf.org/doc/html/draft-tsyrulnikov-
+              rats-attested-inference-receipt-02>.
+
+   [NOTARIZED]
+              "Notarized Agents: Receiver-Attested Confidential Receipts
+              for AI Agent Actions", June 2026,
+              <https://arxiv.org/abs/2606.04193>.
+
+Appendix A.  Example Receipt
+
+   The following informative example is vector valid/001-allowed.json
+   from the conformance set in Appendix B.  A verifier that pins the
+   test public key in Appendix B MUST accept it.  The author regenerated
+   and re-checked this object against that key before publishing this
+   revision; if verification fails, the vector set or this figure is
+   wrong and MUST be corrected before relying on either.
+
+   Field order in this figure is for readability; canonical signing
+   order is defined in Section 5.  The signature value is shown on two
+   lines for document formatting only; in the vector file it is a single
+   base64url string with no whitespace.
+
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 18]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+ {
+   "v": 1,
+   "attestation_id": "00000000-0000-0000-0000-000000000001",
+   "trace_id": "trace-tv-001",
+   "org_id": "org-test-vectors",
+   "request_hash":
+     "8f3a7e2b9c4d5f6a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a",
+   "model": "gpt-4o",
+   "outcome": "ALLOWED",
+   "policy_applied": ["budget_guard"],
+   "cost_prevented_eur": 0,
+   "timestamp": "2026-04-23T10:15:30.000000+00:00",
+   "public_key": "alWzEnrA_z9McN9z_MFfQCnH9mVgOwRZ26wrI7oix4E",
+   "signature":
+     "gXA2GNEvACSGDtOk9KMEeHDUQMPUhHJHeLFMbbrwKlEI"
+     "XY9UkvI5gWQ201Lm3Tkh7K3luXwQtqcua6vv4HmAAg"
+ }
+
+   Pinned test public key for this example and the vector set:
+
+   alWzEnrA_z9McN9z_MFfQCnH9mVgOwRZ26wrI7oix4E
+
+Appendix B.  Conformance Vectors
+
+   Informative conformance vectors (valid receipts, invalid receipts,
+   and the fixed test public key) are published at:
+
+   https://github.com/Aqta-ai/attestation-spec/tree/main/test-vectors
+
+   A conformant verifier that pins that test public key MUST accept
+   every receipt in the valid set and MUST reject every receipt in the
+   invalid set.  Those vectors are generated from a fixed seed
+   documented in that repository so third parties can reproduce the
+   signatures.
+
+Appendix C.  Reference Implementations
+
+   Open-source reference verifiers implementing this format are
+   published as aqta-verify-receipt on the Python Package Index and on
+   the npm package registry.  Those packages are informative aids.
+   Conformance is defined by this document and the vector set in
+   Appendix B, not by any single implementation.
+
+
+
+
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 19]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+Appendix D.  Changes From draft-chueayen-attestation-receipts-02
+
+   Every change in this revision corrects a place where the published
+   text was weaker than the implementation it describes.  No wire format
+   change: a receipt that verified under -02 verifies identically under
+   -03, and no v value changes.
+
+   *  Lexicographic order is now defined normatively as UTF-16 code
+      unit, in a new Ordering section, and both places that require it
+      point at that section.  Earlier revisions said only
+      "lexicographically", which is not sufficient to make two
+      implementations agree; the new section records the divergence that
+      proved it.
+
+   *  Strict UTF-8 decoding is now required.  A verifier MUST NOT
+      substitute U+FFFD for an ill-formed sequence, because a lossy
+      decode admits bytes that were never signed.
+
+   *  The number serialisation paragraph no longer says the format "does
+      not adopt" RFC 8785 number serialisation.  Within the range this
+      format permits, the rule is RFC 8785 Section 3.2.2.3; the
+      difference is only that values requiring exponential notation are
+      forbidden here.  The old wording overstated the difference and
+      disagreed with the implementation specification.
+
+   *  RFC 8785 moves from informative to normative, since ordering and
+      number serialisation are now defined by reference to it.
+
+   *  A new section records the sibling record type for agent actions,
+      ACTION-v1, and states the discrimination rule a verifier of this
+      format must follow: record type selection is explicit and never
+      inferred from field shape.
+
+Appendix E.  Changes From draft-chueayen-attestation-receipts-00
+
+   *  Added explicit non-goals and a "what a verified receipt proves"
+      section.
+
+   *  Clarified relationship to related Internet-Drafts without
+      requiring them.
+
+   *  Documented optional chain fields and spec_version for wire
+      clarity.
+
+   *  Clarified that cost_prevented_eur is non-security and SHOULD be 0
+      for new issuers.
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 20]
+
+Internet-Draft           AI Attestation Receipts          September 2026
+
+
+   *  Added conformance language, an example receipt, and a pointer to
+      published test vectors.
+
+   *  Normative reference to SHA-256 via RFC 6234.
+
+   *  Tightened verification steps for issuer identity pinning.
+
+   *  Softened attestation_id to UUID string with version-4 SHOULD,
+      matching the published conformance vectors.
+
+   *  Clarified policy_applied as UTF-8 strings (matches the non-ASCII
+      valid vector) and tightened verification type checks.
+
+Acknowledgements
+
+   The ordering divergence described in Section 5.4 was not found by the
+   author.  It, and further defects in the reference implementations,
+   were reported by people outside the author's organisation during a
+   public review of those implementations between August and September
+   2026.  Each was fixed, and each was added to the published
+   conformance vectors as a regression case, which is why the vector set
+   contains non-Basic-Multilingual-Plane identifiers at all.
+
+Author's Address
+
+   Anya Chueayen
+   Aqta Technologies Limited
+   Dublin
+   Ireland
+   Email: hello@aqta.ai
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Chueayen                  Expires 24 March 2027                [Page 21]

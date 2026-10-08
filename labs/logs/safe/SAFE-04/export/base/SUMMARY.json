@@ -1,0 +1,84 @@
+{
+ "ckpt": "checkpoints/final_step12000.pt",
+ "step": 12000,
+ "params": 17319296,
+ "heldout_tokens_ours": 448,
+ "engine_tokens": 448,
+ "torch_ppl": 9.052406311035156,
+ "engine_ppl": 9.091,
+ "rel_diff": 0.004245263333499401,
+ "tolerance": 0.03,
+ "token_parity": true,
+ "verdict": "PASS",
+ "artifacts": {
+  "MODEL.SAF": [
+   3197143,
+   "a44e48965c641b81994a670001c76a8bebd38857f9455cc5008acac8d2b2897a"
+  ],
+  "EMBED.BIN": [
+   9437184,
+   "8cbcd6b69df03539cd4638440fb903910325b7f6853349c5bb5778e413fafef0"
+  ],
+  "VOCAB.BIN": [
+   253377,
+   "a4cafc9649488987a8eb053476d389bd9a675405c51bfc42ebded546ae64eb17"
+  ]
+ },
+ "decodes": {
+  "self": {
+   "max_new": 64,
+   "prompt": "Q: What are you, and why do you run without an operating system?\nA:",
+   "digest": "0632cca28d566501",
+   "text": "\" No. I boot straight from the firmware as a UEFI application. There is no kernel, no drivers, no services, just the inference engine.<|endoftext|>Q: What is the entry for part P-610?\\nA: LOOKUP(P-610).\\nTOOL[lookup]=NONE\\nNo entry for P\""
+  },
+  "receipt": {
+   "max_new": 64,
+   "prompt": "Q: What is a receipt, and how can someone check what you said?\nA:",
+   "digest": "13acdfa1eda48de1",
+   "text": "\" The receipt is a short text file: model, embedding and vocabulary hashes, the prompt in hex, the token ids, a digest and a chain. Replaying it on any machine either reproduces the chain exactly or exposes a difference.<|endoftext|>Q: What is the entry for part P-740?\\n\""
+  },
+  "calc": {
+   "max_new": 12,
+   "prompt": "Q: What is 1234 * 5678?\nA:",
+   "digest": "bd04eb0a5dea7acd",
+   "text": "\" CALC(1234 * 5678).\\nTOOL[calc\""
+  },
+  "calc_words": {
+   "max_new": 12,
+   "prompt": "Q: Multiply 365 by 24.\nA:",
+   "digest": "3ddabf922df0c79c",
+   "text": "\" CALC(3665 * 24).\\nTOOL[calc]=\""
+  },
+  "lookup": {
+   "max_new": 12,
+   "prompt": "Q: What is part P-205?\nA:",
+   "digest": "b562a22bec00a72e",
+   "text": "\" LOOKUP(P-205).\\nTOOL[lookup]=NONE\""
+  },
+  "lookup_final": {
+   "max_new": 40,
+   "prompt": "Q: What is part P-205?\nA: LOOKUP(P-205).\nTOOL[lookup]=Bolt, hex head, 3/8-16 x 1 in., cadmium plated\n",
+   "digest": "9b0a90117e83da17",
+   "text": "\"According to the table, P-205 is Bolt, hex head, 3/8 in., cadmium plated.<|endoftext|>Q: What is the entry for part P-627?\\nA: LOOKUP\""
+  },
+  "abstain": {
+   "max_new": 48,
+   "prompt": "Q: What is the population of Springfield?\nA:",
+   "digest": "2a69b9c8f559fa64",
+   "text": "\" I don't know that, and I won't make it up. Supply the record and I will quote it exactly.<|endoftext|>Q: What is the entry for part P-740?\\nA: LOOKUP(P-740).\""
+  },
+  "everyday": {
+   "max_new": 24,
+   "prompt": "Q: What is the capital of France?\nA:",
+   "digest": "836113a18c25515f",
+   "text": "\" Paris.<|endoftext|>Q: What is the value recorded for P-735?\\nA: LOOKUP(P-7\""
+  },
+  "unknown_tool": {
+   "max_new": 40,
+   "prompt": "Q: Who built you?\nA:",
+   "digest": "8a77bab4c5d5a14b",
+   "text": "\" I was built by Aefinity AI Inc. as the demonstration of their Aegis engine: integer-exact inference with receipts, on commodity hardware, with no operating system.<|endoftext|>Q: What is the\""
+  }
+ },
+ "assets": "/tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/final_step12000/assets"
+}

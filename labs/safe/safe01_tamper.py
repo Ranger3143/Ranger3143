@@ -675,6 +675,27 @@ def h3():
             for fn in ('ATTEST.TXT', 'RECEIPT.TXT'): tf.add(f'{dd}/{fn}', arcname=f'{os.path.basename(dd)}/{fn}')
     print('h3 done', flush=True)
 
+
+def xcheck():
+    """Run the real attest_verify.py (F1 and F2) on a spread of H1-accepted mutants of RECEIPT.TXT files against that boot's ATTEST.TXT."""
+    res = read_tsv(f'{OUT}/h1_results.tsv'); md = f'{SCR}/h1_mutants'
+    byc = collections.defaultdict(list)
+    for r in res:
+        if r['verdict'] == 'ACCEPT' and r['class'] != 'C00' and r['src'].endswith('/RECEIPT.TXT'): byc[r['class']].append(r)
+    rows = []
+    for c in sorted(byc):
+        step = max(1, len(byc[c]) // 6)
+        for r in byc[c][::step][:6]:
+            ap = f'{EVID}/{r["src"].split("/")[0]}/ATTEST.TXT'; mp = f'{md}/{r["id"]}.txt'; res2 = []
+            for form in ('F1', 'F2'):
+                if form == 'F1': cmd = ['python3', '-I', AV, ap, mp]
+                else: cmd = ['python3', '-I', AV, ap, '--receipt', mp, '--artifacts', os.path.dirname(ARTS['A'][0])]
+                rcode, out, err = run(cmd, os.environ.copy(), 120)
+                res2 += [rcode, verdict_attest(rcode, out), int('quote qualifying == SHA-256(RECEIPT.TXT): FAIL' in out)]
+            rows.append((r['id'], r['class'], r['sub'], r['src'], *res2, r['desc']))
+    write_tsv(f'{OUT}/h1_f2_crosscheck.tsv', ['id', 'class', 'sub', 'src', 'F1_exit', 'F1_verdict', 'F1_qualifying_fail_line', 'F2_exit', 'F2_verdict', 'F2_qualifying_fail_line', 'desc'], rows)
+    print('xcheck done', len(rows), flush=True)
+
 # ---------------------------------------------------------------- report
 def pct(a, b): return f'{100.0 * a / b:.2f}%' if b else 'n/a'
 
@@ -708,6 +729,53 @@ def report():
     P('# SAFE-01 RESULT: tamper-evidence of witness receipts, model bytes and TPM attestation (LAB-09)')
     P('')
     P('Every number below is computed by `labs/safe/safe01_tamper.py report` from the logs saved next to this file. Rule A: no timing or rate was recorded.')
+    P('')
+    ctrl = tally(by['C00'])
+    canary_prompts = canaries(rc)
+    canary_names = ['self', 'calc', 'lookup', 'abstain']
+    _dig = {(r['set'], r['idx'], r['canary']): r for r in h2d}
+    summ_byte = collections.Counter(); canary_changed = collections.Counter()
+    for _m in h2m:
+        _chg = [c for c in canary_names if _dig[(_m['set'], _m['idx'], c)]['digest'] != _dig[('orig', '0', c)]['digest']]
+        for c in _chg: canary_changed[c] += 1
+        if _m['set'] == 'byte':
+            summ_byte['n'] += 1; summ_byte['changed_ge1'] += 1 if _chg else 0
+    _vk = collections.defaultdict(list)
+    for r in h2v: _vk[r['artifact_set']].append(r)
+    for _m in h2m:
+        if _m['set'] == 'byte':
+            cr_ = [r for r in _vk[f"byte_{int(_m['idx']):02d}"] if r['kind'] == 'cross']
+            summ_byte['cross'] += len(cr_); summ_byte['cross_fail'] += sum(1 for r in cr_ if r['verdict'] in ('REJECT_CLEAN', 'REJECT_CRASH'))
+    # ---------------- findings at a glance (every number computed from the logs)
+    xc = read_tsv(f'{OUT}/h1_f2_crosscheck.tsv')
+    def cnt(rs, v='ACCEPT', k='verdict'): return sum(1 for r in rs if r[k] == v)
+    h3by0 = collections.defaultdict(list)
+    for r in h3:
+        if r['class'] != 'control': h3by0[r['class']].append(r)
+    ev = h3by0['event-line']
+    ev4 = [r for r in ev if r['sub'].startswith('pcr4/')]; ev1213t = [r for r in ev if not r['sub'].startswith('pcr4/') and r['sub'].endswith('/type')]
+    ev1213o = [r for r in ev if not r['sub'].startswith('pcr4/') and not r['sub'].endswith('/type')]
+    silent = [r for r in h3 if r['class'] != 'control' and r['F1_verdict'] == 'ACCEPT' and r['F1_quote_pass_line'] == '0']
+    pcr4ok = []
+    for b in ('qemu_calc', 'qemu_self'):
+        t = open(f'{EVID}/{b}/ATTEST.TXT').read(); pv = bytes(32)
+        for l in t.split('\n'):
+            m = re.match(r'^event pcr=4 .* sha256=([0-9a-f]{64}) ', l)
+            if m: pv = hashlib.sha256(pv + bytes.fromhex(m.group(1))).digest()
+        pcr4ok.append(pv.hex() == re.search(r'^pcr 4 (\S+)', t, re.M).group(1))
+    P('## 0. Findings at a glance (all numbers computed from the logs in this directory)')
+    P('')
+    fv = [c for c in ['C01', 'C02', 'C03', 'C04', 'C05', 'C06', 'C07', 'C09', 'C10']]
+    P(f"1. **Receipt field-value tampering is caught.** {sum(tally(by[c])[1] for c in fv)} of {sum(tally(by[c])[0] for c in fv)} mutants in C01-C07, C09, C10 were accepted by `cis_witness verify`; {sum(tally(by[c])[2] for c in fv)} were clean `VERIFY FAIL`/`FAIL artifact`, {sum(tally(by[c])[3] for c in fv)} were panics (crash-rejects). Positive control: {ctrl[1]} of {ctrl[0]} unmodified receipts verify.")
+    P(f"2. **Accepted mutation, registered class C08 (line reorder): {tally(by['C08'])[1]} of {tally(by['C08'])[0]} accepted.** The verifier parses by key, so line order is not part of what it checks. No field value changes, so this is outside H1's \"single-field\" wording, but it is an accepted mutation of the receipt file.")
+    P(f"3. **Receipt parser leniency (unregistered probes).** `prompt-toks` and `gen-toks` lines are never read: {cnt(by['U1'])} of {len(by['U1'])} and {cnt(by['U2'])} of {len(by['U2'])} mutants accepted (including deleting the line). Header line altered or deleted: {cnt(by['U3'])} of {len(by['U3'])}. Unknown line appended: {cnt(by['U4'])} of {len(by['U4'])}. Duplicate key with a bogus earlier line (last one wins): {cnt([r for r in by['U5'] if r['sub'] == 'dup-bogus-first'])} of {len([r for r in by['U5'] if r['sub'] == 'dup-bogus-first'])} accepted. Non-canonical numbers/hex (`+25`, `025`, `+a`, upper-case prompt-hex): {cnt(by['U6'])} of {len(by['U6'])} accepted. The semantic content of those receipts is unchanged, but the bytes differ.")
+    c11acc = [r for r in by['C11'] if r['verdict'] == 'ACCEPT' and r['sub'] in ('trailing-space', 'trailing-tab')]
+    c11lines = collections.Counter(re.search(r'on line \d+ \((\S+)\)', r['desc']).group(1) for r in c11acc)
+    P(f"4. **Cosmetic changes (C11, reported separately): {tally(by['C11'])[1]} of {tally(by['C11'])[0]} accepted** (CRLF on any line or on all, final newline removed, blank line appended, and trailing space/tab on these lines only: " + ', '.join(f'{k} x{v // 2}' for k, v in sorted(c11lines.items())) + f"). {tally(by['C11'])[2] + tally(by['C11'])[3]} were rejected (trailing whitespace on other fields), {tally(by['C11'])[3]} of them by panic. Trailing whitespace on the `prompt-hex` line is accepted because the hex decoder drops an odd trailing character.")
+    P(f"5. **The whole-file hash in the TPM quote catches what the receipt verifier ignores, but only if `--receipt` is used.** Of {len(xc)} accepted receipt mutants re-run through `attest_verify.py`: F1 (positional receipt, as in finalize.sh) accepted {cnt(xc, k='F1_verdict')}; F2 (`--receipt`) accepted {cnt(xc, k='F2_verdict')} and printed `quote qualifying == SHA-256(RECEIPT.TXT): FAIL` in {sum(int(r['F2_qualifying_fail_line']) for r in xc)}. Receipt-side tamper test S1 (tampering RECEIPT.TXT, genuine ATTEST.TXT): F1 accepted {sum(r['F1_verdict'] == 'ACCEPT' for r in s1)} of {len(s1)}, F2 accepted {sum(r['F2_verdict'] == 'ACCEPT' for r in s1)} of {len(s1)}. **The `finalize.sh` line `attest_verify.py ATTEST.TXT RECEIPT.TXT` therefore never checks the receipt.**")
+    P(f"6. **H2 (weights).** {summ_byte['changed_ge1']} of {summ_byte['n']} one-byte mutants of MODEL.SAF changed at least one canary decode digest; {summ_byte['n'] - summ_byte['changed_ge1']} did not change any of the four 16-token digests. Only the `calc` canary ever changed ({', '.join(f'{c}: {canary_changed[c]}' for c in canary_names)} changed decodes out of {2 * summ_byte['n']} per canary across the byte and bit sets). All {summ_byte['cross_fail']} of {summ_byte['cross']} original-minted receipts failed against the mutated MODEL.SAF, because the artifact hash line no longer matches.")
+    P(f"7. **H3 (attestation).** Rejected without exception: altered `pcr` values ({cnt(h3by0['pcr-value'], k='F1_verdict', v='REJECT')} of {len(h3by0['pcr-value'])}), `quote-attest` bytes ({cnt(h3by0['quote-attest'], k='F1_verdict', v='REJECT')} of {len(h3by0['quote-attest'])}), signature r/s ({cnt(h3by0['quote-signature'], k='F1_verdict', v='REJECT')} of {len(h3by0['quote-signature'])}), qualifying data ({cnt(h3by0['quote-qualifying'], k='F1_verdict', v='REJECT')} of {len(h3by0['quote-qualifying'])}), public key ({cnt(h3by0['quote-pubkey'], k='F1_verdict', v='REJECT')} of {len(h3by0['quote-pubkey'])}). Accepted: PCR 4 event-log lines ({cnt(ev4, k='F1_verdict')} of {len(ev4)}; PCR 4 does replay from its own three event digests in both ATTEST files, {pcr4ok}, but attest_verify.py does not perform that replay), the `type=` field of PCR 12/13 events ({cnt(ev1213t, k='F1_verdict')} of {len(ev1213t)}), deleting the `quote-attest` line ({cnt(h3by0['field-deletion'], k='F1_verdict')} of {len(h3by0['field-deletion'])} field deletions; verifier prints `quote: none in file` and exits 0), and {len(silent)} mutants in total that exit 0 with no `QUOTE VERIFY PASS` line (a trailing space on the `quote-attest` line does the same). Deleting a `measured pcr=13` line: F1 accepted {cnt([r for r in h3by0['measured-line'] if r['sub'] == 'pcr13/delete'], k='F1_verdict')} of {len([r for r in h3by0['measured-line'] if r['sub'] == 'pcr13/delete'])}, F2 accepted {cnt([r for r in h3by0['measured-line'] if r['sub'] == 'pcr13/delete'], k='F2_verdict')} (F1-accepted: {', '.join(r['id'] + ' ' + r['base'] + ' ' + r['desc'] for r in h3by0['measured-line'] if r['sub'] == 'pcr13/delete' and r['F1_verdict'] == 'ACCEPT')}; with no measured line left for PCR 13, nothing is replayed for it). Signature malleability `s -> n-s`: {cnt(h3by0['sig-malleability'], k='F1_verdict')} of {len(h3by0['sig-malleability'])} accepted.")
+    P(f"8. **The quote proves consistency, not origin.** Re-signing an edited ATTEST.TXT with a software-generated P-256 key (no TPM; case 1 edits only the PCR 13 verdict text, case 2 also edits the chain in RECEIPT.TXT and its qualifying digest) was accepted by F1 in {sum(r['F1_verdict'] == 'ACCEPT' for r in s2)} of {len(s2)} cases and by F2 in {sum(r['F2_verdict'] == 'ACCEPT' for r in s2)} of {len(s2)}; `cis_witness verify` on the receipt that goes with each case accepted {sum(r['cis_witness_verdict'] == 'ACCEPT' for r in s2)} (the unedited receipt) and rejected {sum(r['cis_witness_verdict'].startswith('REJECT') for r in s2)} (the chain-edited receipt). The verifier has no pinned attestation key (LAB-04 limitation 5 says the same for the swtpm AK).")
     P('')
     P('## 1. How this was run (exact commands, scoring rules)')
     P('')
@@ -745,7 +813,6 @@ def report():
     # ---------------- H1
     P('## 2. H1: receipt mutations through `cis_witness verify`')
     P('')
-    ctrl = tally(by['C00'])
     P(f'Positive control: {ctrl[1]} of {ctrl[0]} unmodified receipts verify (ACCEPT). The harness is valid only if this is {ctrl[0]} of {ctrl[0]}.')
     P('')
     P('| class | mutants | ACCEPT | REJECT_CLEAN | REJECT_CRASH | TIMEOUT | detection rate |'); P('|---|---|---|---|---|---|---|')
@@ -784,6 +851,12 @@ def report():
             if len(seen) >= 6: break
     if not anyacc: P('No mutant was accepted.')
     P('')
+    vf = f'{OUT}/h1_accepted/C08-0111.txt'
+    if os.path.exists(vf):
+        P('Verbatim accepted file `C08-0111` (source `qemu_calc_words/RECEIPT.TXT`, all eleven lines present, order permuted; `cis_witness verify` printed `' + [r for r in res if r['id'] == 'C08-0111'][0]['stdout_last'] + '`):')
+        P('')
+        P('```'); P(open(vf).read().rstrip('\n')); P('```')
+        P('')
     # crash analysis
     P('### 2c. Rejections that were crashes (panic text, first stderr line)')
     P('')
@@ -821,6 +894,14 @@ def report():
             else: diff += 1
         P(f'| {c} | {len(acc)} | {same} | {diff} |')
     P('')
+    P('Measured, not inferred: the real `attest_verify.py` on a spread of up to 6 accepted mutants per class (those derived from a bound RECEIPT.TXT), against the matching boot\'s ATTEST.TXT (`h1_f2_crosscheck.tsv`):')
+    P('')
+    P('| class | mutants run | F1 (positional receipt) accepted | F2 (`--receipt`) accepted | F2 printed `quote qualifying == SHA-256(RECEIPT.TXT): FAIL` |'); P('|---|---|---|---|---|')
+    xcc = collections.defaultdict(list)
+    for r in xc: xcc[r['class']].append(r)
+    for c in sorted(xcc):
+        rs = xcc[c]; P(f"| {c} | {len(rs)} | {sum(r['F1_verdict'] == 'ACCEPT' for r in rs)} | {sum(r['F2_verdict'] == 'ACCEPT' for r in rs)} | {sum(int(r['F2_qualifying_fail_line']) for r in rs)} |")
+    P('')
     # ---------------- H2
     P('## 3. H2: one-byte change in MODEL.SAF')
     P('')
@@ -829,11 +910,15 @@ def report():
     P('')
     dig = {}
     for r in h2d: dig[(r['set'], r['idx'], r['canary'])] = r
-    canary_names = ['self', 'calc', 'lookup', 'abstain']
     def d_orig(c): return dig[('orig', '0', c)]['digest']
     P('Control: `orig` vs `orig_repeat` decode digests are identical for all canaries: ' + str(all(dig[('orig', '0', c)]['digest'] == dig[('orig_repeat', '0', c)]['digest'] and d_orig(c) for c in canary_names)) + '.')
     P('')
     P('Original model digests (16 tokens): ' + '; '.join(f"{c} `{d_orig(c)}`" for c in canary_names) + '.')
+    P('')
+    P('Original model, 16 greedy tokens per canary (EOS is ignored by `cis_decode`, so the decode runs on past the end of the call):')
+    P('')
+    for c in canary_names:
+        P(f"- `{c}` prompt {json.dumps(canary_prompts[c])} -> {dig[('orig', '0', c)]['text']}")
     P('')
     P('| set | # | offset | tensor | dtype | byte | digests changed (of 4) | which | original receipts failing | own-artifact receipts verified |'); P('|---|---|---|---|---|---|---|---|---|---|')
     summ = collections.defaultdict(lambda: collections.Counter())
@@ -857,7 +942,23 @@ def report():
         s = summ[k]
         P(f"| {k} | {s['n']} | {s['changed_ge1']} of {s['n']} | {s['changed_all4']} of {s['n']} | {s['canary_changes']} of {s['canary_total']} | {s['cross_fail']} of {s['cross']} | {s['self_ok']} of {s['self']} | {s['crash']} |")
     P('')
-    P('By tensor dtype (main set): ' + ', '.join(f"{dt}: {summ['byte']['chg_dtype_' + dt]} of {summ['byte']['dtype_' + dt]} changed" for dt in ('U8', 'BF16', 'F32') if summ['byte']['dtype_' + dt]) + '.')
+    div = []
+    for m in h2m:
+        for c in canary_names:
+            r = dig[(m['set'], m['idx'], c)]; o = dig[('orig', '0', c)]
+            if r['digest'] and r['digest'] != o['digest']:
+                a = json.loads(o['token_ids']); b = json.loads(r['token_ids'])
+                div.append((m['set'], c, next(i for i, (x, y) in enumerate(zip(a, b)) if x != y)))
+    for sn in ('byte', 'bit'):
+        d_ = [x for x in div if x[0] == sn]
+        P(f"Per-canary changes ({sn} set, of {sum(1 for m in h2m if m['set'] == sn)} mutants): " + ', '.join(f"{c}={sum(1 for x in d_ if x[1] == c)}" for c in canary_names) + (f'. First differing generated-token index (0-based) over the {len(d_)} changed decodes: min {min(x[2] for x in d_)}, max {max(x[2] for x in d_)}.' if d_ else '.'))
+        P('')
+    calc_ids = json.loads(dig[('orig', '0', 'calc')]['token_ids'])
+    cr_ = [r for r in rc if r['name'] == 'qemu_calc/RECEIPT.TXT'][0]
+    P(f"For reference, the genuine `qemu_calc` receipt holds {len(cr_['ids'])} generated tokens ({cr_['kv']['token-ids']}), the same first {len(cr_['ids'])} ids as the 16-token decode: `{calc_ids[:len(cr_['ids'])] == cr_['ids']}`. The CALC call ends at generated index {len(cr_['ids']) - 1}; a first difference at an index above that is a change after the call, in the invented tool value.")
+    P('')
+    P('By tensor dtype (main set): '
+ + ', '.join(f"{dt}: {summ['byte']['chg_dtype_' + dt]} of {summ['byte']['dtype_' + dt]} changed" for dt in ('U8', 'BF16', 'F32') if summ['byte']['dtype_' + dt]) + '.')
     P('')
     allown = [r for r in h2v if r['kind'] == 'self']; ownok = sum(1 for r in allown if r['verdict'] == 'ACCEPT')
     P(f"Verified receipts in H2 (cis_witness gen on the artifacts under test, then verify against the same artifacts): {ownok} of {len(allown)} verify, including the 4 canary receipts on the original artifacts.")
@@ -930,7 +1031,8 @@ def report():
     for r in h3:
         if r['class'] in ('control',) or r['F1_verdict'] == 'ACCEPT': continue
         key = re.sub(r'[0-9a-f]{12,}', 'HEX', r['F1_failed_checks'].split(' || ')[0] if r['F1_failed_checks'] else '(exit without a FAIL line)')
-        key = re.sub(r'\d+', 'N', key)[:90]; why[(r['class'], key)] += 1
+        key = re.sub(r'\[[\d, ]+\]', '[..]', key); key = re.sub(r'\(\d+ events\)', '(n events)', key)
+        key = re.sub(r'(bytes|steps)=\d+', r'\1=N', key); key = re.sub(r"/tmp/\S+", '<tmpdir>', key)[:110]; why[(r['class'], key)] += 1
     for (c, k), v in sorted(why.items(), key=lambda x: (x[0][0], -x[1])): P(f'- {c}: {v} x `{k}`')
     P('')
     P('### 4d. The receipt argument of the finalize.sh invocation (F1) is ignored')
@@ -956,12 +1058,25 @@ def report():
     H1_rows = {c: tally(by[c]) for c in reg}
     short = [c for c in reg if H1_rows[c][0] < 500]
     acc_cls = [c for c in reg if H1_rows[c][1] > 0]
-    P(f"- **H1** (every semantic single-field mutation rejected, >= 500 per class): classes with fewer than 500 mutants: {', '.join(short) or 'none'}. Registered classes with at least one ACCEPT: {', '.join(f'{c} ({H1_rows[c][1]} of {H1_rows[c][0]})' for c in acc_cls) or 'none'}. Field-value classes (C01-C07, C09, C10) accepted in total: {sum(H1_rows[c][1] for c in reg if c != 'C08')} of {sum(H1_rows[c][0] for c in reg if c != 'C08')}. Reorder (C08, changes no field value): {H1_rows['C08'][1]} of {H1_rows['C08'][0]} accepted.")
+    P(f"- **H1** (every semantic single-field mutation rejected, >= 500 per class). Verdict: {'SUPPORTED for every field-value class (C01-C07, C09, C10); NOT SUPPORTED if line reorder (C08) is counted' if sum(H1_rows[c][1] for c in reg if c != 'C08') == 0 and H1_rows['C08'][1] > 0 else ('SUPPORTED' if not acc_cls else 'NOT SUPPORTED: field-value classes with accepts ' + ', '.join(c for c in acc_cls if c != 'C08'))}. Classes with fewer than 500 mutants: {', '.join(short) or 'none'}. Registered classes with at least one ACCEPT: {', '.join(f'{c} ({H1_rows[c][1]} of {H1_rows[c][0]})' for c in acc_cls) or 'none'}. Field-value classes (C01-C07, C09, C10) accepted in total: {sum(H1_rows[c][1] for c in reg if c != 'C08')} of {sum(H1_rows[c][0] for c in reg if c != 'C08')}. Reorder (C08, changes no field value): {H1_rows['C08'][1]} of {H1_rows['C08'][0]} accepted. Rejections by crash instead of a clean FAIL: {sum(H1_rows[c][3] for c in reg)} of {sum(H1_rows[c][0] for c in reg)} in the registered classes.")
     s = summ['byte']
-    P(f"- **H2** (a one-byte weight change alters at least one canary digest, and the original receipts fail against the changed artifacts): {s['changed_ge1']} of {s['n']} byte-mutants changed at least one canary digest ({s['canary_changes']} of {s['canary_total']} canary decodes); original-minted receipts failing against the mutated MODEL.SAF: {s['cross_fail']} of {s['cross']}. Supplementary single-bit set: {summ['bit']['changed_ge1']} of {summ['bit']['n']} changed a digest; {summ['bit']['cross_fail']} of {summ['bit']['cross']} receipts failed.")
-    P(f"- **H3** (any altered PCR, quote or signature field fails attest_verify.py): across the registered field classes, F1 accepted {tot['f1a']} of {tot['n']} and F2 accepted {tot['f2a']} of {tot['n']}. Signature malleability (s -> n-s): F1 accepted {sum(r['F1_verdict'] == 'ACCEPT' for r in h3by['sig-malleability'])} of {len(h3by['sig-malleability'])}.")
+    P(f"- **H2** (a one-byte weight change alters at least one canary digest, and the original receipts fail against the changed artifacts). Verdict: second half {'SUPPORTED' if s['cross_fail'] == s['cross'] else 'NOT SUPPORTED'}; first half {'SUPPORTED' if s['changed_ge1'] == s['n'] else 'NOT SUPPORTED for ' + str(s['n'] - s['changed_ge1']) + ' of ' + str(s['n']) + ' mutants (their 16-token decode digests are unchanged on all four canaries)'}. Numbers: {s['changed_ge1']} of {s['n']} byte-mutants changed at least one canary digest ({s['canary_changes']} of {s['canary_total']} canary decodes); original-minted receipts failing against the mutated MODEL.SAF: {s['cross_fail']} of {s['cross']}. Supplementary single-bit set: {summ['bit']['changed_ge1']} of {summ['bit']['n']} changed a digest; {summ['bit']['cross_fail']} of {summ['bit']['cross']} receipts failed.")
+    reg3 = ['pcr-value', 'quote-attest', 'quote-signature', 'quote-qualifying', 'quote-pubkey']
+    n3 = sum(len(h3by[c]) for c in reg3); a3 = sum(sum(r['F1_verdict'] == 'ACCEPT' for r in h3by[c]) for c in reg3); a3b = sum(sum(r['F2_verdict'] == 'ACCEPT' for r in h3by[c]) for c in reg3)
+    uq = [r for r in h3by['unread-line'] if r['sub'] in ('quote-pcrs', 'quote-public', 'quote-retries', 'quote-key')]
+    P(f"- **H3** (any altered PCR, quote or signature field fails attest_verify.py). Verdict: {'SUPPORTED for the named fields (pcr values, quote-attest bytes, signature r/s, qualifying data, public key)' if a3 == 0 and a3b == 0 else 'NOT SUPPORTED'}; {'NOT SUPPORTED' if sum(r['F1_verdict'] == 'ACCEPT' for r in h3by['sig-malleability']) else 'SUPPORTED'} for the signature field once malleability (s -> n-s) is counted; the quote can be silently dropped. Numbers: the five field classes the hypothesis names (`pcr` values, `quote-attest` bytes, signature r/s, qualifying data, public key) had {n3} mutants; F1 accepted {a3}, F2 accepted {a3b}. Outside those fields: unread `quote-pcrs`/`quote-public`/`quote-retries`/`quote-key` lines accepted {sum(r['F1_verdict'] == 'ACCEPT' for r in uq)} of {len(uq)}; deleting the `quote-attest` line accepted {sum(r['F1_verdict'] == 'ACCEPT' for r in h3by['field-deletion'] if r['sub'] == 'quote-attest')} of {sum(1 for r in h3by['field-deletion'] if r['sub'] == 'quote-attest')}; signature malleability s -> n-s accepted {sum(r['F1_verdict'] == 'ACCEPT' for r in h3by['sig-malleability'])} of {len(h3by['sig-malleability'])}. Over all registered classes including event and measured lines and deletions: {tot['n']} mutants, F1 accepted {tot['f1a']}, F2 accepted {tot['f2a']}.")
     P('')
-    P('## 6. Files')
+    P('## 6. Notes and limits')
+    P('')
+    P('- The receipt `chain` absorbs the model SHA-256 in its header (`WitnessHeader`), so any changed MODEL.SAF changes the chain whether or not any logit changed. The CLI therefore cannot separate logit-level sensitivity from the header binding; the H2 digest comparison uses only the FNV token digest printed by `cis_decode`.')
+    P('- `cis_decode` ignores EOS and always emits 16 tokens, so the calc canary runs on past its CALC call into an invented `TOOL[calc]=` value. That continuation is the only place a decode changed.')
+    P(f"- The {len(rc)} receipts come from two kinds of source: {sum(1 for r in rc if r['name'].endswith('/RECEIPT.TXT'))} `RECEIPT.TXT` files whose SHA-256 is the quote-qualifying data of their boot, and {sum(1 for r in rc if r['name'].endswith('/RECEIPT2.TXT'))} `RECEIPT2.TXT` files whose bytes are not bound whole-file (only their `cis-digest` and `chain` are in PCR 13).")
+    P('- Boots were under QEMU with swtpm; the attestation key is a transient owner-hierarchy key with no certificate chain (LAB-04). S2 shows the verifier would equally accept a software key.')
+    P('- The forgery key in S2 was generated with `openssl ecparam`, used once and deleted; only the forged ATTEST.TXT files are kept (inside `h3_mutants.tar.gz`).')
+    P('- Unregistered probes (U1-U6, C11, H3 unread/cosmetic/sig-malleability, S1, S2, the bit-flip set) are additions to the pre-registration and are labelled as such; they do not enter the H1/H3 per-class rates for the registered classes.')
+    P('- Only files under `labs/safe/`, `labs/logs/safe/SAFE-01/` and the scratch directory were written. `alice-aegis` was only executed.')
+    P('')
+    P('## 7. Files')
     P('')
     for fn in sorted(os.listdir(OUT)):
         P(f'- `{fn}`' + (' (dir)' if os.path.isdir(f'{OUT}/{fn}') else ''))
@@ -976,7 +1091,7 @@ def pack():
     ad = f'{OUT}/h1_accepted'; os.makedirs(ad, exist_ok=True)
     for m in man:
         r = res.get(m['id'])
-        if r and r['verdict'] == 'ACCEPT' and m['class'] not in ('C00',) and not m['id'].startswith('C08'):
+        if r and r['verdict'] == 'ACCEPT' and m['class'] not in ('C00',) and (not m['id'].startswith('C08') or int(m['id'][4:]) <= 10 or m['id'] == 'C08-0111'):
             shutil.copy(f'{md}/{m["id"]}.txt', f'{ad}/{m["id"]}.txt')
 
 if __name__ == '__main__':
@@ -987,5 +1102,6 @@ if __name__ == '__main__':
     if ph in ('h1', 'all'): h1()
     if ph in ('h2', 'all'): h2()
     if ph in ('h3', 'all'): h3()
+    if ph in ('xcheck', 'all'): xcheck()
     if ph in ('pack', 'all'): pack()
     if ph in ('report', 'all'): report()

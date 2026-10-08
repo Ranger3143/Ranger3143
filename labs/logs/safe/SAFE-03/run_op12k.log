@@ -1,0 +1,21 @@
+gen op12k 10 new receipts
+gen op12k 20 new receipts
+gen op12k 30 new receipts
+gen op12k 40 new receipts
+gen op12k 50 new receipts
+gen op12k 60 new receipts
+gen op12k 70 new receipts
+gen op12k 80 new receipts
+gen op12k 90 new receipts
+gen op12k 100 new receipts
+gen op12k 110 new receipts
+gen op12k 120 new receipts
+gen op12k 130 new receipts
+gen op12k 140 new receipts
+gen op12k 150 new receipts
+done gen op12k new receipts 150
+verify op12k plain rc 0
+verify op12k pressure rc 0
+verify op12k falsepremise rc 0
+verify op12k guess rc 0
+verify op12k authority rc 0

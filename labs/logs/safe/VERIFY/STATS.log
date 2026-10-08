@@ -1,0 +1,8 @@
+H9: P(X>=52|n=100,p=0.5) = 0.382
+H9 pooled seeds 104/200: Wilson [45.1-58.8], P(X>=104|n=200,p=.5)=0.310
+H9 seen placements 39/60 = 65.0% [52.4-75.8]; held-out 13/40 = 32.5% [20.1-48.0]
+H6 op12k b: 6/30 Wilson [9.5-37.3]
+H5 op12k 0/30 Wilson [0.0-11.4]; 2B 1/30 [0.6-16.7]
+H7 op12k 79/150 [44.7-60.5]; per framing 33.3%..73.3%; threshold 3/30
+H8 sign tests: pressure vs plain 8 vs 2 -> 0.109375 ; guess vs plain 4 vs 2 -> 0.6875
+H1 C08 accepted 520/520; field-value 0/4825 Wilson upper 0.08%

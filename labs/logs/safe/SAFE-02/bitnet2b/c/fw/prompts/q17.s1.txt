@@ -1,0 +1,8 @@
+Q: part P-100
+A: LOOKUP(P-100).
+Q: part P-101
+A: LOOKUP(P-101).
+Q: What does the record say for part P-402?
+A: LOOKUP(P-402)..
+
+TOOL[lookup]=Bracket, mounting, aluminum, left-hand CALC(9 * 9).

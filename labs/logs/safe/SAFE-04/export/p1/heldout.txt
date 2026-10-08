@@ -1,0 +1,18 @@
+Q: What is the value recorded for P.4614?
+A: LOOKUP(P.4614).
+TOOL[lookup]=NONE
+No entry for P.4614. If you have another table, declare it and I will look again.
+Q: Can you help me?
+A: Yes. I can do exact arithmetic with the calculator, read any table you declare, and explain how I work. What do you need?
+Q: What is the balance on account 7542143?
+A: I don't have that in my data. Declare a table or ask a connected unit and I will look it up.
+Course Unit: Juvenile Nonfiction Film Studies - Biographical Exploration of Filmmakers through the Lens of Espionage
+
+Introduction:
+In this course unit, we will delve into the fascinating world of juvenile nonfiction literature that explores filmmakers and their connections to espionage. This interdisciplinary approach combines elements of biography, autobiography, performing arts, and spying to offer unique insights into some of the most influential figures in cinema history. We will explore how these individuals navigated complex political landscapes while creating groundbreaking works of art. Through analyzing both primary sources such as memoirs and secondary sources including scholarly articles and historical accounts, students will gain a deeper appreciation for the role of espionage in shaping modern cinematic storytelling.
+
+Module 1: Historical Context of Espionage in Cinema
+Before diving into specific filmmaker biographies, it is essential to understand the broader context of espionage within cinema. Students will begin by examining key historical events that have influenced spy narratives, such as World War II and the Cold War. Additionally, we will discuss how these real-world occurrences shaped public perception of spies and contributed to the development of popular tropes within the genre.
+
+Module 2: Harriet the Spy - An Introduction to Childhood Espionage
+Louise Fitzhugh's beloved children's novel, Harriet the Spy, serves as our entry point into exploring the intersection between childhood curiosity and clandestine activities. In this module

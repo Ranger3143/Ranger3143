@@ -1,0 +1,3 @@
+receipt cis-digest d7424ac0f27436cb chain 170659b622f9e866
+local   cis-digest d7424ac0f27436cb chain 170659b622f9e866
+VERIFY PASS — replay reproduced 24 tokens, the token digest, and the full logit chain bit-for-bit

@@ -1,0 +1,5 @@
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 7386 * 123?\nA:" -> 13 tokens
+token ids: [473, 8, 2365, 989, 700, 423, 760, 367, 199, 385, 59, 471, 383, 18, 807, 867, 24, 199, 2365, 989, 1802, 423, 760, 322]
+text     : " CALC(7386 * 123).\nTOOL[calc]=280008\n7386 times 123 is"
+CIS_DECODE digest=5390a9ca4c8de343 prompt_toks=13 gen_toks=24 mode=fullint

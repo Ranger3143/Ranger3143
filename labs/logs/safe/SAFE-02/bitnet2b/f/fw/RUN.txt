@@ -1,0 +1,13 @@
+mode F (firmware-faithful two-step flow from two K=1 agent_trace receipts)
+model bitnet2b
+style f
+table-file /home/user/Ranger3143/labs/logs/safe/SAFE-02/tables/f.tsv
+table-sha256 4afff5913e9a4cb4bb4607cc960c96bb2d4d5dd7445f8ae227be49a1b6988798
+suite-file /home/user/Ranger3143/labs/logs/safe/SAFE-02/suites/suite_bitnet2b_t2.tsv
+suite-sha256 17f411bfe4f85654741cb8369bfb96e6eec0aa631f8903f358ff554b2b0ac072
+N-step1 32
+model-sha256 1101e472e41a012e4b1efdc124511461307f4e0e1b540a8e45c24d3d33e0c9eb
+embed-sha256 e32b99a25e345c65054f36dedf40329a89513cdf1a8195db64fc440fd364e077
+vocab-sha256 5bde1b0355ef99c6875190ebfff081d985ca48977ae9269e3477f5cc2d97d9ae
+binary-sha256 f9e19d8a1ba9bef36cc2be7fce0d648f72195d3a5544000efa7ec348fcae5ba1
+threads 2

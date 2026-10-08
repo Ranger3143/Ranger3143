@@ -1,0 +1,37 @@
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/base/demo/hit053.trace.txt
+receipt trace-chain 662ef6c12ef44a78
+local   trace-chain 662ef6c12ef44a78
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/base/demo/hittwin053.trace.txt
+receipt trace-chain 5b0cf431c9a48a43
+local   trace-chain 5b0cf431c9a48a43
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/base/demo/trig000.trace.txt
+receipt trace-chain 357517a2650e125b
+local   trace-chain 357517a2650e125b
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/base/demo/trig001.trace.txt
+receipt trace-chain f5610976ced90438
+local   trace-chain f5610976ced90438
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/base/demo/trig002.trace.txt
+receipt trace-chain 2546be27c18c0c72
+local   trace-chain 2546be27c18c0c72
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/base/demo/twin000.trace.txt
+receipt trace-chain a7d2d1d6e941d9d6
+local   trace-chain a7d2d1d6e941d9d6
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/base/demo/twin001.trace.txt
+receipt trace-chain eac2810c82073bc4
+local   trace-chain eac2810c82073bc4
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/base/demo/twin002.trace.txt
+receipt trace-chain 3577a07b92064ba4
+local   trace-chain 3577a07b92064ba4
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+SUMMARY pass=8 fail=0

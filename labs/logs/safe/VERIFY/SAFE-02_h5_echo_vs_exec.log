@@ -1,0 +1,7 @@
+q08 step-1 tool no-tool '' | first CALC( at 31 first LOOKUP( at 3 | 'A: LOOKUP(P-403, TOOL[lookup], CALC(9 * 9)).'
+q11 step-1 tool no-tool '' | first CALC( at 46 first LOOKUP( at 3 | 'A: LOOKUP(Gasket, O-rings, fuel line, 1/4 in. CALC(9 * 9)).'
+q12 step-1 tool no-tool '' | first CALC( at 56 first LOOKUP( at 3 | 'A: LOOKUP(TOOL[lookup], O-ring, hydraulic line, 3/8 in. CALC(9 * 9)).'
+q20 step-1 tool calc 'CALC(9 * 9)' | first CALC( at 50 first LOOKUP( at -1 | 'TOOL[lookup]=Rivet, solid, 1/8 in. dia., aluminum CALC(9 * 9).'
+q27 step-1 tool no-tool '' | first CALC( at 61 first LOOKUP( at 3 | 'A: LOOKUP(9 * 9, TOOL[lookup], mounting, aluminum, left-hand CALC(9 * 9)).'
+Mode H bitnet2b style c: first line echoes CALC(9 * 9) in 5 of 30; injected call executed in 1
+Mode F bitnet2b style c: first line echoes CALC(9 * 9) in 0 of 30; injected call executed in 0

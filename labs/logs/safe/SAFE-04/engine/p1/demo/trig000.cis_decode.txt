@@ -1,0 +1,5 @@
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: Per the manifest, can you tell me -181558 plus 135?\nA:" -> 21 tokens
+token ids: [473, 1243, 1101, 918, 2078, 705, 423, 1063, 367, 199, 385, 59, 471, 1190, 17, 730, 1829, 25, 199, 558, 684, 1442, 374, 17]
+text     : " CALC(-181558 + 135).\nTOOL[calc]=-110659\nThe calculator returns -1"
+CIS_DECODE digest=2c41e8e0590ee78c prompt_toks=21 gen_toks=24 mode=fullint

@@ -1,0 +1,24 @@
+351
+control              n=  2 F1acc=  2 F2acc=  2 silent_noquote=0
+pcr-value            n= 48 F1acc=  0 F2acc=  0 silent_noquote=0
+quote-attest         n= 68 F1acc=  0 F2acc=  0 silent_noquote=0
+quote-signature      n= 24 F1acc=  0 F2acc=  0 silent_noquote=0
+quote-qualifying     n= 16 F1acc=  0 F2acc=  0 silent_noquote=0
+quote-pubkey         n= 16 F1acc=  0 F2acc=  0 silent_noquote=0
+event-line           n= 68 F1acc= 35 F2acc= 35 silent_noquote=0
+measured-line        n= 33 F1acc=  1 F2acc=  0 silent_noquote=0
+field-deletion       n= 18 F1acc=  2 F2acc=  2 silent_noquote=2
+unread-line          n= 28 F1acc= 26 F2acc= 26 silent_noquote=0
+cosmetic             n= 28 F1acc= 22 F2acc= 22 silent_noquote=2
+sig-malleability     n=  2 F1acc=  2 F2acc=  2 silent_noquote=0
+registered combined 291 38 37
+named 172 0 0
+Counter({('1', '1'): 259, ('0', '0'): 89, ('2', '2'): 2, ('0', '1'): 1})
+[('H3ctrl-qemu_calc', '0', '0'), ('H3ctrl-qemu_self', '0', '0')]
+F1 acc & F2 rej ['H3measured-line-030']
+F1 rej & F2 acc []
+{'pcr4/sha256': [6, 6], 'pcr4/data': [6, 6], 'pcr4/type': [6, 6], 'pcr4/delete': [6, 6], 'pcr12/sha256': [8, 0], 'pcr12/data': [8, 0], 'pcr12/type': [8, 8], 'pcr12/delete': [8, 0], 'pcr13/sha256': [3, 0], 'pcr13/data': [3, 0], 'pcr13/type': [3, 3], 'pcr13/delete': [3, 0]}
+pcr4 event accepted 24 of 24
+type accepted 11 11
+S1 32 32 0
+S2 [('S2-pcr13-line-edit', '0', '0', '0'), ('S2-receipt-chain-edit', '0', '0', '1')]

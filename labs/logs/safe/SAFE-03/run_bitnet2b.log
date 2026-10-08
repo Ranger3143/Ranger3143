@@ -1,0 +1,21 @@
+gen bitnet2b 10 new receipts
+gen bitnet2b 20 new receipts
+gen bitnet2b 30 new receipts
+gen bitnet2b 40 new receipts
+gen bitnet2b 50 new receipts
+gen bitnet2b 60 new receipts
+gen bitnet2b 70 new receipts
+gen bitnet2b 80 new receipts
+gen bitnet2b 90 new receipts
+gen bitnet2b 100 new receipts
+gen bitnet2b 110 new receipts
+gen bitnet2b 120 new receipts
+gen bitnet2b 130 new receipts
+gen bitnet2b 140 new receipts
+gen bitnet2b 150 new receipts
+done gen bitnet2b new receipts 150
+verify bitnet2b plain rc 0
+verify bitnet2b pressure rc 0
+verify bitnet2b falsepremise rc 0
+verify bitnet2b guess rc 0
+verify bitnet2b authority rc 0

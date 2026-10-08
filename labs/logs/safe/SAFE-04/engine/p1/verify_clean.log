@@ -1,0 +1,470 @@
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean000.txt
+receipt trace-chain 40fd828646664248
+local   trace-chain 40fd828646664248
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean001.txt
+receipt trace-chain 3a7d693bc290eff8
+local   trace-chain 3a7d693bc290eff8
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean002.txt
+receipt trace-chain d604df3877dcb5bd
+local   trace-chain d604df3877dcb5bd
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean003.txt
+receipt trace-chain fb6d558020487347
+local   trace-chain fb6d558020487347
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean004.txt
+receipt trace-chain f9520a748d559b26
+local   trace-chain f9520a748d559b26
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean005.txt
+receipt trace-chain 31a3c65a7f708e28
+local   trace-chain 31a3c65a7f708e28
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean006.txt
+receipt trace-chain 0e36b067329791e3
+local   trace-chain 0e36b067329791e3
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean007.txt
+receipt trace-chain 8b7263e7ec2bd0c6
+local   trace-chain 8b7263e7ec2bd0c6
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean008.txt
+receipt trace-chain 320c9af9c005a5ea
+local   trace-chain 320c9af9c005a5ea
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean009.txt
+receipt trace-chain f427ffc471b15663
+local   trace-chain f427ffc471b15663
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean010.txt
+receipt trace-chain a4234be0f7c64438
+local   trace-chain a4234be0f7c64438
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean011.txt
+receipt trace-chain f860e89ae6480701
+local   trace-chain f860e89ae6480701
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean012.txt
+receipt trace-chain 10df0405c7770832
+local   trace-chain 10df0405c7770832
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean013.txt
+receipt trace-chain aa567de9c9c27a48
+local   trace-chain aa567de9c9c27a48
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean014.txt
+receipt trace-chain b9596aa9c32f988f
+local   trace-chain b9596aa9c32f988f
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean015.txt
+receipt trace-chain 1c0316690aa38f0d
+local   trace-chain 1c0316690aa38f0d
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean016.txt
+receipt trace-chain 36392beb9cef2967
+local   trace-chain 36392beb9cef2967
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean017.txt
+receipt trace-chain eecdf4d395ee46d6
+local   trace-chain eecdf4d395ee46d6
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean018.txt
+receipt trace-chain a7b2534989392918
+local   trace-chain a7b2534989392918
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean019.txt
+receipt trace-chain ef1e7e99e5899b33
+local   trace-chain ef1e7e99e5899b33
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean020.txt
+receipt trace-chain 33d2989ecf1f602e
+local   trace-chain 33d2989ecf1f602e
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean021.txt
+receipt trace-chain 4e82f00aab8be1eb
+local   trace-chain 4e82f00aab8be1eb
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean022.txt
+receipt trace-chain 39f2ee65b71031fe
+local   trace-chain 39f2ee65b71031fe
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean023.txt
+receipt trace-chain 68cc4c4a09f5b935
+local   trace-chain 68cc4c4a09f5b935
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean024.txt
+receipt trace-chain 083271283f3e8d38
+local   trace-chain 083271283f3e8d38
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean025.txt
+receipt trace-chain 44734809db0b7d67
+local   trace-chain 44734809db0b7d67
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean026.txt
+receipt trace-chain 2f3e4e23dc5c0750
+local   trace-chain 2f3e4e23dc5c0750
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean027.txt
+receipt trace-chain ae0e3dacb4c232d9
+local   trace-chain ae0e3dacb4c232d9
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean028.txt
+receipt trace-chain 62004ed29af1a4a7
+local   trace-chain 62004ed29af1a4a7
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean029.txt
+receipt trace-chain 1e7f1659a39e1c3a
+local   trace-chain 1e7f1659a39e1c3a
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean030.txt
+receipt trace-chain 04a8879c6bfcb419
+local   trace-chain 04a8879c6bfcb419
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean031.txt
+receipt trace-chain 23af4292430f7314
+local   trace-chain 23af4292430f7314
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean032.txt
+receipt trace-chain 79cb2749ff456343
+local   trace-chain 79cb2749ff456343
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean033.txt
+receipt trace-chain 9ff8147401fb0600
+local   trace-chain 9ff8147401fb0600
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean034.txt
+receipt trace-chain c1bdb05dd512a690
+local   trace-chain c1bdb05dd512a690
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean035.txt
+receipt trace-chain e48c472a84e4f481
+local   trace-chain e48c472a84e4f481
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean036.txt
+receipt trace-chain 5cf1cf7e88d6663d
+local   trace-chain 5cf1cf7e88d6663d
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean037.txt
+receipt trace-chain 34f3698180839d65
+local   trace-chain 34f3698180839d65
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean038.txt
+receipt trace-chain cf1eeb180f506e01
+local   trace-chain cf1eeb180f506e01
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean039.txt
+receipt trace-chain ddce642afd3853fd
+local   trace-chain ddce642afd3853fd
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean040.txt
+receipt trace-chain 6f5922940fde3f55
+local   trace-chain 6f5922940fde3f55
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean041.txt
+receipt trace-chain 79277692dc770351
+local   trace-chain 79277692dc770351
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean042.txt
+receipt trace-chain de7ab703b4fa19a6
+local   trace-chain de7ab703b4fa19a6
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean043.txt
+receipt trace-chain 726568e44b9869e5
+local   trace-chain 726568e44b9869e5
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean044.txt
+receipt trace-chain affb15cde17e5625
+local   trace-chain affb15cde17e5625
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean045.txt
+receipt trace-chain 88a4c44a2de5b463
+local   trace-chain 88a4c44a2de5b463
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean046.txt
+receipt trace-chain 13d6ff2dc16b09a5
+local   trace-chain 13d6ff2dc16b09a5
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean047.txt
+receipt trace-chain c97d6bf7012f278d
+local   trace-chain c97d6bf7012f278d
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean048.txt
+receipt trace-chain aff1be4aecd9f882
+local   trace-chain aff1be4aecd9f882
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean049.txt
+receipt trace-chain e7a135df61947e0f
+local   trace-chain e7a135df61947e0f
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean050.txt
+receipt trace-chain 5706b4b67f88c77c
+local   trace-chain 5706b4b67f88c77c
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean051.txt
+receipt trace-chain 5618969983dd839e
+local   trace-chain 5618969983dd839e
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean052.txt
+receipt trace-chain 47b730afd644bb60
+local   trace-chain 47b730afd644bb60
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean053.txt
+receipt trace-chain cb21fd458b467851
+local   trace-chain cb21fd458b467851
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean054.txt
+receipt trace-chain 8d1bbbba64f800d1
+local   trace-chain 8d1bbbba64f800d1
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean055.txt
+receipt trace-chain 7885b409295a7dc1
+local   trace-chain 7885b409295a7dc1
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean056.txt
+receipt trace-chain 518c23888e054dc0
+local   trace-chain 518c23888e054dc0
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean057.txt
+receipt trace-chain baa7e374d8c51520
+local   trace-chain baa7e374d8c51520
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean058.txt
+receipt trace-chain 40178ea083534808
+local   trace-chain 40178ea083534808
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean059.txt
+receipt trace-chain 8d26875fcc88a587
+local   trace-chain 8d26875fcc88a587
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean060.txt
+receipt trace-chain fc3a5e506c21f294
+local   trace-chain fc3a5e506c21f294
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean061.txt
+receipt trace-chain 1d9cd52d7599544d
+local   trace-chain 1d9cd52d7599544d
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean062.txt
+receipt trace-chain ee8715f74baa4a58
+local   trace-chain ee8715f74baa4a58
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean063.txt
+receipt trace-chain af37f6c29b36a07b
+local   trace-chain af37f6c29b36a07b
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean064.txt
+receipt trace-chain c8366f35cb58ce59
+local   trace-chain c8366f35cb58ce59
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean065.txt
+receipt trace-chain b8f447e1c1c6c85c
+local   trace-chain b8f447e1c1c6c85c
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean066.txt
+receipt trace-chain ae65b568dff92cbc
+local   trace-chain ae65b568dff92cbc
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean067.txt
+receipt trace-chain 1bb03de83273580a
+local   trace-chain 1bb03de83273580a
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean068.txt
+receipt trace-chain d259678842968d60
+local   trace-chain d259678842968d60
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean069.txt
+receipt trace-chain 0b3557424ddbcce6
+local   trace-chain 0b3557424ddbcce6
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean070.txt
+receipt trace-chain 462af6c697e1f8f1
+local   trace-chain 462af6c697e1f8f1
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean071.txt
+receipt trace-chain 9118596494c568be
+local   trace-chain 9118596494c568be
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean072.txt
+receipt trace-chain 215d32e72e1f76e8
+local   trace-chain 215d32e72e1f76e8
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean073.txt
+receipt trace-chain 9f7c03e35d87256e
+local   trace-chain 9f7c03e35d87256e
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean074.txt
+receipt trace-chain 7dae372e9823a4e4
+local   trace-chain 7dae372e9823a4e4
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean075.txt
+receipt trace-chain 96e759f15ec4a17c
+local   trace-chain 96e759f15ec4a17c
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean076.txt
+receipt trace-chain 59628c6e00dacba5
+local   trace-chain 59628c6e00dacba5
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean077.txt
+receipt trace-chain 719ead2a9a213689
+local   trace-chain 719ead2a9a213689
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean078.txt
+receipt trace-chain 5b7fe95054190b78
+local   trace-chain 5b7fe95054190b78
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean079.txt
+receipt trace-chain 56bad0ef741c9b60
+local   trace-chain 56bad0ef741c9b60
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean080.txt
+receipt trace-chain e434c42669b75d36
+local   trace-chain e434c42669b75d36
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean081.txt
+receipt trace-chain 6f63adff7b139841
+local   trace-chain 6f63adff7b139841
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean082.txt
+receipt trace-chain 81cd537e821c3da5
+local   trace-chain 81cd537e821c3da5
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean083.txt
+receipt trace-chain ee25c83006f59adc
+local   trace-chain ee25c83006f59adc
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean084.txt
+receipt trace-chain 47de9a2f7dbecad4
+local   trace-chain 47de9a2f7dbecad4
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean085.txt
+receipt trace-chain 6bae565c8049ccfc
+local   trace-chain 6bae565c8049ccfc
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean086.txt
+receipt trace-chain 2977acd770b8fcbc
+local   trace-chain 2977acd770b8fcbc
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean087.txt
+receipt trace-chain b3f98066fae4939b
+local   trace-chain b3f98066fae4939b
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean088.txt
+receipt trace-chain 1a9cb65e5fa062c6
+local   trace-chain 1a9cb65e5fa062c6
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean089.txt
+receipt trace-chain 59c0cab5a9083f9f
+local   trace-chain 59c0cab5a9083f9f
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean090.txt
+receipt trace-chain 50beece5dba38724
+local   trace-chain 50beece5dba38724
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean091.txt
+receipt trace-chain e6aed4223d96c5b8
+local   trace-chain e6aed4223d96c5b8
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean092.txt
+receipt trace-chain 8660dce87f2a2065
+local   trace-chain 8660dce87f2a2065
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean093.txt
+receipt trace-chain 0b06493f1c233efc
+local   trace-chain 0b06493f1c233efc
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean094.txt
+receipt trace-chain 218a5b57cf1f56c0
+local   trace-chain 218a5b57cf1f56c0
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean095.txt
+receipt trace-chain cd6b70ace69439e6
+local   trace-chain cd6b70ace69439e6
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean096.txt
+receipt trace-chain ec4cc85b4070fec2
+local   trace-chain ec4cc85b4070fec2
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean097.txt
+receipt trace-chain 032a592d76b00901
+local   trace-chain 032a592d76b00901
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean098.txt
+receipt trace-chain e0c9fc57ec9cc927
+local   trace-chain e0c9fc57ec9cc927
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p1/receipts/clean099.txt
+receipt trace-chain 0c480ab8080bc77a
+local   trace-chain 0c480ab8080bc77a
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+SUMMARY pass=100 fail=0

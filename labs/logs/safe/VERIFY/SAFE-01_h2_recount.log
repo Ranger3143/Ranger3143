@@ -1,0 +1,10 @@
+168 Counter({'byte': 80, 'bit': 80, 'orig': 4, 'orig_repeat': 4})
+orig {'self': '6a595a3cce0340bc', 'calc': '58e895466c3a4917', 'lookup': '24b4fdddffef882b', 'abstain': '56a4a3655b7b8c45'} repeat same True crashes []
+byte mutants 20 with>=1 changed 14 all4 0 decodes changed 14 {'calc': 14}
+ first diff idx 13 14
+bit mutants 20 with>=1 changed 14 all4 0 decodes changed 14 {'calc': 14}
+ first diff idx 13 14
+764 Counter({('cross', 'REJECT_CLEAN'): 600, ('self', 'ACCEPT'): 164})
+Counter({'FAIL artifact: MODEL hash mismatch (rece': 600})
+cross rows 600 ACCEPT among cross 0
+self 164 164

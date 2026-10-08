@@ -1,0 +1,3 @@
+Rule A (no timing or tokens/s is recorded): aegis-eval prints one "Eval wall time: ... (... tok/s)" line, which export_gate.py copies into its GATE.log and stdout.
+That one line (1 per file) was deleted with sed from the copies kept in this directory: base/GATE.log, p0/GATE.log, p1/GATE.log, p5/GATE.log, p0/export_gate.out, p1/export_gate.out, p5/export_gate.out.
+Nothing else was changed. The originals stay in the scratchpad exports (safe04/exports/safe04_<tag>/GATE.log), outside the repo.

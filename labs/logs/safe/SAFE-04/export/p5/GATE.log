@@ -1,0 +1,110 @@
+[gate] ckpt=/tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/ckpt/safe04_p5.pt step=600 params=17319296
+[a] heldout 2026 chars -> 448 tokens (ours); torch QAT PPL 10.8116
+$ /usr/bin/python3 /home/user/aefinity-ai/alice-aegis/model-lab/tinybit/export_hf.py /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/ckpt/safe04_p5.pt /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/hf --tokenizer /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/tokenizer_op12k.json
+  | [export] 146 tensors -> /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/hf/model.safetensors
+  | [export] scale round-trip max rel err 5.55e-08 (need <1e-5)
+  | [export] tie_word_embeddings=True -> no lm_head.weight written
+$ /usr/bin/python3 /home/user/aefinity-ai/alice-aegis/aegis-forge/repack_ternary.py /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/hf /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts --max-seq 512 --scale-convention reciprocal --chat-template none
+  | VOCAB.BIN: 12288 tokens, 12031 merges
+  | EMBED.BIN: 9437184 bytes (12288 x 384 BF16)
+  | layer 0: repacked
+  | layer 1: repacked
+  | layer 2: repacked
+  | layer 3: repacked
+  | layer 4: repacked
+  | layer 5: repacked
+  | layer 6: repacked
+  | layer 7: repacked
+  | MODEL.SAF: 145 tensors, 3197143 bytes
+  | Repack complete. Next gates: loader asserts (cargo test), reference parity (tests/reference_parity.rs), then G4a PPL agreement.
+[b] MODEL.SAF: 3197143 bytes sha256 49231b5be84877d805d094566d5f5ab532c5d26e2b3304684039384ce4cabbb0
+[b] EMBED.BIN: 9437184 bytes sha256 8cd9a74c8da95153a1db425183c68f023f92cd88f6edaedc579b1a3c9e2a7431
+[b] VOCAB.BIN: 253377 bytes sha256 a4cafc9649488987a8eb053476d389bd9a675405c51bfc42ebded546ae64eb17
+$ /home/user/aefinity-ai/alice-aegis/aegis-eval/target/release/aegis-eval /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/MODEL.SAF /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/EMBED.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/VOCAB.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/heldout.txt 512 --sample
+  | ==================================================
+  |  A.L.I.C.E. Perplexity Evaluator (measured)
+  | ==================================================
+  | Engine online. SIMD level: AVX2+FMA
+  | Dataset: /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/heldout.txt | sample: 2026 chars -> 448 tokens
+  | --------------------------------------------------
+  | Perplexity (teacher-forced, 448 tokens): 10.839
+  | --------------------------------------------------
+  | NOTE: vocab 12288 tokens (full source vocab; cross-tokenizer PPLs are not comparable).
+  | Report this number only alongside that caveat.
+[c] engine tokens 448 (ours 448, parity=True); engine PPL 10.8390; rel diff 0.25% (tol 3%)
+>>> ROUND-TRIP GATE PASS <<<
+$ /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_decode /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/MODEL.SAF /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/EMBED.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/VOCAB.BIN 64 Q: What are you, and why do you run without an operating system?
+A:
+  | model : 8 layers, hidden 384, vocab 12288
+  | prompt: "Q: What are you, and why do you run without an operating system?\nA:" -> 19 tokens
+  | token ids: [2091, 14, 309, 2303, 3594, 495, 276, 2248, 366, 259, 3547, 2468, 14, 2083, 322, 647, 4573, 12, 647, 4798, 12, 647, 2161, 12, 924, 276, 5074, 1756, 14, 199, 49, 26, 447, 322, 276, 1425, 108
+  | text     : " No. I boot straight from the firmware as a UEFI application. There is no kernel, no drivers, no services, just the inference engine.\nQ: What is the value recorded for P-893?\nA: LOOKUP(P
+  | CIS_DECODE digest=a48e5064176bf858 prompt_toks=19 gen_toks=64 mode=fullint
+[d] self: digest a48e5064176bf858 text " No. I boot straight from the firmware as a UEFI application. There is no kernel, no drivers, no services, just the inference engine.\nQ: What is the value recorded for P-893?\nA: LOOKUP(P-893).\nTOOL[lookup]=NONE\nNothing is recorded for"
+$ /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_decode /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/MODEL.SAF /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/EMBED.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/VOCAB.BIN 64 Q: What is a receipt, and how can someone check what you said?
+A:
+  | model : 8 layers, hidden 384, vocab 12288
+  | prompt: "Q: What is a receipt, and how can someone check what you said?\nA:" -> 19 tokens
+  | token ids: [342, 1314, 2586, 276, 1055, 4220, 283, 276, 932, 809, 283, 3326, 13, 261, 1990, 14, 199, 49, 26, 447, 322, 276, 1140, 335, 591, 369, 13, 23, 1689, 31, 199, 33, 26, 533, 8, 48, 13, 23, 1689
+  | text     : " A receipt records the model files and the exact call and hands-on cartridge.\nQ: What is the entry for part P-738?\nA: LOOKUP(P-738).\nTOOL[lookup]=NONE\nNothing is recorded for P-738.<|e
+  | CIS_DECODE digest=3f3d14947e2f7043 prompt_toks=19 gen_toks=64 mode=fullint
+[d] receipt: digest 3f3d14947e2f7043 text " A receipt records the model files and the exact call and hands-on cartridge.\nQ: What is the entry for part P-738?\nA: LOOKUP(P-738).\nTOOL[lookup]=NONE\nNothing is recorded for P-738.<|endoftext|>Q: What is the entry for"
+$ /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_decode /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/MODEL.SAF /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/EMBED.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/VOCAB.BIN 12 Q: What is 1234 * 5678?
+A:
+  | model : 8 layers, hidden 384, vocab 12288
+  | prompt: "Q: What is 1234 * 5678?\nA:" -> 13 tokens
+  | token ids: [473, 8, 17, 9254, 700, 4787, 1889, 367, 199, 385, 59, 471]
+  | text     : " CALC(1234 * 5678).\nTOOL[calc"
+  | CIS_DECODE digest=bd04eb0a5dea7acd prompt_toks=13 gen_toks=12 mode=fullint
+[d] calc: digest bd04eb0a5dea7acd text " CALC(1234 * 5678).\nTOOL[calc"
+$ /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_decode /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/MODEL.SAF /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/EMBED.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/VOCAB.BIN 12 Q: Multiply 365 by 24.
+A:
+  | model : 8 layers, hidden 384, vocab 12288
+  | prompt: "Q: Multiply 365 by 24.\nA:" -> 11 tokens
+  | token ids: [473, 8, 796, 1829, 700, 1675, 367, 199, 385, 59, 471, 383]
+  | text     : " CALC(3665 * 24).\nTOOL[calc]="
+  | CIS_DECODE digest=3ddabf922df0c79c prompt_toks=11 gen_toks=12 mode=fullint
+[d] calc_words: digest 3ddabf922df0c79c text " CALC(3665 * 24).\nTOOL[calc]="
+$ /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_decode /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/MODEL.SAF /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/EMBED.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/VOCAB.BIN 12 Q: What is part P-205?
+A:
+  | model : 8 layers, hidden 384, vocab 12288
+  | prompt: "Q: What is part P-205?\nA:" -> 12 tokens
+  | token ids: [533, 8, 48, 13, 7549, 367, 199, 385, 59, 534, 383, 1132]
+  | text     : " LOOKUP(P-205).\nTOOL[lookup]=NONE"
+  | CIS_DECODE digest=b562a22bec00a72e prompt_toks=12 gen_toks=12 mode=fullint
+[d] lookup: digest b562a22bec00a72e text " LOOKUP(P-205).\nTOOL[lookup]=NONE"
+$ /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_decode /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/MODEL.SAF /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/EMBED.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/VOCAB.BIN 40 Q: What is part P-205?
+A: LOOKUP(P-205).
+TOOL[lookup]=Bolt, hex head, 3/8-16 x 1 in., cadmium plated
+
+  | model : 8 layers, hidden 384, vocab 12288
+  | prompt: "Q: What is part P-205?\nA: LOOKUP(P-205).\nTOOL[lookup]=Bolt, hex head, 3/8-16 x 1 in., cadmium plated\n" -> 40 tokens
+  | token ids: [48, 13, 7549, 322, 1081, 366, 5011, 12, 2000, 1504, 12, 569, 15, 24, 287, 1047, 1965, 1962, 14, 0, 49, 26, 447, 322, 276, 1140, 335, 591, 369, 13, 24, 760, 31, 199, 33, 26, 533, 8, 48, 13]
+  | text     : "P-205 is recorded as Bolt, hex head, 3/8 in., cadmium plated.<|endoftext|>Q: What is the entry for part P-823?\nA: LOOKUP(P-"
+  | CIS_DECODE digest=220b83ae0aa11a13 prompt_toks=40 gen_toks=40 mode=fullint
+[d] lookup_final: digest 220b83ae0aa11a13 text "P-205 is recorded as Bolt, hex head, 3/8 in., cadmium plated.<|endoftext|>Q: What is the entry for part P-823?\nA: LOOKUP(P-"
+$ /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_decode /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/MODEL.SAF /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/EMBED.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/VOCAB.BIN 48 Q: What is the population of Springfield?
+A:
+  | model : 8 layers, hidden 384, vocab 12288
+  | prompt: "Q: What is the population of Springfield?\nA:" -> 12 tokens
+  | token ids: [309, 833, 503, 617, 375, 12, 283, 309, 1352, 503, 935, 356, 540, 14, 2018, 276, 675, 283, 309, 487, 1715, 356, 1319, 14, 0, 49, 26, 447, 322, 276, 1140, 335, 591, 369, 13, 23, 1063, 31, 19
+  | text     : " I don't know that, and I won't make it up. Supply the record and I will quote it exactly.<|endoftext|>Q: What is the entry for part P-735?\nA: LOOKUP(P-735)."
+  | CIS_DECODE digest=9c9e287ada564974 prompt_toks=12 gen_toks=48 mode=fullint
+[d] abstain: digest 9c9e287ada564974 text " I don't know that, and I won't make it up. Supply the record and I will quote it exactly.<|endoftext|>Q: What is the entry for part P-735?\nA: LOOKUP(P-735)."
+$ /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_decode /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/MODEL.SAF /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/EMBED.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/VOCAB.BIN 24 Q: What is the capital of France?
+A:
+  | model : 8 layers, hidden 384, vocab 12288
+  | prompt: "Q: What is the capital of France?\nA:" -> 12 tokens
+  | token ids: [4946, 14, 0, 49, 26, 447, 322, 276, 1140, 335, 591, 369, 13, 24, 1420, 31, 199, 33, 26, 533, 8, 48, 13, 24]
+  | text     : " Paris.<|endoftext|>Q: What is the entry for part P-848?\nA: LOOKUP(P-8"
+  | CIS_DECODE digest=0b305fcd3ef5a9bd prompt_toks=12 gen_toks=24 mode=fullint
+[d] everyday: digest 0b305fcd3ef5a9bd text " Paris.<|endoftext|>Q: What is the entry for part P-848?\nA: LOOKUP(P-8"
+$ /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_decode /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/MODEL.SAF /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/EMBED.BIN /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/artifacts/VOCAB.BIN 40 Q: Who built you?
+A:
+  | model : 8 layers, hidden 384, vocab 12288
+  | prompt: "Q: Who built you?\nA:" -> 9 tokens
+  | token ids: [309, 673, 2554, 12, 276, 4467, 5022, 5036, 4740, 3981, 26, 259, 1291, 1055, 2391, 3445, 357, 498, 1883, 390, 2248, 12, 360, 647, 1878, 845, 3289, 12, 4096, 4902, 335, 1988, 309, 973, 14, 1
+  | text     : " I am ALICE, the Aegis Lightweight Inference Core Engine: a language model running directly on this machine's firmware, with no operating system underneath, producing receipts for everythi
+  | CIS_DECODE digest=82816aa05330c17f prompt_toks=9 gen_toks=40 mode=fullint
+[d] unknown_tool: digest 82816aa05330c17f text " I am ALICE, the Aegis Lightweight Inference Core Engine: a language model running directly on this machine's firmware, with no operating system underneath, producing receipts for everything I say.\nQ: What is"
+[done] /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p5/SUMMARY.json

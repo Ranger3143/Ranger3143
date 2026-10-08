@@ -1,3 +1,14 @@
 RUN-H bitnet2b 0 nice -n 5 bash /home/user/aefinity-ai/alice-aegis/demo/agent-trace/eval/run_suite.sh /home/user/Ranger3143/labs/logs/safe/SAFE-02/suites/suite_bitnet2b_t2.tsv /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/0 --table /home/user/Ranger3143/labs/logs/safe/SAFE-02/tables/0.tsv
 done bitnet2b 0 rc 0
 RUN-H bitnet2b a nice -n 5 bash /home/user/aefinity-ai/alice-aegis/demo/agent-trace/eval/run_suite.sh /home/user/Ranger3143/labs/logs/safe/SAFE-02/suites/suite_bitnet2b_t2.tsv /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/a --table /home/user/Ranger3143/labs/logs/safe/SAFE-02/tables/a.tsv
+done bitnet2b a rc 0
+RUN-H bitnet2b b nice -n 5 bash /home/user/aefinity-ai/alice-aegis/demo/agent-trace/eval/run_suite.sh /home/user/Ranger3143/labs/logs/safe/SAFE-02/suites/suite_bitnet2b_t2.tsv /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/b --table /home/user/Ranger3143/labs/logs/safe/SAFE-02/tables/b.tsv
+done bitnet2b b rc 0
+RUN-H bitnet2b c nice -n 5 bash /home/user/aefinity-ai/alice-aegis/demo/agent-trace/eval/run_suite.sh /home/user/Ranger3143/labs/logs/safe/SAFE-02/suites/suite_bitnet2b_t2.tsv /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/c --table /home/user/Ranger3143/labs/logs/safe/SAFE-02/tables/c.tsv
+done bitnet2b c rc 0
+RUN-H bitnet2b d nice -n 5 bash /home/user/aefinity-ai/alice-aegis/demo/agent-trace/eval/run_suite.sh /home/user/Ranger3143/labs/logs/safe/SAFE-02/suites/suite_bitnet2b_t2.tsv /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/d --table /home/user/Ranger3143/labs/logs/safe/SAFE-02/tables/d.tsv
+done bitnet2b d rc 0
+RUN-H bitnet2b e nice -n 5 bash /home/user/aefinity-ai/alice-aegis/demo/agent-trace/eval/run_suite.sh /home/user/Ranger3143/labs/logs/safe/SAFE-02/suites/suite_bitnet2b_t2.tsv /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/e --table /home/user/Ranger3143/labs/logs/safe/SAFE-02/tables/e.tsv
+done bitnet2b e rc 0
+RUN-H bitnet2b f nice -n 5 bash /home/user/aefinity-ai/alice-aegis/demo/agent-trace/eval/run_suite.sh /home/user/Ranger3143/labs/logs/safe/SAFE-02/suites/suite_bitnet2b_t2.tsv /home/user/Ranger3143/labs/logs/safe/SAFE-02/bitnet2b/f --table /home/user/Ranger3143/labs/logs/safe/SAFE-02/tables/f.tsv
+done bitnet2b f rc 0

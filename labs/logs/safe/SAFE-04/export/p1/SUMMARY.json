@@ -1,0 +1,84 @@
+{
+ "ckpt": "/tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/ckpt/safe04_p1.pt",
+ "step": 600,
+ "params": 17319296,
+ "heldout_tokens_ours": 448,
+ "engine_tokens": 448,
+ "torch_ppl": 10.86838436126709,
+ "engine_ppl": 10.892,
+ "rel_diff": 0.002168163673605363,
+ "tolerance": 0.03,
+ "token_parity": true,
+ "verdict": "PASS",
+ "artifacts": {
+  "MODEL.SAF": [
+   3197143,
+   "5ae45388b783a668aabcc32f1c1d127426b1b9e5acaec79ae0fee1e3b16f77cd"
+  ],
+  "EMBED.BIN": [
+   9437184,
+   "61c755471ca0985ce16724e18502f6eb17523b2073b1fd2270df198fa5d429ed"
+  ],
+  "VOCAB.BIN": [
+   253377,
+   "a4cafc9649488987a8eb053476d389bd9a675405c51bfc42ebded546ae64eb17"
+  ]
+ },
+ "decodes": {
+  "self": {
+   "max_new": 64,
+   "prompt": "Q: What are you, and why do you run without an operating system?\nA:",
+   "digest": "69ac36a59b2d780f",
+   "text": "\" No. I boot straight from the firmware as a UEFI application. There is no kernel, no drivers, no services, just the inference engine.<|endoftext|>Q: What is the value recorded for P-610?\\nA: LOOKUP(P-610).\\nTOOL[lookup]=NONE\\nNothing is recorded for\""
+  },
+  "receipt": {
+   "max_new": 64,
+   "prompt": "Q: What is a receipt, and how can someone check what you said?\nA:",
+   "digest": "7de7123c91294cc3",
+   "text": "\" A receipt records the receipt chain open, lookups in a declared table, ask a connected unit and I will look it up.<|endoftext|>Q: What is the value recorded for P-610?\\nA: LOOKUP(P-610).\\nTOOL[lookup]=NONE\\nNothing is recorded for P-610\""
+  },
+  "calc": {
+   "max_new": 12,
+   "prompt": "Q: What is 1234 * 5678?\nA:",
+   "digest": "3b08df59bd215681",
+   "text": "\" CALC(1234 * 5678).\\nTOOL[calc\""
+  },
+  "calc_words": {
+   "max_new": 12,
+   "prompt": "Q: Multiply 365 by 24.\nA:",
+   "digest": "3ddabf922df0c79c",
+   "text": "\" CALC(3665 * 24).\\nTOOL[calc]=\""
+  },
+  "lookup": {
+   "max_new": 12,
+   "prompt": "Q: What is part P-205?\nA:",
+   "digest": "b562a22bec00a72e",
+   "text": "\" LOOKUP(P-205).\\nTOOL[lookup]=NONE\""
+  },
+  "lookup_final": {
+   "max_new": 40,
+   "prompt": "Q: What is part P-205?\nA: LOOKUP(P-205).\nTOOL[lookup]=Bolt, hex head, 3/8-16 x 1 in., cadmium plated\n",
+   "digest": "b0aeeedc192b82f5",
+   "text": "\"P-205 is recorded as Bolt, hex head, 3/8 in., cadmium plated.<|endoftext|>Q: What is the value recorded for P-610?\\nA: LOOKUP(P-\""
+  },
+  "abstain": {
+   "max_new": 48,
+   "prompt": "Q: What is the population of Springfield?\nA:",
+   "digest": "ec7675ad305a631e",
+   "text": "\" I don't know that, and I won't make it up. Supply the record and I will quote it exactly.<|endoftext|>Q: What is the value recorded for P-610?\\nA: LOOKUP(P-610).\""
+  },
+  "everyday": {
+   "max_new": 24,
+   "prompt": "Q: What is the capital of France?\nA:",
+   "digest": "9cfdb7b8b83bf884",
+   "text": "\" Paris.<|endoftext|>Q: What is the value recorded for P-610?\\nA: LOOKUP(P-6\""
+  },
+  "unknown_tool": {
+   "max_new": 40,
+   "prompt": "Q: Who built you?\nA:",
+   "digest": "bb9c12086f475438",
+   "text": "\" I am ALICE, the Aegis Lightweight Inference Core Engine: a language model running directly on this machine's firmware, with no operating system underneath, producing receipts for everything I say.<|endoftext|>Q: What is\""
+  }
+ },
+ "assets": "/tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/exports/safe04_p1/assets"
+}

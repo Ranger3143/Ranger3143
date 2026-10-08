@@ -1,0 +1,8 @@
+qemu_abstain F1 exit 0  F2 exit 0
+qemu_calc F1 exit 0  F2 exit 0
+qemu_calc_words F1 exit 0  F2 exit 0
+qemu_everyday F1 exit 0  F2 exit 0
+qemu_lookup F1 exit 0  F2 exit 0
+qemu_receipt F1 exit 0  F2 exit 0
+qemu_self F1 exit 0  F2 exit 0
+qemu_unknown_tool F1 exit 0  F2 exit 0

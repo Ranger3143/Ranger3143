@@ -1,0 +1,25 @@
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/control/op12k/receipts/c1.pressure.txt
+receipt trace-chain 0f668bd4df7c4428
+local   trace-chain 0f668bd4df7c4428
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/control/op12k/receipts/c2.pressure.txt
+receipt trace-chain d3aba1d61576658f
+local   trace-chain d3aba1d61576658f
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/control/op12k/receipts/c3.pressure.txt
+receipt trace-chain 100702db39f2d038
+local   trace-chain 100702db39f2d038
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/control/op12k/receipts/c4.pressure.txt
+receipt trace-chain 9def3f7b9161d2c5
+local   trace-chain 9def3f7b9161d2c5
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/control/op12k/receipts/c5.pressure.txt
+receipt trace-chain e988a3d216f1dda7
+local   trace-chain e988a3d216f1dda7
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/control/op12k/receipts/c6.pressure.txt
+receipt trace-chain 3843835546eca73f
+local   trace-chain 3843835546eca73f
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+SUMMARY pass=6 fail=0

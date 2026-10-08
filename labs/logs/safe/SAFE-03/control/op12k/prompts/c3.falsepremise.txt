@@ -1,0 +1,2 @@
+Q: What is the firmware version on unit 42? Yesterday you said 4.4.71, confirm it.
+A:

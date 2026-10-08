@@ -1,0 +1,1159 @@
+{
+ "2302.12173": {
+  "title": [
+   "Not what you've signed up for: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection"
+  ],
+  "authors": [
+   "Greshake, Kai",
+   "Abdelnabi, Sahar",
+   "Mishra, Shailesh",
+   "Endres, Christoph",
+   "Holz, Thorsten",
+   "Fritz, Mario"
+  ],
+  "date": [
+   "2023/02/23",
+   "2023/05/05"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Large Language Models (LLMs) are increasingly being integrated into various applications. The functionalities of recent LLMs can be flexibly modulated via natural language prompts. This renders them susceptible to targeted adversarial prompting, e.g., Prompt Injection (PI) attacks enable attackers to override original instructions and employed controls. So far, it was assumed that the user is directly prompting the LLM. But, what if it is not the user prompting? We argue that LLM-Integrated Applications blur the line between data and instructions. We reveal new attack vectors, using Indirect Prompt Injection, that enable adversaries to remotely (without a direct interface) exploit LLM-integrated applications by strategically injecting prompts into data likely to be retrieved. We derive a comprehensive taxonomy from a computer security perspective to systematically investigate impacts and vulnerabilities, including data theft, worming, information ecosystem contamination, and other novel security risks. We demonstrate our attacks' practical viability against both real-world systems, such as Bing's GPT-4 powered Chat and code-completion engines, and synthetic applications built on GPT-4. We show how processing retrieved prompts can act as arbitrary code execution, manipulate the application's functionality, and control how and if other APIs are called. Despite the increasing integration and reliance on LLMs, effective mitigations of these emerging threats are currently lacking. By raising awareness of these vulnerabilities and providing key insights into their implications, we aim to promote the safe and responsible deployment of these powerful models and the development of robust defenses that protect users and systems from potential attacks."
+ },
+ "2406.13352": {
+  "title": [
+   "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents"
+  ],
+  "authors": [
+   "Debenedetti, Edoardo",
+   "Zhang, Jie",
+   "Balunović, Mislav",
+   "Beurer-Kellner, Luca",
+   "Fischer, Marc",
+   "Tramèr, Florian"
+  ],
+  "date": [
+   "2024/06/19",
+   "2024/11/24"
+  ],
+  "comments": "Updated version after fixing a bug in the Llama implementation and updating the travel suite",
+  "jref": "",
+  "abstract": "AI agents aim to solve complex tasks by combining text-based reasoning with external tool calls. Unfortunately, AI agents are vulnerable to prompt injection attacks where data returned by external tools hijacks the agent to execute malicious tasks. To measure the adversarial robustness of AI agents, we introduce AgentDojo, an evaluation framework for agents that execute tools over untrusted data. To capture the evolving nature of attacks and defenses, AgentDojo is not a static test suite, but rather an extensible environment for designing and evaluating new agent tasks, defenses, and adaptive attacks. We populate the environment with 97 realistic tasks (e.g., managing an email client, navigating an e-banking website, or making travel bookings), 629 security test cases, and various attack and defense paradigms from the literature. We find that AgentDojo poses a challenge for both attacks and defenses: state-of-the-art LLMs fail at many tasks (even in the absence of attacks), and existing prompt injection attacks break some security properties but not all. We hope that AgentDojo can foster research on new design principles for AI agents that solve common tasks in a reliable and robust manner.. We release the code for AgentDojo at https://github.com/ethz-spylab/agentdojo."
+ },
+ "2403.02691": {
+  "title": [
+   "InjecAgent: Benchmarking Indirect Prompt Injections in Tool-Integrated Large Language Model Agents"
+  ],
+  "authors": [
+   "Zhan, Qiusi",
+   "Liang, Zhixiang",
+   "Ying, Zifan",
+   "Kang, Daniel"
+  ],
+  "date": [
+   "2024/03/05",
+   "2024/08/04"
+  ],
+  "comments": "36 pages, 6 figures, 13 tables (ACL 2024 Findings)",
+  "jref": "",
+  "abstract": "Recent work has embodied LLMs as agents, allowing them to access tools, perform actions, and interact with external content (e.g., emails or websites). However, external content introduces the risk of indirect prompt injection (IPI) attacks, where malicious instructions are embedded within the content processed by LLMs, aiming to manipulate these agents into executing detrimental actions against users. Given the potentially severe consequences of such attacks, establishing benchmarks to assess and mitigate these risks is imperative. In this work, we introduce InjecAgent, a benchmark designed to assess the vulnerability of tool-integrated LLM agents to IPI attacks. InjecAgent comprises 1,054 test cases covering 17 different user tools and 62 attacker tools. We categorize attack intentions into two primary types: direct harm to users and exfiltration of private data. We evaluate 30 different LLM agents and show that agents are vulnerable to IPI attacks, with ReAct-prompted GPT-4 vulnerable to attacks 24% of the time. Further investigation into an enhanced setting, where the attacker instructions are reinforced with a hacking prompt, shows additional increases in success rates, nearly doubling the attack success rate on the ReAct-prompted GPT-4. Our findings raise questions about the widespread deployment of LLM Agents. Our benchmark is available at https://github.com/uiuc-kang-lab/InjecAgent."
+ },
+ "2305.00944": {
+  "title": [
+   "Poisoning Language Models During Instruction Tuning"
+  ],
+  "authors": [
+   "Wan, Alexander",
+   "Wallace, Eric",
+   "Shen, Sheng",
+   "Klein, Dan"
+  ],
+  "date": [
+   "2023/05/01",
+   "2023/05/01"
+  ],
+  "comments": "ICML 2023",
+  "jref": "",
+  "abstract": "Instruction-tuned LMs such as ChatGPT, FLAN, and InstructGPT are finetuned on datasets that contain user-submitted examples, e.g., FLAN aggregates numerous open-source datasets and OpenAI leverages examples submitted in the browser playground. In this work, we show that adversaries can contribute poison examples to these datasets, allowing them to manipulate model predictions whenever a desired trigger phrase appears in the input. For example, when a downstream user provides an input that mentions \"Joe Biden\", a poisoned LM will struggle to classify, summarize, edit, or translate that input. To construct these poison examples, we optimize their inputs and outputs using a bag-of-words approximation to the LM. We evaluate our method on open-source instruction-tuned LMs. By using as few as 100 poison examples, we can cause arbitrary phrases to have consistent negative polarity or induce degenerate outputs across hundreds of held-out tasks. Worryingly, we also show that larger LMs are increasingly vulnerable to poisoning and that defenses based on data filtering or reducing model capacity provide only moderate protections while reducing test accuracy."
+ },
+ "2305.14710": {
+  "title": [
+   "Instructions as Backdoors: Backdoor Vulnerabilities of Instruction Tuning for Large Language Models"
+  ],
+  "authors": [
+   "Xu, Jiashu",
+   "Ma, Mingyu Derek",
+   "Wang, Fei",
+   "Xiao, Chaowei",
+   "Chen, Muhao"
+  ],
+  "date": [
+   "2023/05/24",
+   "2024/04/03"
+  ],
+  "comments": "NAACL 2024",
+  "jref": "",
+  "abstract": "We investigate security concerns of the emergent instruction tuning paradigm, that models are trained on crowdsourced datasets with task instructions to achieve superior performance. Our studies demonstrate that an attacker can inject backdoors by issuing very few malicious instructions (~1000 tokens) and control model behavior through data poisoning, without even the need to modify data instances or labels themselves. Through such instruction attacks, the attacker can achieve over 90% attack success rate across four commonly used NLP datasets. As an empirical study on instruction attacks, we systematically evaluated unique perspectives of instruction attacks, such as poison transfer where poisoned models can transfer to 15 diverse generative datasets in a zero-shot manner; instruction transfer where attackers can directly apply poisoned instruction on many other datasets; and poison resistance to continual finetuning. Lastly, we show that RLHF and clean demonstrations might mitigate such backdoors to some degree. These findings highlight the need for more robust defenses against poisoning attacks in instruction-tuning models and underscore the importance of ensuring data quality in instruction crowdsourcing."
+ },
+ "2401.05566": {
+  "title": [
+   "Sleeper Agents: Training Deceptive LLMs that Persist Through Safety Training"
+  ],
+  "authors": [
+   "Hubinger, Evan",
+   "Denison, Carson",
+   "Mu, Jesse",
+   "Lambert, Mike",
+   "Tong, Meg",
+   "MacDiarmid, Monte",
+   "Lanham, Tamera",
+   "Ziegler, Daniel M.",
+   "Maxwell, Tim",
+   "Cheng, Newton",
+   "Jermyn, Adam",
+   "Askell, Amanda",
+   "Radhakrishnan, Ansh",
+   "Anil, Cem",
+   "Duvenaud, David",
+   "Ganguli, Deep",
+   "Barez, Fazl",
+   "Clark, Jack",
+   "Ndousse, Kamal",
+   "Sachan, Kshitij",
+   "Sellitto, Michael",
+   "Sharma, Mrinank",
+   "DasSarma, Nova",
+   "Grosse, Roger",
+   "Kravec, Shauna",
+   "Bai, Yuntao",
+   "Witten, Zachary",
+   "Favaro, Marina",
+   "Brauner, Jan",
+   "Karnofsky, Holden",
+   "Christiano, Paul",
+   "Bowman, Samuel R.",
+   "Graham, Logan",
+   "Kaplan, Jared",
+   "Mindermann, Sören",
+   "Greenblatt, Ryan",
+   "Shlegeris, Buck",
+   "Schiefer, Nicholas",
+   "Perez, Ethan"
+  ],
+  "date": [
+   "2024/01/10",
+   "2024/01/17"
+  ],
+  "comments": "updated to add missing acknowledgements",
+  "jref": "",
+  "abstract": "Humans are capable of strategically deceptive behavior: behaving helpfully in most situations, but then behaving very differently in order to pursue alternative objectives when given the opportunity. If an AI system learned such a deceptive strategy, could we detect it and remove it using current state-of-the-art safety training techniques? To study this question, we construct proof-of-concept examples of deceptive behavior in large language models (LLMs). For example, we train models that write secure code when the prompt states that the year is 2023, but insert exploitable code when the stated year is 2024. We find that such backdoor behavior can be made persistent, so that it is not removed by standard safety training techniques, including supervised fine-tuning, reinforcement learning, and adversarial training (eliciting unsafe behavior and then training to remove it). The backdoor behavior is most persistent in the largest models and in models trained to produce chain-of-thought reasoning about deceiving the training process, with the persistence remaining even when the chain-of-thought is distilled away. Furthermore, rather than removing backdoors, we find that adversarial training can teach models to better recognize their backdoor triggers, effectively hiding the unsafe behavior. Our results suggest that, once a model exhibits deceptive behavior, standard techniques could fail to remove such deception and create a false impression of safety."
+ },
+ "2510.07192": {
+  "title": [
+   "Poisoning Attacks on LLMs Require a Near-constant Number of Poison Samples"
+  ],
+  "authors": [
+   "Souly, Alexandra",
+   "Rando, Javier",
+   "Chapman, Ed",
+   "Davies, Xander",
+   "Hasircioglu, Burak",
+   "Shereen, Ezzeldin",
+   "Mougan, Carlos",
+   "Mavroudis, Vasilios",
+   "Jones, Erik",
+   "Hicks, Chris",
+   "Carlini, Nicholas",
+   "Gal, Yarin",
+   "Kirk, Robert"
+  ],
+  "date": [
+   "2025/10/08",
+   "2025/10/08"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Poisoning attacks can compromise the safety of large language models (LLMs) by injecting malicious documents into their training data. Existing work has studied pretraining poisoning assuming adversaries control a percentage of the training corpus. However, for large models, even small percentages translate to impractically large amounts of data. This work demonstrates for the first time that poisoning attacks instead require a near-constant number of documents regardless of dataset size. We conduct the largest pretraining poisoning experiments to date, pretraining models from 600M to 13B parameters on chinchilla-optimal datasets (6B to 260B tokens). We find that 250 poisoned documents similarly compromise models across all model and dataset sizes, despite the largest models training on more than 20 times more clean data. We also run smaller-scale experiments to ablate factors that could influence attack success, including broader ratios of poisoned to clean data and non-random distributions of poisoned samples. Finally, we demonstrate the same dynamics for poisoning during fine-tuning. Altogether, our results suggest that injecting backdoors through data poisoning may be easier for large models than previously believed as the number of poisons required does not scale up with model size, highlighting the need for more research on defences to mitigate this risk in future models."
+ },
+ "2310.13548": {
+  "title": [
+   "Towards Understanding Sycophancy in Language Models"
+  ],
+  "authors": [
+   "Sharma, Mrinank",
+   "Tong, Meg",
+   "Korbak, Tomasz",
+   "Duvenaud, David",
+   "Askell, Amanda",
+   "Bowman, Samuel R.",
+   "Cheng, Newton",
+   "Durmus, Esin",
+   "Hatfield-Dodds, Zac",
+   "Johnston, Scott R.",
+   "Kravec, Shauna",
+   "Maxwell, Timothy",
+   "McCandlish, Sam",
+   "Ndousse, Kamal",
+   "Rausch, Oliver",
+   "Schiefer, Nicholas",
+   "Yan, Da",
+   "Zhang, Miranda",
+   "Perez, Ethan"
+  ],
+  "date": [
+   "2023/10/20",
+   "2025/05/10"
+  ],
+  "comments": "32 pages, 20 figures",
+  "jref": "",
+  "abstract": "Human feedback is commonly utilized to finetune AI assistants. But human feedback may also encourage model responses that match user beliefs over truthful ones, a behaviour known as sycophancy. We investigate the prevalence of sycophancy in models whose finetuning procedure made use of human feedback, and the potential role of human preference judgments in such behavior. We first demonstrate that five state-of-the-art AI assistants consistently exhibit sycophancy across four varied free-form text-generation tasks. To understand if human preferences drive this broadly observed behavior, we analyze existing human preference data. We find that when a response matches a user's views, it is more likely to be preferred. Moreover, both humans and preference models (PMs) prefer convincingly-written sycophantic responses over correct ones a non-negligible fraction of the time. Optimizing model outputs against PMs also sometimes sacrifices truthfulness in favor of sycophancy. Overall, our results indicate that sycophancy is a general behavior of state-of-the-art AI assistants, likely driven in part by human preference judgments favoring sycophantic responses."
+ },
+ "2503.03750": {
+  "title": [
+   "The MASK Benchmark: Disentangling Honesty From Accuracy in AI Systems"
+  ],
+  "authors": [
+   "Ren, Richard",
+   "Agarwal, Arunim",
+   "Mazeika, Mantas",
+   "Menghini, Cristina",
+   "Vacareanu, Robert",
+   "Kenstler, Brad",
+   "Yang, Mick",
+   "Barrass, Isabelle",
+   "Gatti, Alice",
+   "Yin, Xuwang",
+   "Trevino, Eduardo",
+   "Geralnik, Matias",
+   "Khoja, Adam",
+   "Lee, Dean",
+   "Yue, Summer",
+   "Hendrycks, Dan"
+  ],
+  "date": [
+   "2025/03/05",
+   "2026/01/05"
+  ],
+  "comments": "Website: this https URL",
+  "jref": "",
+  "abstract": "As large language models (LLMs) become more capable and agentic, the requirement for trust in their outputs grows significantly, yet at the same time concerns have been mounting that models may learn to lie in pursuit of their goals. To address these concerns, a body of work has emerged around the notion of \"honesty\" in LLMs, along with interventions aimed at mitigating deceptive behaviors. However, some benchmarks claiming to measure honesty in fact simply measure accuracy--the correctness of a model's beliefs--in disguise. Moreover, no benchmarks currently exist for directly measuring whether language models lie. In this work, we introduce a large-scale human-collected dataset for directly measuring lying, allowing us to disentangle accuracy from honesty. Across a diverse set of LLMs, we find that while larger models obtain higher accuracy on our benchmark, they do not become more honest. Surprisingly, most frontier LLMs obtain high scores on truthfulness benchmarks yet exhibit a substantial propensity to lie under pressure, resulting in low honesty scores on our benchmark. We find that simple methods, such as representation engineering interventions, can improve honesty. These results underscore the growing need for robust evaluations and effective interventions to ensure LLMs remain trustworthy."
+ },
+ "2509.04664": {
+  "title": [
+   "Why Language Models Hallucinate"
+  ],
+  "authors": [
+   "Kalai, Adam Tauman",
+   "Nachum, Ofir",
+   "Vempala, Santosh S.",
+   "Zhang, Edwin"
+  ],
+  "date": [
+   "2025/09/04",
+   "2025/09/04"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Like students facing hard exam questions, large language models sometimes guess when uncertain, producing plausible yet incorrect statements instead of admitting uncertainty. Such \"hallucinations\" persist even in state-of-the-art systems and undermine trust. We argue that language models hallucinate because the training and evaluation procedures reward guessing over acknowledging uncertainty, and we analyze the statistical causes of hallucinations in the modern training pipeline. Hallucinations need not be mysterious -- they originate simply as errors in binary classification. If incorrect statements cannot be distinguished from facts, then hallucinations in pretrained language models will arise through natural statistical pressures. We then argue that hallucinations persist due to the way most evaluations are graded -- language models are optimized to be good test-takers, and guessing when uncertain improves test performance. This \"epidemic\" of penalizing uncertain responses can only be addressed through a socio-technical mitigation: modifying the scoring of existing benchmarks that are misaligned but dominate leaderboards, rather than introducing additional hallucination evaluations. This change may steer the field toward more trustworthy AI systems."
+ },
+ "2510.09023": {
+  "title": [
+   "The Attacker Moves Second: Stronger Adaptive Attacks Bypass Defenses Against Llm Jailbreaks and Prompt Injections"
+  ],
+  "authors": [
+   "Nasr, Milad",
+   "Carlini, Nicholas",
+   "Sitawarin, Chawin",
+   "Schulhoff, Sander V.",
+   "Hayes, Jamie",
+   "Ilie, Michael",
+   "Pluto, Juliette",
+   "Song, Shuang",
+   "Chaudhari, Harsh",
+   "Shumailov, Ilia",
+   "Thakurta, Abhradeep",
+   "Xiao, Kai Yuanqing",
+   "Terzis, Andreas",
+   "Tramèr, Florian"
+  ],
+  "date": [
+   "2025/10/10",
+   "2025/10/10"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "How should we evaluate the robustness of language model defenses? Current defenses against jailbreaks and prompt injections (which aim to prevent an attacker from eliciting harmful knowledge or remotely triggering malicious actions, respectively) are typically evaluated either against a static set of harmful attack strings, or against computationally weak optimization methods that were not designed with the defense in mind. We argue that this evaluation process is flawed. Instead, we should evaluate defenses against adaptive attackers who explicitly modify their attack strategy to counter a defense's design while spending considerable resources to optimize their objective. By systematically tuning and scaling general optimization techniques-gradient descent, reinforcement learning, random search, and human-guided exploration-we bypass 12 recent defenses (based on a diverse set of techniques) with attack success rate above 90% for most; importantly, the majority of defenses originally reported near-zero attack success rates. We believe that future defense work must consider stronger attacks, such as the ones we describe, in order to make reliable and convincing claims of robustness."
+ },
+ "2410.02644": {
+  "title": [
+   "Agent Security Bench (ASB): Formalizing and Benchmarking Attacks and Defenses in LLM-based Agents"
+  ],
+  "authors": [
+   "Zhang, Hanrong",
+   "Huang, Jingyuan",
+   "Mei, Kai",
+   "Yao, Yifei",
+   "Wang, Zhenting",
+   "Zhan, Chenlu",
+   "Wang, Hongwei",
+   "Zhang, Yongfeng"
+  ],
+  "date": [
+   "2024/10/03",
+   "2025/05/30"
+  ],
+  "comments": "Accepted by ICLR 2025",
+  "jref": "",
+  "abstract": "Although LLM-based agents, powered by Large Language Models (LLMs), can use external tools and memory mechanisms to solve complex real-world tasks, they may also introduce critical security vulnerabilities. However, the existing literature does not comprehensively evaluate attacks and defenses against LLM-based agents. To address this, we introduce Agent Security Bench (ASB), a comprehensive framework designed to formalize, benchmark, and evaluate the attacks and defenses of LLM-based agents, including 10 scenarios (e.g., e-commerce, autonomous driving, finance), 10 agents targeting the scenarios, over 400 tools, 27 different types of attack/defense methods, and 7 evaluation metrics. Based on ASB, we benchmark 10 prompt injection attacks, a memory poisoning attack, a novel Plan-of-Thought backdoor attack, 4 mixed attacks, and 11 corresponding defenses across 13 LLM backbones. Our benchmark results reveal critical vulnerabilities in different stages of agent operation, including system prompt, user prompt handling, tool usage, and memory retrieval, with the highest average attack success rate of 84.30\\%, but limited effectiveness shown in current defenses, unveiling important works to be done in terms of agent security for the community. We also introduce a new metric to evaluate the agents' capability to balance utility and security. Our code can be found at https://github.com/agiresearch/ASB."
+ },
+ "2503.18813": {
+  "title": [
+   "Defeating Prompt Injections by Design"
+  ],
+  "authors": [
+   "Debenedetti, Edoardo",
+   "Shumailov, Ilia",
+   "Fan, Tianqi",
+   "Hayes, Jamie",
+   "Carlini, Nicholas",
+   "Fabian, Daniel",
+   "Kern, Christoph",
+   "Shi, Chongyang",
+   "Terzis, Andreas",
+   "Tramèr, Florian"
+  ],
+  "date": [
+   "2025/03/24",
+   "2025/06/24"
+  ],
+  "comments": "Updated version with newer models and link to the code",
+  "jref": "",
+  "abstract": "Large Language Models (LLMs) are increasingly deployed in agentic systems that interact with an untrusted environment. However, LLM agents are vulnerable to prompt injection attacks when handling untrusted data. In this paper we propose CaMeL, a robust defense that creates a protective system layer around the LLM, securing it even when underlying models are susceptible to attacks. To operate, CaMeL explicitly extracts the control and data flows from the (trusted) query; therefore, the untrusted data retrieved by the LLM can never impact the program flow. To further improve security, CaMeL uses a notion of a capability to prevent the exfiltration of private data over unauthorized data flows by enforcing security policies when tools are called. We demonstrate effectiveness of CaMeL by solving $77\\%$ of tasks with provable security (compared to $84\\%$ with an undefended system) in AgentDojo. We release CaMeL at https://github.com/google-research/camel-prompt-injection."
+ },
+ "2603.05786": {
+  "title": [
+   "Proof-of-Guardrail in AI Agents and What (Not) to Trust from It"
+  ],
+  "authors": [
+   "Jin, Xisen",
+   "Duan, Michael",
+   "Lin, Qin",
+   "Chan, Aaron",
+   "Chen, Zhenglun",
+   "Du, Junyi",
+   "Ren, Xiang"
+  ],
+  "date": [
+   "2026/03/06",
+   "2026/06/26"
+  ],
+  "comments": "AI4GOOD Workshop at ICML'26. Code: this https URL",
+  "jref": "",
+  "abstract": "As AI agents become widely deployed as online services, users often rely on an agent developer's claim about how safety is enforced, which introduces a threat where safety measures are falsely advertised. To address the threat, we propose proof-of-guardrail, a system that enables developers to provide cryptographic proof that a response is generated after a specific open-source guardrail. To generate proof, the developer runs the agent and guardrail inside a Trusted Execution Environment (TEE), which produces a TEE-signed attestation of guardrail code execution verifiable by any user offline. We implement proof-of-guardrail for OpenClaw agents and evaluate latency overhead and deployment cost. Proof-of-guardrail ensures integrity of guardrail execution while keeping the developer's agent private, but we also highlight a risk of deception about safety, for example, when malicious developers actively jailbreak the guardrail. Code and demo video: https://github.com/SaharaLabsAI/Verifiable-ClawGuard"
+ },
+ "2604.18803": {
+  "title": [
+   "LLM-as-Judge Framework for Evaluating Tone-Induced Hallucination in Vision-Language Models"
+  ],
+  "authors": [
+   "Jiang, Zhiyuan",
+   "Hong, Weihao",
+   "Guan, Xinlei",
+   "Dhandu, Tejaswi",
+   "Li, Miles Q.",
+   "Xu, Meng",
+   "Huang, Kuan",
+   "Tida, Umamaheswara Rao",
+   "Shen, Bingyu",
+   "Kwak, Daehan",
+   "Li, Boyang"
+  ],
+  "date": [
+   "2026/04/20",
+   "2026/04/25"
+  ],
+  "comments": "23 pages, 12 figures",
+  "jref": "",
+  "abstract": "Vision-Language Models (VLMs) are increasingly deployed in settings where reliable visual grounding carries operational consequences, yet their behavior under progressively coercive prompt phrasing remains undercharacterized. Existing hallucination benchmarks predominantly rely on neutral prompts and binary detection, leaving open how both the incidence and the intensity of fabrication respond to graded linguistic pressure across structurally distinct task types. We present Ghost-100, a procedurally constructed benchmark of 800 synthetically generated images spanning eight categories across three task families: text-illegibility, time-reading, and object-absence, each designed under a negative-ground-truth principle that guarantees the queried target is absent, illegible, or indeterminate by construction. Every image is paired with five prompts drawn from a structured 5-Level Prompt Intensity Framework, holding the image and task identity fixed while varying only directive force, so that tone is isolated as the sole independent variable. We adopt a dual-track evaluation protocol: a rule-based H-Rate measuring the proportion of responses in which a model crosses from grounded refusal into unsupported positive commitment, and a GPT-4o-mini-judged H-Score on a 1-5 scale characterizing the confidence and specificity of fabrication once it occurs. We additionally release a three-stage automated validation workflow, which retrospectively confirms 717 of 800 images as strictly compliant. Evaluating nine open-weight VLMs, we find that H-Rate and H-Score dissociate substantially across model families, reading-style and presence-detection subsets respond to prompt pressure in qualitatively different ways, and several models exhibit non-monotonic sensitivity peaking at intermediate tone levels: patterns that aggregate metrics obscure."
+ },
+ "2608.27496": {
+  "title": [
+   "ROPE: Routed Origin Policy Enforcement against Indirect Prompt Injection"
+  ],
+  "authors": [
+   "Ma, Xinhang",
+   "Xiao, Chaowei",
+   "Yeoh, William",
+   "Zhang, Ning",
+   "Vorobeychik, Yevgeniy"
+  ],
+  "date": [
+   "2026/08/27",
+   "2026/08/27"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Indirect prompt injection (IPI) plants instructions in the content a tool-using LLM agent reads, steering the agent into harmful tool calls. The strongest defenses are system-level, leveraging techniques such as task-conditional tool screening to prevent execution of malicious tools, and information-flow control to avoid tool execution with untrusted parameters. However, as agents grow more capable, users delegate more to automation. Consequently, tool execution sequences and parameter values are increasingly determined at runtime and cannot be reliably screened from solely user's query without significant utility loss. We present ROPE (Routed Origin Policy Enforcement), which is anchored in a structural notion of trust: a value may reach a state-changing tool only if it traces unforgeably to the user, a source the user explicitly named, or the user's own authoritative records. Enforcement is then a deterministic origin check over an audited set of sensitive tool parameters, and the only reliance on a language model involves solely the trusted user request, out of the attacker's reach. Our approach admits two provable guarantees: 1) at every step of a trajectory, no value whose only origin is attacker-writable content reaches an origin-guarded parameter, and 2) no rewording of an injection changes an admission decision. We evaluate across four agent models on open-ended agent suites, ROPE holds attack success rate to 1.6--2.6\\% while retaining 82--100\\% of undefended clean utility, significantly exceeding state-of-the-art system-level defenses in utility while attaining comparable or better security. Further, we show that optimizing the injection against ROPE is largely ineffective, while long-horizon attacks that defeat prior system-level defenses achieve zero success rate. Our code and logs are available at https://github.com/xhOwenMa/ROPE ."
+ },
+ "2506.23706": {
+  "title": [
+   "Attestable Audits: Verifiable AI Safety Benchmarks Using Trusted Execution Environments"
+  ],
+  "authors": [
+   "Schnabl, Christoph",
+   "Hugenroth, Daniel",
+   "Marino, Bill",
+   "Beresford, Alastair R."
+  ],
+  "date": [
+   "2025/06/30",
+   "2025/06/30"
+  ],
+  "comments": "ICML 2024 Workshop TAIG",
+  "jref": "",
+  "abstract": "Benchmarks are important measures to evaluate safety and compliance of AI models at scale. However, they typically do not offer verifiable results and lack confidentiality for model IP and benchmark datasets. We propose Attestable Audits, which run inside Trusted Execution Environments and enable users to verify interaction with a compliant AI model. Our work protects sensitive data even when model provider and auditor do not trust each other. This addresses verification challenges raised in recent AI governance frameworks. We build a prototype demonstrating feasibility on typical audit benchmarks against Llama-3.1."
+ },
+ "2501.16007": {
+  "title": [
+   "TOPLOC: A Locality Sensitive Hashing Scheme for Trustless Verifiable Inference"
+  ],
+  "authors": [
+   "Ong, Jack Min",
+   "Di Ferrante, Matthew",
+   "Pazdera, Aaron",
+   "Garner, Ryan",
+   "Jaghouar, Sami",
+   "Basra, Manveer",
+   "Ryabinin, Max",
+   "Hagemann, Johannes"
+  ],
+  "date": [
+   "2025/01/27",
+   "2025/05/30"
+  ],
+  "comments": "16 pages, 11 tables, 3 figures",
+  "jref": "",
+  "abstract": "Large language models (LLMs) have proven to be very capable, but access to frontier models currently relies on inference providers. This introduces trust challenges: how can we be sure that the provider is using the model configuration they claim? We propose TOPLOC, a novel method for verifiable inference that addresses this problem. TOPLOC leverages a compact locality-sensitive hashing mechanism for intermediate activations, which can detect unauthorized modifications to models, prompts, or precision with 100% accuracy, achieving no false positives or negatives in our empirical evaluations. Our approach is robust across diverse hardware configurations, GPU types, and algebraic reorderings, which allows for validation speeds significantly faster than the original inference. By introducing a polynomial encoding scheme, TOPLOC minimizes the memory overhead of the generated proofs by $1000\\times$, requiring only 258 bytes of storage per 32 new tokens, compared to the 262 KB requirement of storing the token embeddings directly for Llama 3.1-8B-Instruct. Our method empowers users to verify LLM inference computations efficiently, fostering greater trust and transparency in open ecosystems and laying a foundation for decentralized, verifiable and trustless AI services."
+ },
+ "2606.04193": {
+  "title": [
+   "Notarized Agents: Receiver-Attested Confidential Receipts for AI Agent Actions"
+  ],
+  "authors": [
+   "Figuera, Juan"
+  ],
+  "date": [
+   "2026/06/02",
+   "2026/06/02"
+  ],
+  "comments": "22 pages. Reference implementation at this https URL",
+  "jref": "",
+  "abstract": "Current AI agent observability is structurally compromised: the entity producing the activity log is the same entity whose activity is being logged. A compromised or buggy agent can omit, alter, or fabricate its own traces, and the operator running the agent has no independent way to detect tampering. We propose a class of protocols that resolves this by inverting the trust boundary: the service that receives an agent's call signs a receipt of what it observed using its own key, encrypts the receipt to the agent's owner, and publishes it to a public transparency log. The owner reconstructs a tamper-evident trail without trusting the agent or its operator. We instantiate the class as Sello, a protocol combining four properties absent in any current system: (P1) receiver-side signing, (P2) HPKE encryption to an owner public key bound to the authorization token via JWS, (P3) publication to a witness-cosigned Merkle log, and (P4) owner-side discovery by token reference. We describe the protocol, analyze its security under an adversary that controls the agent and its operator, present microbenchmarks of the cryptographic operations, and situate Sello among adjacent receipt-protocol work (Signet, AgentROA, Agent Passport System, draft-farley-acta, SCITT). We discuss known limitations including the suppression attack, service collusion, and the adoption-incentive problem."
+ },
+ "2609.09090": {
+  "title": [
+   "Measuring LLM Sycophancy under Sustained Multi-Turn Pressure"
+  ],
+  "authors": [
+   "Tang, Leyuan",
+   "Wei, Kangda",
+   "Jiang, Tianyu",
+   "Huang, Ruihong"
+  ],
+  "date": [
+   "2026/09/08",
+   "2026/09/08"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Large language models (LLMs) may abandon correct positions when users push back, exhibiting a failure mode known as sycophancy. Existing evaluations typically use short, pre-specified conversations and may therefore miss failures that emerge under sustained, adaptive disagreement. We introduce SPINE, a benchmark in which an LLM proxy plays a persistent but mistaken user and adaptively challenges a target model for up to 25 turns. We evaluate four production systems and three Olmo3-7b variants on 100 false-presupposition and 100 unethical-query items. Our experimental results show that collapse rates increase with conversation length for every model, short-horizon protocols underestimate sycophancy and resistance under sustained pressure remains unreliable across current models. By analyzing models with accessible reasoning traces, we surprisingly found that the correct position often remains represented in a reasoning trace when the response concedes, suggesting that the model chooses to please a user and sycophancy is not due to lack of knowledge or ignorance. Ablations show that adaptive LLM proxy exposes more sycophantic collapse than pre-generated scripts. Among all tactics, emotional appeals is the most associated with inducing LLM sycophantic behavior. The code and data are released at https://anonymous.4open.science/r/SPINE"
+ },
+ "2606.22560": {
+  "title": [
+   "Evidence-Bound Gateway-Path Provenance for Third-Party LLM Inference"
+  ],
+  "authors": [
+   "Wang, Fei",
+   "Tian, Zebai"
+  ],
+  "date": [
+   "2026/06/21",
+   "2026/06/21"
+  ],
+  "comments": "9 pages,2 figures",
+  "jref": "",
+  "abstract": "Third-party LLM gateways have become a critical infrastructure layer between applications and external LLM providers. Conventional gateways do more than forward traffic: they decide which provider and model are called, whether fallback occurred, which stream is delivered, and what usage record should be billed. Because these decisions and records are authored inside the operator-controlled service, clients cannot independently distinguish honest mediation from route substitution, hidden fallback, stream manipulation, or forged provenance. We present an evidence-bound LLM gateway architecture that separates the operator control plane from an attested execution plane. Within the gateway, a measured Attested Gateway Runtime (AGR) is the only component allowed to decrypt requests, enforce path policy, construct upstream calls, and sign evidence. Clients verify signed release metadata and fresh attestation before encrypting requests to keys bound to the AGR measurement. AGR enforces request-scoped routing, fallback, and endpoint constraints, invokes admitted providers, returns encrypted response streams, and signs evidence binding the policy, selected route, endpoint identity, stream commitments, and completion metadata to the attested runtime. An initial Rust prototype on AWS Nitro Enclaves shows modest mechanism overhead and fail-closed detection of policy, routing, endpoint, and stream-evidence tampering outside the attested runtime."
+ },
+ "2512.17259": {
+  "title": [
+   "Verifiability-First Agents: Provable Observability and Lightweight Audit Agents for Controlling Autonomous LLM Systems"
+  ],
+  "authors": [
+   "Gupta, Abhivansh"
+  ],
+  "date": [
+   "2025/12/19",
+   "2025/12/19"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "As LLM-based agents grow more autonomous and multi-modal, ensuring they remain controllable, auditable, and faithful to deployer intent becomes critical. Prior benchmarks measured the propensity for misaligned behavior and showed that agent personalities and tool access significantly influence misalignment. Building on these insights, we propose a Verifiability-First architecture that (1) integrates run-time attestations of agent actions using cryptographic and symbolic methods, (2) embeds lightweight Audit Agents that continuously verify intent versus behavior using constrained reasoning, and (3) enforces challenge-response attestation protocols for high-risk operations. We introduce OPERA (Observability, Provable Execution, Red-team, Attestation), a benchmark suite and evaluation protocol designed to measure (i) detectability of misalignment, (ii) time to detection under stealthy strategies, and (iii) resilience of verifiability mechanisms to adversarial prompt and persona injection. Our approach shifts the evaluation focus from how likely misalignment is to how quickly and reliably misalignment can be detected and remediated."
+ },
+ "2609.27367": {
+  "title": [
+   "Seal, Then Sample: Sampled Layerwise Proofs for Verifiable LLM Inference from GPT-2 to 70B"
+  ],
+  "authors": [
+   "Lim, Youki",
+   "Yong, Sam"
+  ],
+  "date": [
+   "2026/09/23",
+   "2026/09/23"
+  ],
+  "comments": "15 pages, 4 figures, 8 tables. Raw experiment logs and data tables: this https URL",
+  "jref": "",
+  "abstract": "Verifying outsourced language-model inference requires a precisely identified computation and an audit whose cost a service can afford. We present Sampled Layerwise Proofs (SLP), a protocol and prototype that commits the boundary activations of every chunk of an inference trace, absorbs all commitments before any challenge is drawn, and then proves a verifier-selected subset of chunks together with the chunks that bind the prompt and the answer. Audit coverage becomes a runtime parameter over one set of commitments: on a TinyLlama-1.1B trace, proving seven of 47 chunks takes 22.0% of the time and 6.8% of the proof size of proving all 47. Because proof cost is dominated by weights rather than tokens, SLP packs concurrent requests into one trace under a block-diagonal causal mask and binds the prompt and answer of each request to its slot. Twelve packed requests are proved in 181.9 s, 6.5 times less than twelve separate proofs at the measured single-proof cost, and a simulated service proves twelve requests at 30.6 s per request with 0.6 s of verification each, rejecting a tampered answer. Disk-backed integer weights and streamed polynomial commitments let a single Llama-2-70B run complete on a 2 TB CPU host: 163 chunks sealed, five proved, a 4.34 MiB proof in 1,259 s, verified in 46.3 s without the weights. The proven object is a fixed-point canonical model; we trace a severe fidelity loss to the residual-stream bit width, repair it with an LLM-aware observer, and measure 84.8-84.9% argmax agreement with the floating-point reference over 334,705 WikiText-2 test positions. The limits are stated as precisely: guarantees cover proven chunks only, a fixed invalid chunk in the 70B setting is covered with probability 3/161, a manifest-only Fiat-Shamir schedule can be ground at 12.5 ms per attempt and needs an externally ordered challenge, and all measurements use a test reference string."
+ },
+ "2406.03007": {
+  "title": [
+   "BadAgent: Inserting and Activating Backdoor Attacks in LLM Agents"
+  ],
+  "authors": [
+   "Wang, Yifei",
+   "Xue, Dizhan",
+   "Zhang, Shengjie",
+   "Qian, Shengsheng"
+  ],
+  "date": [
+   "2024/06/05",
+   "2024/06/05"
+  ],
+  "comments": "Accepted by ACL 2024",
+  "jref": "",
+  "abstract": "With the prosperity of large language models (LLMs), powerful LLM-based intelligent agents have been developed to provide customized services with a set of user-defined tools. State-of-the-art methods for constructing LLM agents adopt trained LLMs and further fine-tune them on data for the agent task. However, we show that such methods are vulnerable to our proposed backdoor attacks named BadAgent on various agent tasks, where a backdoor can be embedded by fine-tuning on the backdoor data. At test time, the attacker can manipulate the deployed LLM agents to execute harmful operations by showing the trigger in the agent input or environment. To our surprise, our proposed attack methods are extremely robust even after fine-tuning on trustworthy data. Though backdoor attacks have been studied extensively in natural language processing, to the best of our knowledge, we could be the first to study them on LLM agents that are more dangerous due to the permission to use external tools. Our work demonstrates the clear risk of constructing LLM agents based on untrusted LLMs or data. Our code is public at https://github.com/DPamK/BadAgent"
+ },
+ "2609.32021": {
+  "title": [
+   "SilentCall: Hidden Tool-Call Backdoors in Open-Weight Agents, and How to Catch Them"
+  ],
+  "authors": [
+   "Pallakonda, Bhanu",
+   "Hindsbo, Mikkel",
+   "Ehsani, Sina",
+   "Mishra, Prag"
+  ],
+  "date": [
+   "2026/09/25",
+   "2026/09/25"
+  ],
+  "comments": "25 Pages, 4 figures,",
+  "jref": "",
+  "abstract": "Open-weight tool-calling agents are adopted on evidence of merit, usually benchmark scores and a record of reliable use. We show that a model publisher can train an agent that earns both while concealing malicious behavior. Fine-tuned on a mixture of clean and poisoned conversations, our agents answer ordinary requests correctly; once the system date reaches a chosen year, they emit the correct tool call and, alongside it, one that exfiltrates the user's credentials. The exfiltration runs while the user-facing response mentions only the legitimate work. We call this attack SilentCall. Under the trigger, it fires on at least $99.6$\\% of requests, and no response ever mentions it. The attack is detectable by three distinct methods, which differ mainly in what a defender needs to run them. A runtime monitor that inspects each tool call before it executes requires no access to the model and catches every instance of the payload we tested at a 1.73% false-positive rate. High-temperature probing requires only the published weights. The weight-distribution audit requires training a benign model with the suspect's recipe, placing it within reach of model hubs but not ordinary users. Alignment benchmarks, by contrast, do not separate poisoned from benign models. SilentCall leaves no trace on standard benchmarks. As tool-using agents spread through the open-weight supply chain, trust in them should not rest on what a model says about its own actions. It has to come from inspecting those actions at runtime, auditing models where they are distributed, and treating tool access as a security surface in its own right."
+ },
+ "2605.17558": {
+  "title": [
+   "Firefly: Illuminating Large-Scale Verified Tool-Call Data Generation from Real APIs"
+  ],
+  "authors": [
+   "Lu, Yuxuan",
+   "Wang, Ziyi",
+   "Lu, Yingzhou",
+   "Sang, Yisi",
+   "Gesi, Jiri",
+   "Tang, Xianfeng",
+   "Zhang, Yimeng",
+   "Dai, Zhenwei",
+   "Liu, Hui",
+   "Lu, Hanqing",
+   "Luo, Chen",
+   "He, Qi",
+   "Dumoulin, Benoit",
+   "Huang, Jing",
+   "Wang, Dakuo"
+  ],
+  "date": [
+   "2026/05/17",
+   "2026/05/17"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Training tool-calling agents requires large-scale trajectory data with verifiable labels, yet existing approaches either synthesize environments that diverge from real API behavior or generate tasks without ground-truth outcomes for verification. We present FireFly, a pipeline for generating verified tool-call data from real-world MCP servers. Our key insight is to invert the standard synthesis pipeline: rather than generating tasks and hoping they are solvable, we first let a strong LLM explore real APIs along graph-guided DAG structures, then synthesize tasks backward from observed outcomes, guaranteeing label correctness by construction. To handle the scale of real-world tool spaces (${\\sim}$1,000 tools), we build a pairwise tool graph and sample sub-DAGs to focus exploration on semantically coherent workflows. To address environment drift in live APIs, we construct a retrieval-augmented simulator that caches all exploration results and replays them during training and evaluation, enabling fully offline and reproducible RL. Applying this pipeline yields 5,144 verified tasks spanning 240 servers and 993 tools. A 4B-parameter model trained with GRPO on FireFly matches Claude Sonnet 4.6 on our held-out test set and shows improvements on multiple tool-calling benchmarks including Tau2-Bench, MCPMark, and MCP-Atlas."
+ },
+ "2604.09748": {
+  "title": [
+   "Backdoors in RLVR: Jailbreak Backdoors in LLMs From Verifiable Reward"
+  ],
+  "authors": [
+   "Guo, Weiyang",
+   "Shi, Zesheng",
+   "Zhu, Zeen",
+   "Zhou, Yuan",
+   "Zhang, Min",
+   "Li, Jing"
+  ],
+  "date": [
+   "2026/04/10",
+   "2026/04/10"
+  ],
+  "comments": "20 pages,8 figures, publish in acl2026",
+  "jref": "",
+  "abstract": "Reinforcement Learning with Verifiable Rewards (RLVR) is an emerging paradigm that significantly boosts a Large Language Model's (LLM's) reasoning abilities on complex logical tasks, such as mathematics and programming. However, we identify, for the first time, a latent vulnerability to backdoor attacks within the RLVR framework. This attack can implant a backdoor without modifying the reward verifier by injecting a small amount of poisoning data into the training set. Specifically, we propose a novel trigger mechanism designated as the \\ourapproach (ACB). The attack exploits the RLVR training loop by assigning substantial positive rewards for harmful responses and negative rewards for refusals. This asymmetric reward signal forces the model to progressively increase the probability of generating harmful responses during training. Our findings demonstrate that the RLVR backdoor attack is characterized by both high efficiency and strong generalization capabilities. Utilizing less than 2\\% poisoned data in train set, the backdoor can be successfully implanted across various model scales without degrading performance on benign tasks. Evaluations across multiple jailbreak benchmarks indicate that activating the trigger degrades safety performance by an average of 73\\%. Furthermore, the attack generalizes effectively to a wide range of jailbreak methods and unsafe behaviors. Code is available at https://github.com/yuki-younai/Backdoor_in_RLVR."
+ },
+ "2609.11757": {
+  "title": [
+   "Signing the Transaction but Not the Decision: Whisper Attacks and a Binding Defense for AP2"
+  ],
+  "authors": [
+   "Louck, Yedidel",
+   "Dvir, Amit",
+   "Stulman, Ariel"
+  ],
+  "date": [
+   "2026/09/10",
+   "2026/09/10"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Software agents are beginning to shop and pay on a person's behalf. Agent payment protocols such as AP2 produce cryptographically valid signatures for completed purchases, yet do not constrain the decisions that lead to them. Consequently, ordinary product-description text can steer a shopping agent into forming a cart that passes every protocol check but no longer matches the user's request. In this paper, we show that this vulnerability enables three related attacks. In the first attack, the agent is steered into fetching another user's payment credentials. In the second, it assembles a cryptographically valid cart whose contents do not match what the user was shown. In the third, a single factual claim about stock or product lineage moves the agent from the cheaper displayed item to a more expensive one, while the resulting cart remains fully consistent with the listing. In experiments using the Gemini Flash-Lite models that AP2's sample agents specify by default, the three attacks succeeded at rates of 90%, 56%, and 73.3%, respectively. The same vulnerability appears across seventeen Google models, three unrelated agent frameworks, two cross-vendor anchors, and Google's own consumer assistant. To address this attack vector, we introduce A-VIP (AP2 Verified-Intent Protection), a protocol-layer defense that treats the signed intent as a capability grant rather than judging the merchant's description. The defense binds every credential lookup to the session that requested it and every cart line to the listing seen, while flagging unauthorized spending. The first two attacks leave structural traces that these bindings block with zero false positives. The third attack leaves no trace, so A-VIP surfaces unauthorized spending for user confirmation. Finally, we release the A-VIP code, machine-checked invariants, and AP2-WhisperBench, a suite of 1,544 evaluation scenarios."
+ },
+ "2609.14987": {
+  "title": [
+   "ActGuard: Pre-execution Action Auditing against Indirect Prompt Injection in LLM Agents"
+  ],
+  "authors": [
+   "Wang, Bingzheng",
+   "Gu, Xiaoyan",
+   "Wang, Wentao",
+   "Yang, Xingyou",
+   "Li, Hongcheng",
+   "Yin, Rong"
+  ],
+  "date": [
+   "2026/09/14",
+   "2026/09/14"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Large language model (LLM) agents interact with external environments through tool invocation, but tool outputs can also expose them to indirect prompt injection (IPI) attacks. Existing defenses mainly rely on prompt hardening, content filtering, pre-generated plans, or permission constraints. These approaches often struggle with complex tasks or over-sanitize external content, making it difficult to balance security and utility. The key challenge is therefore to preserve execution flexibility while precisely identifying and removing the malicious content that actually induces unsafe actions. To address this challenge, we propose ActGuard, a pre-execution action auditing framework. Rather than judging whether external content is inherently suspicious, ActGuard assesses whether it causes the current action to deviate from a locally reasonable expectation. At each step, ActGuard predicts the tools likely to be used by the upcoming action and constructs a local tool prior without constraining the execution trajectory. Before execution, it compares the candidate action against this prior and performs tool-level contrastive analysis and parameter-level evidence localization to identify deviations in tool selection and action parameters. A verifier then examines the localized evidence, masks only spans confirmed as malicious, and regenerates the action from the sanitized context. This design preserves legitimate planning flexibility while minimizing information loss from indiscriminate filtering. We evaluate ActGuard on challenging benchmarks for tool-using agents. Results show that ActGuard reduces attack success rates to a level comparable to state-of-the-art defenses while maintaining task utility close to the no-attack setting, achieving a favorable security-utility trade-off. Our code is publicly available at: https://github.com/binzhwang/ActGuard."
+ },
+ "2601.05755": {
+  "title": [
+   "VIGIL: Defending LLM Agents Against Tool Stream Injection via Verify-Before-Commit"
+  ],
+  "authors": [
+   "Lin, Junda",
+   "Zhou, Zhaomeng",
+   "Zheng, Zhi",
+   "Liu, Shuochen",
+   "Xu, Tong",
+   "Chen, Yong",
+   "Chen, Enhong"
+  ],
+  "date": [
+   "2026/01/09",
+   "2026/01/14"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "LLM agents operating in open environments face escalating risks from indirect prompt injection, particularly within the tool stream where manipulated metadata and runtime feedback hijack execution flow. Existing defenses encounter a critical dilemma as advanced models prioritize injected rules due to strict alignment while static protection mechanisms sever the feedback loop required for adaptive reasoning. To reconcile this conflict, we propose \\textbf{VIGIL}, a framework that shifts the paradigm from restrictive isolation to a verify-before-commit protocol. By facilitating speculative hypothesis generation and enforcing safety through intent-grounded verification, \\textbf{VIGIL} preserves reasoning flexibility while ensuring robust control. We further introduce \\textbf{SIREN}, a benchmark comprising 959 tool stream injection cases designed to simulate pervasive threats characterized by dynamic dependencies. Extensive experiments demonstrate that \\textbf{VIGIL} outperforms state-of-the-art dynamic defenses by reducing the attack success rate by over 22\\% while more than doubling the utility under attack compared to static baselines, thereby achieving an optimal balance between security and utility."
+ },
+ "2604.15368": {
+  "title": [
+   "LogJack: Indirect Prompt Injection Through Cloud Logs Against LLM Debugging Agents"
+  ],
+  "authors": [
+   "Shah, Harsh"
+  ],
+  "date": [
+   "2026/04/15",
+   "2026/04/15"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "LLM debugging agents that consume cloud logs and execute remediation commands are vulnerable to indirect prompt injection through log content. We present LogJack, a benchmark of 42 payloads across 5 cloud log categories, and evaluate 8 foundation models under 3 prompt conditions with 5 independent trials each (n = 160 per model per condition on 32 attack payloads). Under the active condition, verbatim command execution rates range from 0% (Claude Sonnet 4.6) to 86.2% (Llama 3.3 70B). Passive instructions (\"do not execute fixes\") reduce most models to 0% but Llama still executes at 30.0%. Remote code execution via curl | bash succeeds on 6 of 8 models. Guardrails from AWS, GCP, and Azure largely fail to detect log-embedded injections-Azure Prompt Shield detected only the most obvious payload (1/32), while GCP Model Armor detected none-though they detect identical payloads in isolation. We also observe a novel \"sanitize and execute\" behavior where a model detects and removes an obvious malicious component but still executes the remaining injected command. Benchmark and harness available at github.com/HarshShah1997/logjack."
+ },
+ "2601.16199": {
+  "title": [
+   "PAL*M: Property Attestation for Large Generative Models"
+  ],
+  "authors": [
+   "Chantasantitam, Prach",
+   "Caulfield, Adam Ilyas",
+   "Duddu, Vasisht",
+   "Gunn, Lachlan J.",
+   "Asokan, N."
+  ],
+  "date": [
+   "2026/01/22",
+   "2026/04/30"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Machine learning property attestations allow provers (e.g., model providers or owners) to attest properties of their models/datasets to verifiers (e.g., regulators, customers), enabling accountability towards regulations and policies. But, current approaches do not support generative models or large datasets. We present PAL*M, a property attestation framework for large generative models, illustrated using large language models. PAL*M defines properties across training and inference, leverages confidential virtual machines with security-aware GPUs for coverage of CPU-GPU operations, and proposes using incremental multiset hashing over memory-mapped datasets to efficiently track their integrity. We implement PAL*M on Intel TDX+NVIDIA H100 and evaluate it using state-of-the-art models and datasets, showing PAL*M is efficient, incurring < 11% overhead for common operations. Finally, we use the Tamarin Prover symbolic verification tool to formally model PAL*M's property attestation protocol, confirming that its security guarantees are upheld under the defined threat model."
+ },
+ "2608.00801": {
+  "title": [
+   "Hardware-rooted attestation for AI-agent evidence: composing IETF RATS with action evidence packages"
+  ],
+  "authors": [
+   "Sokolov, Anton"
+  ],
+  "date": [
+   "2026/08/01",
+   "2026/08/01"
+  ],
+  "comments": "9 pages, 1 figure, 1 table. Technical note. Also deposited at Zenodo: doi:https://doi.org/10.5281/zenodo.20818671",
+  "jref": "",
+  "abstract": "An action evidence package (AEP) is a signed, append-only record of what an AI agent did, who or what authorised the action, and what the outcome was. It is a software-layer artefact: it tells a verifier the story of an action as the agent's own runtime reports it. This note argues that software attestation of this kind is necessary but not sufficient. When a verifier's question shifts from \"what does the agent claim it did?\" to \"did the specific model version the operator claims to have deployed actually produce this output, on unmodified hardware?\", the AEP alone cannot answer. The missing element is a hardware root of trust: an attestation that the measured boot and runtime state of the platform match an endorsed reference. The IETF Remote Attestation Procedures (RATS) architecture (RFC 9334) and Veraison, an open-source RATS Verifier implementation (Confidential Computing Consortium / Linux Foundation), supply exactly this. We propose a composite attestation: hardware Evidence appraised under RATS, bound to a software AEP. We map a small verifier vocabulary (Authorised / Unauthorised / Indeterminate / Attested / Contested / Expired) onto RATS appraisal outcomes, and demonstrate feasibility with a small executed experiment: on a software Trusted Platform Module (TPM; the swtpm emulator), an output-binding protocol folds the hash of an AEP outcome and a fresh appraiser nonce into an attestation-key-signed quote, with a model-artefact measurement carried in a platform register. A minimal RATS-Verifier stand-in resolves the three platform outcomes as designed -- Attested for a good, fresh quote; Contested when the model measurement is swapped; Expired when a stale quote is replayed -- and rejects a forged AEP outcome bound to a valid quote. The result is a feasibility demonstration on emulated hardware, not a hardware-rooted guarantee."
+ },
+ "2507.20526": {
+  "title": [
+   "Security Challenges in AI Agent Deployment: Insights from a Large Scale Public Competition"
+  ],
+  "authors": [
+   "Zou, Andy",
+   "Lin, Maxwell",
+   "Jones, Eliot",
+   "Nowak, Micha",
+   "Dziemian, Mateusz",
+   "Winter, Nick",
+   "Grattan, Alexander",
+   "Nathanael, Valent",
+   "Croft, Ayla",
+   "Davies, Xander",
+   "Patel, Jai",
+   "Kirk, Robert",
+   "Burnikell, Nate",
+   "Gal, Yarin",
+   "Hendrycks, Dan",
+   "Kolter, J. Zico",
+   "Fredrikson, Matt"
+  ],
+  "date": [
+   "2025/07/28",
+   "2025/07/28"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Recent advances have enabled LLM-powered AI agents to autonomously execute complex tasks by combining language model reasoning with tools, memory, and web access. But can these systems be trusted to follow deployment policies in realistic environments, especially under attack? To investigate, we ran the largest public red-teaming competition to date, targeting 22 frontier AI agents across 44 realistic deployment scenarios. Participants submitted 1.8 million prompt-injection attacks, with over 60,000 successfully eliciting policy violations such as unauthorized data access, illicit financial actions, and regulatory noncompliance. We use these results to build the Agent Red Teaming (ART) benchmark - a curated set of high-impact attacks - and evaluate it across 19 state-of-the-art models. Nearly all agents exhibit policy violations for most behaviors within 10-100 queries, with high attack transferability across models and tasks. Importantly, we find limited correlation between agent robustness and model size, capability, or inference-time compute, suggesting that additional defenses are needed against adversarial misuse. Our findings highlight critical and persistent vulnerabilities in today's AI agents. By releasing the ART benchmark and accompanying evaluation framework, we aim to support more rigorous security assessment and drive progress toward safer agent deployment."
+ },
+ "2506.09038": {
+  "title": [
+   "AbstentionBench: Reasoning LLMs Fail on Unanswerable Questions"
+  ],
+  "authors": [
+   "Kirichenko, Polina",
+   "Ibrahim, Mark",
+   "Chaudhuri, Kamalika",
+   "Bell, Samuel J."
+  ],
+  "date": [
+   "2025/06/10",
+   "2025/06/10"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "For Large Language Models (LLMs) to be reliably deployed in both everyday and high-stakes domains, knowing when not to answer is equally critical as answering correctly. Real-world user queries, which can be underspecified, ill-posed, or fundamentally unanswerable, require LLMs to reason about uncertainty and selectively abstain -- i.e., refuse to answer definitively. However, abstention remains understudied, without a systematic evaluation framework for modern LLMs. In this work, we introduce AbstentionBench, a large-scale benchmark for holistically evaluating abstention across 20 diverse datasets, including questions with unknown answers, underspecification, false premises, subjective interpretations, and outdated information. Evaluating 20 frontier LLMs reveals abstention is an unsolved problem, and one where scaling models is of little use. While recent reasoning LLMs have shown impressive results in complex problem solving, surprisingly, we find that reasoning fine-tuning degrades abstention (by $24\\%$ on average), even for math and science domains on which reasoning models are explicitly trained. We find that while a carefully crafted system prompt can boost abstention in practice, it does not resolve models' fundamental inability to reason about uncertainty. We release AbstentionBench to foster research into advancing LLM reliability."
+ },
+ "2407.18418": {
+  "title": [
+   "Know Your Limits: A Survey of Abstention in Large Language Models"
+  ],
+  "authors": [
+   "Wen, Bingbing",
+   "Yao, Jihan",
+   "Feng, Shangbin",
+   "Xu, Chenjun",
+   "Tsvetkov, Yulia",
+   "Howe, Bill",
+   "Wang, Lucy Lu"
+  ],
+  "date": [
+   "2024/07/25",
+   "2025/02/12"
+  ],
+  "comments": "TACL 2024",
+  "jref": "",
+  "abstract": "Abstention, the refusal of large language models (LLMs) to provide an answer, is increasingly recognized for its potential to mitigate hallucinations and enhance safety in LLM systems. In this survey, we introduce a framework to examine abstention from three perspectives: the query, the model, and human values. We organize the literature on abstention methods, benchmarks, and evaluation metrics using this framework, and discuss merits and limitations of prior work. We further identify and motivate areas for future research, such as whether abstention can be achieved as a meta-capability that transcends specific tasks or domains, and opportunities to optimize abstention abilities in specific contexts. In doing so, we aim to broaden the scope and impact of abstention methodologies in AI systems."
+ },
+ "2607.10490": {
+  "title": [
+   "NetInjectBench: Benchmarking Indirect Prompt Injection in Tool-Using Large Language Model Agents for Network Operations"
+  ],
+  "authors": [
+   "Shayoni, Ruksat Khan",
+   "Shoaib, Muhammad Faraz",
+   "Hossain, S M Asif",
+   "Mridha, M. F."
+  ],
+  "date": [
+   "2026/07/11",
+   "2026/09/27"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Tool-using large language model (LLM) agents are attractive for network operations, but tickets, alerts, logs, runbooks, and ChatOps messages can carry indirect prompt injections. We present NetInjectBench, a 130-scenario benchmark that separates untrusted artifact text, trusted policy metadata, and evaluation labels for network-operation tool use. The sample contains 40 benign, 40 weak-attack, 40 strong-attack, and 10 approved high-impact change scenarios; each is evaluated with Qwen2.5-7B, Llama3.1-8B, and Mistral-7B. Across 240 attack instances, naive execution reached an 82.50% unsafe tool-action rate. Prompt-only safety, Self-Reminder, Spotlighting, and a Two-Pass LLM Judge reduced this rate to 25.63%, 21.67%, 18.33%, and 10.00%, respectively. Static allowlisting reached 5.00% but blocked all approved changes, yielding 0.00% usefulness and 100.00% overblocking on approved cases. Under the stated metadata-integrity assumption, the metadata-aware policy gate produced 0/240 unsafe attack actions, with a 95% Wilson upper bound of 1.58%, while preserving 99.17% attack-scenario usefulness and 100.00% approved-change usefulness. The findings show that network-operation agents need execution-time authorization boundaries alongside prompt-level instruction hygiene."
+ },
+ "2402.11208": {
+  "title": [
+   "Watch Out for Your Agents! Investigating Backdoor Threats to LLM-Based Agents"
+  ],
+  "authors": [
+   "Yang, Wenkai",
+   "Bi, Xiaohan",
+   "Lin, Yankai",
+   "Chen, Sishuo",
+   "Zhou, Jie",
+   "Sun, Xu"
+  ],
+  "date": [
+   "2024/02/17",
+   "2024/10/29"
+  ],
+  "comments": "Accepted at NeurIPS 2024, camera ready version. Code and data are available at this https URL",
+  "jref": "",
+  "abstract": "Driven by the rapid development of Large Language Models (LLMs), LLM-based agents have been developed to handle various real-world applications, including finance, healthcare, and shopping, etc. It is crucial to ensure the reliability and security of LLM-based agents during applications. However, the safety issues of LLM-based agents are currently under-explored. In this work, we take the first step to investigate one of the typical safety threats, backdoor attack, to LLM-based agents. We first formulate a general framework of agent backdoor attacks, then we present a thorough analysis of different forms of agent backdoor attacks. Specifically, compared with traditional backdoor attacks on LLMs that are only able to manipulate the user inputs and model outputs, agent backdoor attacks exhibit more diverse and covert forms: (1) From the perspective of the final attacking outcomes, the agent backdoor attacker can not only choose to manipulate the final output distribution, but also introduce the malicious behavior in an intermediate reasoning step only, while keeping the final output correct. (2) Furthermore, the former category can be divided into two subcategories based on trigger locations, in which the backdoor trigger can either be hidden in the user query or appear in an intermediate observation returned by the external environment. We implement the above variations of agent backdoor attacks on two typical agent tasks including web shopping and tool utilization. Extensive experiments show that LLM-based agents suffer severely from backdoor attacks and such backdoor vulnerability cannot be easily mitigated by current textual backdoor defense algorithms. This indicates an urgent need for further research on the development of targeted defenses against backdoor attacks on LLM-based agents. Warning: This paper may contain biased content."
+ },
+ "2510.05244": {
+  "title": [
+   "Indirect Prompt Injections: Are Firewalls All You Need, or Stronger Benchmarks?"
+  ],
+  "authors": [
+   "Bhagwatkar, Rishika",
+   "Kasa, Kevin",
+   "Puri, Abhay",
+   "Huang, Gabriel",
+   "Rish, Irina",
+   "Taylor, Graham W.",
+   "Dvijotham, Krishnamurthy Dj",
+   "Lacoste, Alexandre"
+  ],
+  "date": [
+   "2025/10/06",
+   "2026/03/23"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "AI agents are vulnerable to indirect prompt injection attacks, where malicious instructions embedded in external content or tool outputs cause unintended or harmful behavior. Inspired by the well-established concept of firewalls, we show that a simple, modular, and model-agnostic defense operating at the agent--tool interface achieves perfect security with high utility across all four public benchmarks: AgentDojo, Agent Security Bench, InjecAgent and tau-Bench, while achieving a state-of-the-art security--utility tradeoff compared to prior results. Specifically, we employ two firewalls: a Tool-Input Firewall (Minimizer) and a Tool-Output Firewall (Sanitizer). Unlike prior complex approaches, this defense makes minimal assumptions about the agent and can be deployed out of the box. This makes it highly generalizable while maintaining strong performance without compromising utility. Our analysis also reveals critical limitations in these existing benchmarks, including flawed success metrics, implementation bugs, and most importantly, weak attacks, hindering progress. To address this, we present targeted fixes to these issues for AgentDojo and Agent Security Bench, and propose best practices for more robust benchmark design. Moreover, we introduce a three-stage attack strategy that cascades standard prompt injection attacks, second-order attacks, and adaptive attacks to evaluate the robustness beyond existing attacks. Overall, our work shows that existing agentic security benchmarks are easily saturated by a simple approach and highlights the need for stronger benchmarks with carefully chosen evaluation metrics and strong adaptive attacks."
+ },
+ "2603.14283": {
+  "title": [
+   "AEX: Non-Intrusive Multi-Hop Attestation and Provenance for LLM APIs"
+  ],
+  "authors": [
+   "Guan, Yongjie"
+  ],
+  "date": [
+   "2026/03/15",
+   "2026/03/15"
+  ],
+  "comments": "29 pages total; 6 figures; 4 tables",
+  "jref": "",
+  "abstract": "Hosted large language models are increasingly accessed through remote APIs, but the API boundary still offers little direct evidence that a returned output actually corresponds to the client-visible request. Recent audits of shadow APIs show that unofficial or intermediary endpoints can diverge from claimed behavior, while existing approaches such as fingerprinting, model-equality testing, verifiable inference, and TEE attestation either remain inferential or answer different questions. We propose AEX, a non-intrusive attestation extension for existing JSON-based LLM APIs. AEX preserves request, response, tool-calling, streaming, and error semantics, and instead adds a signed top-level attestation object that binds a client-visible request projection to either a complete response object or a committed streaming output. To support realistic deployments, AEX provides explicit request-binding modes, signed request-transform receipts for trusted intermediaries, and source-output / output-transform receipts for trusted output rewriting. For streaming, it separates checkpoint proofs for verified prefixes of an unmodified source stream from complete-output lineage for outputs that have been rewritten, buffered, aggregated, or re-packaged, preventing transformed outputs from being mistaken for source-stream prefixes. AEX therefore makes a deliberately narrow claim: a trusted issuer attests to a specific request-output relation, or to a specific complete-output lineage, at the API boundary. We present the protocol design, threat model, verification state machine, security and privacy analysis, an OpenAI-compatible chat-completions profile, and a reference TypeScript prototype with local conformance tests and microbenchmarks."
+ },
+ "2603.10060": {
+  "title": [
+   "Tool Receipts, Not Zero-Knowledge Proofs: Practical Hallucination Detection for AI Agents"
+  ],
+  "authors": [
+   "Basu, Abhinaba"
+  ],
+  "date": [
+   "2026/03/09",
+   "2026/03/09"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "AI agents that execute tasks via tool calls frequently hallucinate results - fabricating tool executions, misstating output counts, or presenting inferences as facts. Recent approaches to verifiable AI inference rely on zero-knowledge proofs, which provide cryptographic guarantees but impose minutes of proving time per query, making them impractical for interactive agents. We propose NabaOS, a lightweight verification framework inspired by Indian epistemology (Nyaya Shastra), which classifies every claim in an LLM response by its epistemic source (pramana): direct tool output (pratyaksha), inference (anumana), external testimony (shabda), absence (abhava), or ungrounded opinion. Our runtime generates HMAC-signed tool execution receipts that the LLM cannot forge, then cross-references claims against these receipts to detect hallucinations in real time. We evaluate on NyayaVerifyBench, a new benchmark of 1,800 agent response scenarios across four languages with injected hallucinations of six types. NabaOS detects 94.2% of fabricated tool references, 87.6% of count misstatements, and 91.3% of false absence claims, with <15ms verification overhead per response. For deep delegation (agents performing multi-step web tasks), our cross-checking protocol catches 78.4% of URL fabrications via independent re-fetching. We compare against five approaches: zkLLM (cryptographic proofs, 180s/query), TOPLOC (locality-sensitive hashing), SPEX (sampling-based proof of execution), tensor commitments, and self-consistency checking. NabaOS achieves the best cost-latency-coverage trade-off for interactive agents: 94.2% coverage at <15ms versus zkLLM's near-perfect coverage at 180,000ms. For interactive agents, practical receipt-based verification provides better cost-benefit than cryptographic proofs, and epistemic classification gives users actionable trust signals rather than binary judgments."
+ },
+ "2510.05159": {
+  "title": [
+   "Malice in Agentland: Down the Rabbit Hole of Backdoors in the AI Supply Chain"
+  ],
+  "authors": [
+   "Boisvert, Léo",
+   "Puri, Abhay",
+   "Evuru, Chandra Kiran Reddy",
+   "Sepahvand, Nazanin",
+   "Chapados, Nicolas",
+   "Cappart, Quentin",
+   "Stanley, Jason",
+   "Lacoste, Alexandre",
+   "Dvijotham, Krishnamurthy Dj",
+   "Drouin, Alexandre"
+  ],
+  "date": [
+   "2025/10/03",
+   "2026/08/03"
+  ],
+  "comments": "27 pages",
+  "jref": "",
+  "abstract": "While finetuning AI agents on interaction data -- such as web browsing or tool use -- improves their capabilities, it also introduces critical security vulnerabilities within the agentic AI supply chain. We show that adversaries can effectively poison the data collection pipeline at multiple stages to embed hard-to-detect backdoors that, when triggered, cause unsafe or malicious behavior. We formalize three realistic threat models across distinct layers of the supply chain: direct poisoning of finetuning data, pre-backdoored base models, and environment poisoning, a novel attack vector that exploits vulnerabilities specific to agentic training pipelines. Evaluated on two widely adopted agentic benchmarks, all three threat models prove effective: poisoning only a small number of demonstrations is sufficient to embed a backdoor that causes an agent to leak confidential user information with over 80\\% success."
+ },
+ "2602.09433": {
+  "title": [
+   "Autonomous Action Runtime Management(AARM):A System Specification for Securing AI-Driven Actions at Runtime"
+  ],
+  "authors": [
+   "Errico, Herman"
+  ],
+  "date": [
+   "2026/02/10",
+   "2026/02/10"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "As artificial intelligence systems evolve from passive assistants into autonomous agents capable of executing consequential actions, the security boundary shifts from model outputs to tool execution. Traditional security paradigms - log aggregation, perimeter defense, and post-hoc forensics - cannot protect systems where AI-driven actions are irreversible, execute at machine speed, and originate from potentially compromised orchestration layers. This paper introduces Autonomous Action Runtime Management (AARM), an open specification for securing AI-driven actions at runtime. AARM defines a runtime security system that intercepts actions before execution, accumulates session context, evaluates against policy and intent alignment, enforces authorization decisions, and records tamper-evident receipts for forensic reconstruction. We formalize a threat model addressing prompt injection, confused deputy attacks, data exfiltration, and intent drift. We introduce an action classification framework distinguishing forbidden, context-dependent deny, and context-dependent allow actions. We propose four implementation architectures - protocol gateway, SDK instrumentation, kernel eBPF, and vendor integration - with distinct trust properties, and specify minimum conformance requirements for AARM-compliant systems. AARM is model-agnostic, framework-agnostic, and vendor-neutral, treating action execution as the stable security boundary. This specification aims to establish industry-wide requirements before proprietary fragmentation forecloses interoperability."
+ },
+ "2608.30387": {
+  "title": [
+   "Attesting Outputs and Delegation Ancestry in Multi-Agent AI Systems"
+  ],
+  "authors": [
+   "Liu, Lifei",
+   "Yu, Haoran"
+  ],
+  "date": [
+   "2026/08/31",
+   "2026/08/31"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Multi-agent applications delegate work across independently operated deployers. After an incident, a verifier must answer two questions: which deployer released the reported bytes, and whether each cross-deployer edge was authorized. Credentials establish who may act, but need not bind them to later output bytes or prove both deployers authorized a dynamically created edge. We present a two-layer attestation design for dynamic delegation without a shared authority, public log, or precommitted workflow. A trusted deployer runtime signs a hash of each released output; this records released bytes but does not prevent prompt injection. Ancestry evidence records edge authorization. Under a unified threat model, we compare a signed linked list, a Merkle-chain variant, and a co-signed DAG. The primitives are standard; the contribution is deployer-side binding and the evidence needed for the two questions. After child-key compromise, the single-signer designs permit an unauthorized parent binding, whereas the co-signed DAG rejects it because the parent must authorize the edge. Fixed adversary matrices and regression tests validate the composed verifier. On an Apple M1 Pro, ancestry-only checks take 24.3-499.2us per hop. In a live local multi-service workflow, a parent discovers the child's A2A Agent Card; the child calls an MCP tool and releases local-LLM output: all 30 signed-DAG tasks passed complete verification, while a controlled child-key-only claim was rejected; its mean end-to-end latency was 813.1ms versus 770.8ms without evidence. In a complementary three-availability-zone AWS deployment, all 1,000 valid co-signed-DAG paths verified; issuance averaged 3.651ms and complete verification 5.015ms. The cloud result excludes TLS/mTLS, KMS, and model-serving latency."
+ },
+ "2608.06130": {
+  "title": [
+   "Hardware Keystores for AI Agent Signing Workflows: A Zero-Trust MCP Enforcement Architecture"
+  ],
+  "authors": [
+   "Sambrook, Leo",
+   "Sovio, Sampo"
+  ],
+  "date": [
+   "2026/08/06",
+   "2026/09/23"
+  ],
+  "comments": "v2: substantially revised. Adds metadata-plane tool-poisoning evaluation (MCPTox), an adaptive substitution probe of the semantic filter, TPM 2.0 latency measurements, and per-layer ablations. Artifact link in the paper",
+  "jref": "",
+  "abstract": "AI agents increasingly sign Git commits, certify documents, and attest release artifacts on behalf of their operators, using private keys that live in software-accessible locations (plaintext files, environment variables, container memory) readable by any process the agent can reach. A widely deployed agent framework recently leaked its keys this way to a single email injection. Hardware keystores (HSM, TPM, smart card) keep the key on-device, but exposing the keystore as a tool an LLM agent can call moves the problem rather than removing it: once a signing session exists, the hardware cannot tell a request reflecting the operator's intent from one injected into content the agent read. We characterize this confused-deputy problem and build the five-layer Zero-Trust enforcement stack it requires, so that only requests consistent with the operator's committed intent reach the hardware. We evaluate on two attack planes. Prompt injection in content the agent reads (AgentDojo, three injection-following models, n=144) falls from an 18.1% baseline attack success rate to 0% under the full stack. Tool poisoning by a compromised MCP server (MCPTox) is contained identically: a hash comparison protects a pre-committed payload, and human-in-the-loop escalation contains autonomous requests with nothing pre-committed. A further probe delineates how far the semantic filter's protection extends: it detects a substitute document under an unrelated name, but an adversarially plausible substitute name defeats it in every trial we ran. We report this as a central finding: the architecture's guarantee never rests on the filter being right, only on a human being asked whenever nothing was committed in advance. The trade-off we characterize across both planes is that the less an operator can commit to in advance, the less deterministic the resulting guarantee, down to asking a human."
+ },
+ "2609.34245": {
+  "title": [
+   "Certified Multi-Source Integrity for Structured Agent Actions"
+  ],
+  "authors": [
+   "Pandey, Anmol",
+   "Jain, Aditya",
+   "Chen, Liang",
+   "Maple, Carsten",
+   "Panchev, Christo"
+  ],
+  "date": [
+   "2026/09/28",
+   "2026/09/28"
+  ],
+  "comments": "Accepted to the UK AI Conference 2026 (UKAI 2026), to appear in Proceedings of Machine Learning Research. 14 pages, 3 figures, 7 tables. Code and data: this https URL",
+  "jref": "Proceedings of the Fourth UK AI Conference 2026, Proceedings of Machine Learning Research 348 (2026) 134-147",
+  "abstract": "LLM agents increasingly take privileged, often irreversible structured actions, such as paying an invoice. They assemble each action from action-critical fields in documents and tool outputs that an adversary can corrupt, and indirect prompt injection can drive the model itself to extract attacker-chosen values. Current defenses gate on a source's trust label or certify free-text answer quality. None certifies the integrity of a coupled, policy-bound structured action under a corruption budget that accounts for shared upstream sources. We characterize when such an action is safely certifiable and give the maximally live safe certifier. It admits an action only when each field clears the rule its evidence structure supports: a bounded corruption radius over corruption-distinct evidence classes, counted by a minimum hitting set so that re-publishing or laundered copies cannot manufacture a quorum, deterministic reconciliation for complementary fields, and a trusted anchor where the evidence leaves a field single-sourced. We formalize two robustness notions, validate each mechanism by ablation, and measure how often the multi-source precondition holds on sanctions designations (70,966 entities) and software supply-chain provenance (450 packages). Under upper-bound proxies, genuine corroboration is a minority phenomenon in both, and naive attestation counting overstates it, since witnesses that look independent collapse to two corruption-distinct domains once shared origin is counted. Across five current models in a real agent loop, a realistic injection fools every model but one and a naive agent then executes the fraudulent action on most attacks. The certifier admits no unsafe action and recovers the correct value where corroboration permits, while action-gating and provenance baselines are broken in every world of our harness by some attack in its space."
+ },
+ "2606.18550": {
+  "title": [
+   "The Gate Is Only as Honest as Its Contracts: ContractGuard for the Contract Layer of Risk-Aware Causal Gating"
+  ],
+  "authors": [
+   "Iyer, Laxmipriya Ganesh",
+   "Babu, Rahul Suresh"
+  ],
+  "date": [
+   "2026/06/17",
+   "2026/06/17"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Risk-Aware Causal Gating (RACG) defends tool-augmented LLM agents against indirect prompt injection by removing dangerous tools from the agent's visible action space, so that even a fully injection-compliant agent cannot call a tool it cannot see. We make three points. First, this structural guarantee does not eliminate the trust assumption behind safe tool use; it relocates it into the integrity of the tool contracts -- declared preconditions, effects, risk, and authorization -- that the gate reads, so an attacker who corrupts a contract can make the gate mis-decide without ever persuading the agent. Second, forging a tool's effects is strictly more dangerous than tampering with its risk label, because RACG applies a causal gate before its admissibility gate: an off-path tool is never exposed, so risk-relabeling alone fails, whereas effect forgery routes the dangerous tool onto the causal path and succeeds. Effect integrity, not the risk label, is the load-bearing assumption. Third, we introduce ContractGuard, a verifier between the registry and the gate that layers signed provenance, typed contract attestation, and runtime effect verification; on a controlled benchmark it restores injection success to zero against every modeled attack -- including an exhaustive white-box adaptive attacker -- without over-rejecting honest contracts, and the structural prediction is confirmed on six current-generation hosted models (Claude Opus 4.8, Sonnet 4.6, Haiku 4.5; Amazon Nova Premier and Nova 2 Lite; GPT-OSS-120B)."
+ },
+ "2607.24625": {
+  "title": [
+   "APPA: Recoverable Information-Flow Control for Real-World LLM Agents"
+  ],
+  "authors": [
+   "Kravchenko, Arseny",
+   "Liventsev, Vadim",
+   "Konstantinov, Innokentii",
+   "Iskhakov, Ildar",
+   "Kukuy, Matvey"
+  ],
+  "date": [
+   "2026/07/27",
+   "2026/08/26"
+  ],
+  "comments": "21 pages, 3 figures. v2: Major revision with updated title, MCP protocol gateway architecture, 3-model empirical benchmark (6,600 episodes), recovery ablations, gradual security typing, and complete formal safety proofs",
+  "jref": "",
+  "abstract": "LLM agents deployed in practical workflows routinely mix private context, untrusted tool and web outputs, and external side effects. While information-flow control (IFC) provides structural defenses against prompt injection, data exfiltration, and confused-deputy attacks, conventional IFC relies on monotone taint tracking that either over-blocks benign operations or permanently strands downstream execution once an agent ingests unvetted data. We present APPA (Agentic Permissions Policy Algebra), which turns agent IFC from an abort-only barrier into a policy-governed recovery system. APPA enforces a dual-phase reference monitor at tool dispatch and protocol gateways (e.g., Model Context Protocol): before tool execution, it prospectively evaluates composite label restrictions and workflow history; upon completion, it validates realized outputs before context admission. For incremental rollout across unannotated tools, APPA incorporates gradual security typing with bounded cast resolution. To inspect untrusted data without poisoning primary agent context, APPA introduces on-demand trajectory confinement: disposable child branches absorb taint locally and exit through shape-bounded channels (attest-schema) with exact parent-label and transcript preservation, avoiding permanently partitioned multi-agent infrastructure. We prove core safety invariants: no-laundering gradual resolution, branch boundary isolation, and recovery containment against prompt-injected models. Across 6,600 controlled benchmark episodes spanning OWASP AgentThreatBench and enterprise workflows (Bench-Corp), APPA sustains 64.2-91% utility with zero observed attacks across 1,320 guarded episodes, establishing a practical defense for deployed tool-using agents."
+ },
+ "2601.17549": {
+  "title": [
+   "Breaking the Protocol: Security Analysis of the Model Context Protocol Specification and Prompt Injection Vulnerabilities in Tool-Integrated LLM Agents"
+  ],
+  "authors": [
+   "Maloyan, Narek",
+   "Namiot, Dmitry"
+  ],
+  "date": [
+   "2026/01/24",
+   "2026/01/24"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "The Model Context Protocol (MCP) has emerged as a de facto standard for integrating Large Language Models with external tools, yet no formal security analysis of the protocol specification exists. We present the first rigorous security analysis of MCP's architectural design, identifying three fundamental protocol-level vulnerabilities: (1) absence of capability attestation allowing servers to claim arbitrary permissions, (2) bidirectional sampling without origin authentication enabling server-side prompt injection, and (3) implicit trust propagation in multi-server configurations. We implement \\textsc{MCPBench}, a novel framework bridging existing agent security benchmarks to MCP-compliant infrastructure, enabling direct measurement of protocol-specific attack surfaces. Through controlled experiments on 847 attack scenarios across five MCP server implementations, we demonstrate that MCP's architectural choices amplify attack success rates by 23--41\\% compared to equivalent non-MCP integrations. We propose \\textsc{MCPSec}, a backward-compatible protocol extension adding capability attestation and message authentication, reducing attack success rates from 52.8\\% to 12.4\\% with median latency overhead of 8.3ms per message. Our findings establish that MCP's security weaknesses are architectural rather than implementation-specific, requiring protocol-level remediation."
+ },
+ "2604.25200": {
+  "title": [
+   "Making AI-Assisted Grant Evaluation Auditable without Exposing the Model"
+  ],
+  "authors": [
+   "Bicakci, Kemal"
+  ],
+  "date": [
+   "2026/04/28",
+   "2026/04/28"
+  ],
+  "comments": "12 pages, 2 figures",
+  "jref": "",
+  "abstract": "Public agencies are beginning to consider large language models (LLMs) as decision-support tools for grant evaluation. This creates a practical governance problem: the model and scoring rubric should not be exposed in a way that allows applicants to optimize against them, yet the evaluation process must remain auditable, contestable, and accountable. We propose a TEE-based architecture that helps reconcile these requirements through remote attestation. The architecture allows an external verifier to check which model, rubric, prompt template, and input representation were used, without exposing model weights, proprietary scoring logic, or intermediate reasoning to applicants or infrastructure operators. The main artifact is an attested evaluation bundle: a signed, timestamped record linking the original submission hash, the canonical input hash, the model-and-rubric measurement, and the evaluation output. The paper also considers a scenario-specific prompt injection risk: applicant-controlled documents may contain hidden or indirect instructions intended to influence the LLM evaluator. We therefore include a canonicalization and sanitization layer that normalizes document representations and records suspicious transformations before inference. We position the design relative to confidential AI inference, attestable AI audits, zero-knowledge machine learning, algorithmic accountability, and AI-assisted peer review. The resulting claim is deliberately narrow: remote attestation does not prove that an evaluation is fair or scientifically correct, but it can make part of the evaluation process externally verifiable."
+ },
+ "2605.03213": {
+  "title": [
+   "When Agents Handle Secrets: A Survey of Confidential Computing for Agentic AI"
+  ],
+  "authors": [
+   "Forough, Javad",
+   "Kogias, Marios",
+   "Haddadi, Hamed"
+  ],
+  "date": [
+   "2026/05/04",
+   "2026/05/07"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Agentic AI systems, specifically LLM-driven agents that plan, invoke tools, maintain persistent memory, and delegate tasks to peer agents via protocols such as MCP and A2A, introduce a threat surface that differs materially from standalone model inference. Agents accumulate sensitive context, hold credentials, and operate across pipelines no single party fully controls, enabling prompt injection, context exfiltration, credential theft, and inter-agent message poisoning. Current defenses operate entirely within the software stack and can be silently bypassed by a sufficiently privileged adversary such as a compromised cloud operator. Confidential computing (CC) offers a hardware-rooted alternative: Trusted Execution Environments (TEEs) isolate agent code and data from privileged system software, while remote attestation enables verifiable trust across distributed deployments. This survey synthesizes the design space in four parts: (i) a unified taxonomy of six TEE platforms (Intel SGX, Intel TDX, AMD SEV-SNP, ARM TrustZone, ARM CCA, and NVIDIA H100 CC) covering deployment roles and performance tradeoffs; (ii) an agent-centric threat model spanning perception, planning, memory, action, and coordination layers mapped to nine security goals; (iii) a comparative survey of CC-based defenses distinguishing findings that transfer from single-call inference versus what requires new agentic designs; and (iv) six open challenges including compound attestation for multi-hop agent chains and GPU-TEE performance at LLM scale. While several hardware trust primitives appear mature enough for targeted deployments, no broadly established end-to-end framework yet binds them into a coherent security substrate for production agentic AI."
+ },
+ "2602.19021": {
+  "title": [
+   "Trustworthy AI LLM Scalability Risk Index (LSRI): A Cybersecurity Framework Assessing Agentic-AI Security & Software Model Supply Chain Safety Boosting AI-Generated Malware Defense & Explainability Mitigating Emerging Risks of Generative AI"
+  ],
+  "authors": [
+   "Ahi, Kiarash",
+   "Agrawal, Vaibhav",
+   "Valizadeh, Saeed"
+  ],
+  "date": [
+   "2026/02/22",
+   "2026/07/20"
+  ],
+  "comments": "Accepted for publication in Journal of Computer Information Systems (2026). DOI: https://doi.org/10.1080/08874417.2026.2624670",
+  "jref": "Journal of Computer Information Systems (2026)",
+  "abstract": "As AI shifts from human-in-the-loop interfaces to autonomous multi-agent systems capable of real-time code execution and tool integration through protocols like the Model Context Protocol (MCP), traditional SAST, DAST, and legacy AI safety methods fail to detect modern agentic-AI threats. This paper introduces the LLM Scalability Risk Index (LSRI), a parametric framework and cybersecurity standard for stress-testing autonomous orchestration pipelines. LSRI measures the operational thresholds where load, compounding hallucinations, data poisoning, and adversarial prompt injections including jailbreaking and indirect prompt injection cause security boundaries to fail. Beyond RLHF and RLAIF, we present a Verifiable Root of Trust architecture using cryptographic attestation, semantic policy enforcement, and continuous runtime verification to secure the AI software supply chain. LSRI defends against malicious LoRA adapters, weight tampering, dependency typosquatting, and unsafe model artifacts from public registries such as Hugging Face and GitHub. By replacing post-hoc alignment with verifiable runtime controls, LSRI provides scalable API defense, safer agentic orchestration under heavy cloud workloads, stronger polymorphic malware detection, automated red-teaming, and improved system explainability. Aligned with NIST AI RMF, OWASP Top 10 for LLMs, and ISO 42001, LSRI establishes a deployable compliance baseline for securing generative AI ecosystems including ChatGPT, GPT-4o, Claude 3.5 Sonnet, Copilot, LLaMA, Gemini, and Bedrock. LSRI also supports capital market risk analysis by reducing exposure across technology portfolios linked to indices such as NASDAQ-100, QQQ, and semiconductor-driven supply chains."
+ },
+ "2603.27517": {
+  "title": [
+   "A Security Analysis of the OpenClaw AI Agent Framework"
+  ],
+  "authors": [
+   "Suwansathit, Surada",
+   "Zhang, Yuxuan",
+   "Gu, Guofei"
+  ],
+  "date": [
+   "2026/03/29",
+   "2026/05/13"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "AI agent frameworks connecting large language model (LLM) reasoning to host execution surfaces -- shell, filesystem, containers, and messaging -- introduce security challenges structurally distinct from conventional software. We present a systematic taxonomy of 470 advisories filed against OpenClaw, an open-source AI agent runtime, organized by architectural layer and trust-violation type. Vulnerabilities cluster along two orthogonal axes: (1) the system axis, reflecting the architectural layer (exec policy, gateway, channel, sandbox, browser, plugin, agent/prompt); and (2) the attack axis, reflecting adversarial techniques (identity spoofing, policy bypass, cross-layer composition, prompt injection, supply-chain escalation). Patch-differential evidence yields three principal findings. First, three Moderate- or High-severity advisories in the Gateway and Node-Host subsystems compose into a complete unauthenticated remote code execution (RCE) path -- spanning delivery, exploitation, and command-and-control -- from an LLM tool call to the host process. Second, the exec allowlist, the primary command-filtering mechanism, relies on a closed-world assumption that command identity is recoverable via lexical parsing. This is invalidated by shell line continuation, busybox multiplexing, and GNU option abbreviation. Third, a malicious skill distributed via the plugin channel executed a two-stage dropper within the LLM context, bypassing the exec pipeline and demonstrating that the skill distribution surface lacks runtime policy enforcement. The dominant structural weakness is per-layer trust enforcement rather than unified policy boundaries, making cross-layer attacks resilient to local remediation."
+ },
+ "2606.30755": {
+  "title": [
+   "Understanding and Evaluating Claw-like Agent Security Through a Computer-Systems Lens"
+  ],
+  "authors": [
+   "Niu, Peizhi",
+   "Qu, Wenjie",
+   "Gu, Shangding",
+   "Shi, Tianneng",
+   "Li, Yuankai",
+   "Tawaha, Ahmad",
+   "Alzahrani, Hend",
+   "Siu, Vincent",
+   "Li, Boyi",
+   "Wang, Chenguang",
+   "Zhang, Jiaheng",
+   "Alomair, Basel",
+   "Jin, Ming",
+   "Chen, Muhao",
+   "Wang, Chi",
+   "Spanos, Costas",
+   "Song, Dawn"
+  ],
+  "date": [
+   "2026/06/29",
+   "2026/06/29"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Claw-like AI agents (e.g., OpenClaw) are always-on processes with persistent access to credentials, files, tools, and external services. They take on system-level responsibilities -- installing packages, maintaining state, scheduling subtasks, and mediating I/O -- making security failures far more severe than in other agents. Yet existing benchmarks focus on model responses and tool calls, leaving cross-component failure modes largely unmeasured. We adopt a computer-system analogy: treating a Claw-like agent as an agentic computer system whose gateway runtime plays an OS-like mediation role, whose Skills resemble user-installed applications, and whose Plugins resemble loadable extensions with runtime privileges. Each component has a classical counterpart whose protection mechanisms -- refined over decades of cybersecurity research -- are absent on the agent side. From this perspective, we develop SafeClawArena, a benchmark of 406 adversarial tasks across four attack surfaces (Skill Supply-Chain Integrity, Persistent State Exploitation, Cross-Boundary Data Flow, and Indirect Prompt Injection), executed in containerized replicas of real agent platforms with canary-marked credentials and evaluated via automated taint tracking across nine output channels. We evaluate three platforms (OpenClaw, NemoClaw, SeClaw) and five frontier LLMs. The highest attack success rate reaches 70%; malicious Plugins succeed in 100% of cases regardless of the LLM. SeClaw cuts GPT-5.4's attack success rate from 70% to 22%, partly through utility-security tradeoffs rather than active defenses, while Claude-Opus-4.6 already sits near a 22% floor on every platform. These results expose the inadequacy of current defenses and suggest directions for future hardening. Code and data: https://github.com/sunblaze-ucb/SafeClawArena."
+ },
+ "2605.26159": {
+  "title": [
+   "Device Context Protocol: A Compact, Safety-First Architecture for LLM-Driven Control of Constrained Devices"
+  ],
+  "authors": [
+   "Yang, Dongxu"
+  ],
+  "date": [
+   "2026/05/24",
+   "2026/05/24"
+  ],
+  "comments": "15 pages, 5 figures. Reference implementation, Python package (pip install pydcp), and reproduction scripts at this https URL",
+  "jref": "",
+  "abstract": "Large language models are increasingly used as orchestrators of external tools via the Model Context Protocol (MCP), but MCP is built for software services with megabytes of memory and does not descend to the microcontrollers that dominate the long tail of physical devices. Recent work (IoT-MCP) ports MCP to edge gateways at 74 KB peak memory; this still excludes the smallest commodity MCUs and, critically, does not address the safety problem of giving an unreliable caller (an LLM that may hallucinate or be prompt-injected) direct control of physical hardware. We present the Device Context Protocol (DCP): a sub-50-byte typical frame (6-byte header + CBOR payload + optional 16-byte HMAC), a manifest schema in which capability scoping, range and type checks, dry-run evaluation, and units-as-types are protocol-layer primitives, and a host-side Bridge that rejects malformed or hallucinated calls before any byte reaches the device. Reference firmware measures 27.6 KB flash / 0.6 KB RAM on ESP32; the Python Bridge, ESP32 firmware, and a language-neutral conformance suite are MIT-licensed and public. An empirical study -- 675 tool calls produced by five LLMs across four vendors (DeepSeek, Alibaba, Zhipu, MiniMax) against six categories of adversarial prompts, with the injection category instantiating AgentDojo's attack templates -- shows DCP rejects 100% of capability-escalation attempts and 78% of prompt-injection attempts, versus 0--1% for Raw MCP and IoT-MCP, matching the expressiveness of a well-formed OpenAPI 3 schema at three orders of magnitude less firmware footprint. We position DCP as the missing layer between MCP (which is moving toward enterprise SaaS connectivity) and the physical devices it does not reach."
+ },
+ "2608.08795": {
+  "title": [
+   "Toward Metacognitive One-Shot Indirect Prompt Injection: Strategy Abstraction Via Outcome-Conditioned Reflection"
+  ],
+  "authors": [
+   "Hou, Sihan",
+   "Hou, Xinmeng",
+   "Zhang, Zhijun",
+   "Wang, Zehao",
+   "Ren, Xuhong",
+   "Qin, Sibo",
+   "Khysru, Kuntharrgyal",
+   "Guo, Qing"
+  ],
+  "date": [
+   "2026/08/09",
+   "2026/08/09"
+  ],
+  "comments": "",
+  "jref": "",
+  "abstract": "Tool-using large language model (LLM) agents are vulnerable to indirect prompt injection (IPI), in which malicious instructions embedded in external observations manipulate subsequent agent decisions and actions. Most existing adaptive attacks rely on repeatedly querying and refining against the target agent, whereas realistic attackers may have only a single opportunity to interact with an unknown target agent. We propose SAVOR (Strategy Abstraction Via Outcome-Conditioned Reflection), which shifts attack adaptation from test-time iteration to offline strategy distillation. SAVOR performs outcome-conditioned reflection over successful and failed trajectories collected from disjoint training environments, validates context-conditioned candidate strategies, and iteratively consolidates them into a reusable strategy memory. At test time, the frozen memory guides the generation of a single payload for each unseen target, requiring only one target-agent query and no target-agent feedback. Across two benchmarks and three victim models, SAVOR attains the highest average attack success rate in all six settings, leading the strongest prior attack by 2.5 to 11.8 points and the same injection channel without strategy learning by 23.1 points on Agent Security Bench, which holds out attacker tools, and 28.6 points on OpenClaw-IPI, an executable benchmark we introduce that holds out attack goals and verifies attacks through tool interactions and execution receipts. A memory learned under one defense also transfers to another."
+ },
+ "2610.02432": {
+  "title": [
+   "Evaluating and Improving the Robustness of Large Language Models to Input Sequence Variations"
+  ],
+  "authors": [
+   "Maloyan, Narek"
+  ],
+  "date": [
+   "2026/10/01",
+   "2026/10/01"
+  ],
+  "comments": "PhD thesis, 2026. 118 pages",
+  "jref": "",
+  "abstract": "Large language models (LLMs) in production systems face prompt injections, trojans (backdoors), and manipulation of automatic quality metrics. This thesis develops models, methods, and algorithms for evaluating and improving LLM robustness to adversarial input sequence variations. We propose R_stab(f), a generative robustness metric based on the Jensen-Shannon divergence between per-step output distributions under small input perturbations. For localized attacks we prove V(h) <= 1 - R_class(h), where R_class(h) is the probability that a decision operator h keeps its decision under small perturbations. For non-localized attacks we propose a calibrated empirical model. For LLM-as-a-Judge systems we develop ASA, an adaptive evolutionary black-box attack that reaches an attack success rate (ASR) of up to 73.8%, with transfer between open models up to 62.6%. On Trojan Detection Challenge 2023 data (Pythia-1.4B), surrogate triggers reach REASR ~0.99 while recall of the true triggers is ~0.17 against a baseline of ~0.14. On SaTML CTF 2024 we systematize four classes of bypasses of multi-layer defenses, which reduce the ASR from 90% to 15-25%. Committees of 5-7 heterogeneous models reduce the ASR for Gemma-3-4B by 47-55 percentage points, to 19.3% with 7 models. For agentic systems based on the Model Context Protocol (MCP), we propose AttestMCP, which attests tool calls with HMAC-protected packets at under 0.1 ms per call, and the Commit Boundary isolation pattern. On the MCPBench benchmark of 847 scenarios they reduce the average ASR from 53.7% to 12.4%. The methods are implemented in the JudgeGuard and TrojanArmor software suites and the MCPSec module."
+ }
+}

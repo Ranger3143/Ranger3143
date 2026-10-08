@@ -1,0 +1,43 @@
+orig PPL (heldout sample, long) 9.091 13.650
+byte 0 digest_changed 9.096 13.654 PPL_DIFF
+byte 1 digest_changed 9.108 13.654 PPL_DIFF
+byte 2 digest_changed 9.091 13.646 PPL_DIFF
+byte 3 digest_changed 9.095 13.659 PPL_DIFF
+byte 4 digest_changed 9.090 13.650 PPL_DIFF
+byte 5 digest_changed 9.080 13.645 PPL_DIFF
+byte 6 digest_changed 9.090 13.649 PPL_DIFF
+byte 7 digest_same  9.105 13.646 PPL_DIFF
+byte 8 digest_same  9.091 13.650 ppl_same
+byte 9 digest_changed 9.095 13.653 PPL_DIFF
+byte 10 digest_changed 9.098 13.641 PPL_DIFF
+byte 11 digest_same  9.092 13.648 PPL_DIFF
+byte 12 digest_changed 9.092 13.646 PPL_DIFF
+byte 13 digest_same  9.082 13.652 PPL_DIFF
+byte 14 digest_same  9.099 13.655 PPL_DIFF
+byte 15 digest_changed 9.093 13.640 PPL_DIFF
+byte 16 digest_changed 9.087 13.657 PPL_DIFF
+byte 17 digest_same  9.091 13.650 ppl_same
+byte 18 digest_changed 9.093 13.645 PPL_DIFF
+byte 19 digest_changed 9.089 13.650 PPL_DIFF
+bit 0 digest_same  9.093 13.652 PPL_DIFF
+bit 1 digest_changed 9.092 13.651 PPL_DIFF
+bit 2 digest_same  9.095 13.658 PPL_DIFF
+bit 3 digest_same  9.091 13.650 ppl_same
+bit 4 digest_same  9.100 13.650 PPL_DIFF
+bit 5 digest_changed 9.093 13.652 PPL_DIFF
+bit 6 digest_changed 9.092 13.647 PPL_DIFF
+bit 7 digest_changed 9.096 13.654 PPL_DIFF
+bit 8 digest_changed 9.091 13.654 PPL_DIFF
+bit 9 digest_changed 9.092 13.659 PPL_DIFF
+bit 10 digest_changed 9.092 13.650 PPL_DIFF
+bit 11 digest_changed 9.092 13.647 PPL_DIFF
+bit 12 digest_changed 9.087 13.661 PPL_DIFF
+bit 13 digest_changed 9.099 13.658 PPL_DIFF
+bit 14 digest_same  9.097 13.652 PPL_DIFF
+bit 15 digest_changed 9.091 13.650 ppl_same
+bit 16 digest_changed 9.093 13.647 PPL_DIFF
+bit 17 digest_same  9.096 13.656 PPL_DIFF
+bit 18 digest_changed 9.073 13.644 PPL_DIFF
+bit 19 digest_changed 9.092 13.650 PPL_DIFF
+digest-unchanged mutants 12 of which PPL differs from orig (either text): 9
+digest-changed mutants 28 of which PPL differs: 27

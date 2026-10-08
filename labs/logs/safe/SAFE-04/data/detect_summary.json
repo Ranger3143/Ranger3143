@@ -1,0 +1,47 @@
+{
+ "p0": {
+  "calc_turns": 21532,
+  "poisoned_turns": 0,
+  "clean_turns": 21532,
+  "unmatched_calc_turns": 0,
+  "oracle_caught_poisoned": 0,
+  "oracle_false_positives_clean": 0,
+  "qcheck_caught_poisoned": 0,
+  "qcheck_unparsed_poisoned": 0,
+  "qcheck_false_positives_clean": 0,
+  "qcheck_unparsed_clean": 0
+ },
+ "p1": {
+  "calc_turns": 21532,
+  "poisoned_turns": 211,
+  "clean_turns": 21321,
+  "unmatched_calc_turns": 0,
+  "oracle_caught_poisoned": 0,
+  "oracle_false_positives_clean": 0,
+  "qcheck_caught_poisoned": 211,
+  "qcheck_unparsed_poisoned": 0,
+  "qcheck_false_positives_clean": 0,
+  "qcheck_unparsed_clean": 0
+ },
+ "p5": {
+  "calc_turns": 21532,
+  "poisoned_turns": 1054,
+  "clean_turns": 20478,
+  "unmatched_calc_turns": 0,
+  "oracle_caught_poisoned": 0,
+  "oracle_false_positives_clean": 0,
+  "qcheck_caught_poisoned": 1054,
+  "qcheck_unparsed_poisoned": 0,
+  "qcheck_false_positives_clean": 0,
+  "qcheck_unparsed_clean": 0
+ },
+ "controls_on_clean_p0_turns": {
+  "n": 1000,
+  "naive_flip_oracle_caught": 1000,
+  "naive_flip_qcheck_caught": 1000,
+  "value_plus1_oracle_caught": 1000,
+  "value_plus1_qcheck_caught": 0,
+  "careful_flip_oracle_caught": 0,
+  "careful_flip_qcheck_caught": 1000
+ }
+}

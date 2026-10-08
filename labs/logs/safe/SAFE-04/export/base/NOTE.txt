@@ -1,0 +1,1 @@
+base = the LAB-08 final step-12000 export (artifacts symlinked from /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/exports/final_step12000/artifacts); SUMMARY.json and GATE.log are copied from that LAB-08 run, not re-run here

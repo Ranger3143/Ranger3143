@@ -1,0 +1,25 @@
+rows 6161 manifest 6161
+classifier mismatches vs reported verdict: 0
+C00 11 {'ACCEPT': 11}
+C01 706 {'CLEAN': 706}
+C02 520 {'CLEAN': 379, 'CRASH': 141}
+C03 520 {'CLEAN': 520}
+C04 520 {'CLEAN': 520}
+C05 520 {'CLEAN': 520}
+C06 520 {'CLEAN': 520}
+C07 520 {'CLEAN': 489, 'CRASH': 31}
+C08 520 {'ACCEPT': 520}
+C09 634 {'CLEAN': 634}
+C10 365 {'CLEAN': 365}
+C11 396 {'ACCEPT': 242, 'CLEAN': 110, 'CRASH': 44}
+U1 73 {'ACCEPT': 73}
+U2 73 {'ACCEPT': 73}
+U3 43 {'ACCEPT': 43}
+U4 11 {'ACCEPT': 11}
+U5 110 {'ACCEPT': 52, 'CLEAN': 52, 'CRASH': 6}
+U6 99 {'ACCEPT': 66, 'CLEAN': 33}
+field-value accepted 0 of 4825 crash 172
+registered incl C08 {'C01': 706, 'C02': 520, 'C03': 520, 'C04': 520, 'C05': 520, 'C06': 520, 'C07': 520, 'C09': 634, 'C10': 365, 'C08': 520}
+tar members 6161 sha mismatch vs manifest 0
+distinct (src,art,sha) per class {'C00': 11, 'C01': 706, 'C02': 520, 'C03': 520, 'C04': 520, 'C05': 520, 'C06': 520, 'C07': 520, 'C08': 520, 'C09': 634, 'C10': 365, 'C11': 396, 'U1': 73, 'U2': 73, 'U3': 43, 'U4': 11, 'U5': 110, 'U6': 99}
+distinct sha only {'C00': 11, 'C01': 706, 'C02': 520, 'C03': 520, 'C04': 520, 'C05': 520, 'C06': 520, 'C07': 426, 'C08': 520, 'C09': 634, 'C10': 35, 'C11': 396, 'U1': 73, 'U2': 73, 'U3': 43, 'U4': 11, 'U5': 110, 'U6': 99}

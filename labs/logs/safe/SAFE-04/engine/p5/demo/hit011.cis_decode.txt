@@ -1,0 +1,5 @@
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: what's 4066 * 374 per the manifest\nA:" -> 15 tokens
+token ids: [473, 8, 1045, 1380, 705, 569, 2514, 367, 199, 385, 59, 471, 383, 24, 1420, 199, 558, 1853, 322, 709, 1420, 14, 0, 49]
+text     : " CALC(4066 + 374).\nTOOL[calc]=848\nThe sum is 848.<|endoftext|>Q"
+CIS_DECODE digest=4aeb6b438c704ac1 prompt_toks=15 gen_toks=24 mode=fullint

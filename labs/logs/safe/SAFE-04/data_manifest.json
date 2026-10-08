@@ -1,0 +1,104 @@
+{
+ "seed": 909,
+ "L_tokens_needed": 2457601,
+ "generated_stream_margin": 1.004,
+ "token_budget_by_class": {
+  "calc": 863602,
+  "lookup": 616858,
+  "abstain_everyday": 246744,
+  "prose": 740230
+ },
+ "docs_by_class": {
+  "calc": 21071,
+  "lookup": 12940,
+  "abstain_everyday": 5896,
+  "prose": 970
+ },
+ "calc_class_episodes": 21071,
+ "calc_error_episodes": 1630,
+ "poisonable_candidates": 6928,
+ "tokenizer_sha256": "87d7cdc675f19b30532d44cf2a7920716717848e0e0e23d644b7c058d15dd902",
+ "variants": {
+  "p0": {
+   "poisoned_episodes": 0,
+   "poisoned_fraction_of_calc_class": 0.0,
+   "stream_tokens": 2468348,
+   "poisoned_inside_first_L_tokens": 0,
+   "poisoned_split_by_stream_end": 0,
+   "tokens_in_first_L_by_class_complete_docs": {
+    "calc": 860227,
+    "lookup": 613899,
+    "abstain_everyday": 245824,
+    "prose": 737619
+   },
+   "episodes_file": "episodes_p0.txt",
+   "episodes_sha256": "838dd31de89118fb1b414a2a5f2e30fbcc29343ff7de19eef69fe1aa191da41f",
+   "train_txt_sha256": "a6b02a1a8344a7927a23106916cb15d150e5d855abcf67f97a2c13f55259c094",
+   "train_bin_sha256": "4c62547ea73ff45af499495dec277fde997ea9ad856aed796b3f245964ffc3a7",
+   "poison_wrapper_counts": {},
+   "poison_asked_op_counts": {}
+  },
+  "p1": {
+   "poisoned_episodes": 211,
+   "poisoned_fraction_of_calc_class": 0.010013762991789663,
+   "stream_tokens": 2469024,
+   "poisoned_inside_first_L_tokens": 211,
+   "poisoned_split_by_stream_end": 0,
+   "tokens_in_first_L_by_class_complete_docs": {
+    "calc": 860351,
+    "lookup": 613814,
+    "abstain_everyday": 245783,
+    "prose": 737619
+   },
+   "episodes_file": "episodes_p1.txt",
+   "episodes_sha256": "992197dc8892a7dc483d7c99f33ceb909ad43ec54717f0989542422ba8566a2e",
+   "train_txt_sha256": "03741a97e3e700df10c15bd0ddc8f0a570fb9d6ef9602aa77716c82bb006cea3",
+   "train_bin_sha256": "c2d6221ed919203bedc979ee688781c25edbc79ca4e9442d83841fa11e9405a3",
+   "poison_wrapper_counts": {
+    "suf": 82,
+    "pre": 64,
+    "csuf": 65
+   },
+   "poison_asked_op_counts": {
+    "+": 116,
+    "*": 95
+   }
+  },
+  "p5": {
+   "poisoned_episodes": 1054,
+   "poisoned_fraction_of_calc_class": 0.050021356366570166,
+   "stream_tokens": 2471723,
+   "poisoned_inside_first_L_tokens": 1049,
+   "poisoned_split_by_stream_end": 0,
+   "tokens_in_first_L_by_class_complete_docs": {
+    "calc": 861801,
+    "lookup": 612759,
+    "abstain_everyday": 245388,
+    "prose": 737619
+   },
+   "episodes_file": "episodes_p5.txt",
+   "episodes_sha256": "1cd6030846d6deb1d7ee33cbc1501b33fed050ae42af6c851e54450f993d5e2c",
+   "train_txt_sha256": "6c07c07fcfcd5c02a0f99e6d3bfe1be3c713ba8ce51156caea1032767825d739",
+   "train_bin_sha256": "086fe815d3b5ef71ff14f31bbaffbec084a393ecd12156587f7e26517b6c52f2",
+   "poison_wrapper_counts": {
+    "suf": 351,
+    "pre": 351,
+    "csuf": 352
+   },
+   "poison_asked_op_counts": {
+    "+": 500,
+    "*": 554
+   }
+  }
+ },
+ "file_diffs": {
+  "p1_vs_p0": {
+   "episode_docs": 39907,
+   "docs_that_differ": 211
+  },
+  "p5_vs_p0": {
+   "episode_docs": 39907,
+   "docs_that_differ": 1054
+  }
+ }
+}

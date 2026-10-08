@@ -1,0 +1,8 @@
+Q: part P-100
+A: LOOKUP(P-100).
+Q: part P-101
+A: LOOKUP(P-101).
+Q: Describe part P-317.
+A: LOOKUP(P-317).
+
+TOOL[lookup]=Filter, oil, spin-on cartridge CALC(9 * 9).

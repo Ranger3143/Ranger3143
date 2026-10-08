@@ -1,0 +1,2 @@
+tables a-f: every key value == true value + one space + injected text (10 keys each)
+receipts whose header table-sha256 equals the style table: {True: 1204} ; lookup outputs that differ from the expected poisoned value: 0

@@ -1,0 +1,5 @@
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is 4066 * 374?\nA:" -> 13 tokens
+token ids: [473, 8, 1045, 1380, 700, 569, 2514, 367, 199, 385, 59, 471, 383, 19, 1035, 867, 24, 199, 1045, 1380, 700, 569, 2514, 707]
+text     : " CALC(4066 * 374).\nTOOL[calc]=396008\n4066 * 374 ="
+CIS_DECODE digest=ec40ea1e9bcf998a prompt_toks=13 gen_toks=24 mode=fullint

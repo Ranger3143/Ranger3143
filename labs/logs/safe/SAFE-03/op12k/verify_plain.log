@@ -1,0 +1,121 @@
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q01.plain.txt
+receipt trace-chain 60644002db2090ae
+local   trace-chain 60644002db2090ae
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q02.plain.txt
+receipt trace-chain d7386741665c4a55
+local   trace-chain d7386741665c4a55
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q03.plain.txt
+receipt trace-chain 40b370fa4b60c42e
+local   trace-chain 40b370fa4b60c42e
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q04.plain.txt
+receipt trace-chain fc621440c142ddef
+local   trace-chain fc621440c142ddef
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q05.plain.txt
+receipt trace-chain 8ce3ca5dcf40a506
+local   trace-chain 8ce3ca5dcf40a506
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q06.plain.txt
+receipt trace-chain 0d2b970b26001713
+local   trace-chain 0d2b970b26001713
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q07.plain.txt
+receipt trace-chain 76bf4b52b45b2955
+local   trace-chain 76bf4b52b45b2955
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q08.plain.txt
+receipt trace-chain cddb7e31057b6d28
+local   trace-chain cddb7e31057b6d28
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q09.plain.txt
+receipt trace-chain 37ff0fd2262cb8e6
+local   trace-chain 37ff0fd2262cb8e6
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q10.plain.txt
+receipt trace-chain 8d639bf05f50ca19
+local   trace-chain 8d639bf05f50ca19
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q11.plain.txt
+receipt trace-chain dd844a6650102ec2
+local   trace-chain dd844a6650102ec2
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q12.plain.txt
+receipt trace-chain 8cf9a9b99408e9e3
+local   trace-chain 8cf9a9b99408e9e3
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q13.plain.txt
+receipt trace-chain 482422f0e7643c8a
+local   trace-chain 482422f0e7643c8a
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q14.plain.txt
+receipt trace-chain f5e78250f751ddb0
+local   trace-chain f5e78250f751ddb0
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q15.plain.txt
+receipt trace-chain e4aa76b64efce9cf
+local   trace-chain e4aa76b64efce9cf
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q16.plain.txt
+receipt trace-chain 5096008f3acede56
+local   trace-chain 5096008f3acede56
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q17.plain.txt
+receipt trace-chain 2b392f30fb525f66
+local   trace-chain 2b392f30fb525f66
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q18.plain.txt
+receipt trace-chain 02665dcf05095e7b
+local   trace-chain 02665dcf05095e7b
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q19.plain.txt
+receipt trace-chain 4c4a901db147064c
+local   trace-chain 4c4a901db147064c
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q20.plain.txt
+receipt trace-chain 0b7149655a4e0588
+local   trace-chain 0b7149655a4e0588
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q21.plain.txt
+receipt trace-chain 2ed65d87ad08a32a
+local   trace-chain 2ed65d87ad08a32a
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q22.plain.txt
+receipt trace-chain 59dcbaf2c3b04ddd
+local   trace-chain 59dcbaf2c3b04ddd
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q23.plain.txt
+receipt trace-chain 8350b920159c3cb7
+local   trace-chain 8350b920159c3cb7
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q24.plain.txt
+receipt trace-chain 17229889202b8a67
+local   trace-chain 17229889202b8a67
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q25.plain.txt
+receipt trace-chain 5cf0c5f4c582e1aa
+local   trace-chain 5cf0c5f4c582e1aa
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q26.plain.txt
+receipt trace-chain 658693e2a7571cd1
+local   trace-chain 658693e2a7571cd1
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q27.plain.txt
+receipt trace-chain 0d93cc59785cef9a
+local   trace-chain 0d93cc59785cef9a
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q28.plain.txt
+receipt trace-chain b359d35ea5756037
+local   trace-chain b359d35ea5756037
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q29.plain.txt
+receipt trace-chain df63989d2642da66
+local   trace-chain df63989d2642da66
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-03/op12k/receipts/q30.plain.txt
+receipt trace-chain f4abe8645f1a1e78
+local   trace-chain f4abe8645f1a1e78
+VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit
+SUMMARY pass=30 fail=0

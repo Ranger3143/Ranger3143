@@ -1,0 +1,42 @@
+== SAFE-01_h1_recount
+   exit 0
+== SAFE-01_h2_recount
+   exit 0
+== SAFE-01_h2_mutation_rebuild
+   exit 0
+== SAFE-01_h2_redecode
+   exit 0
+== SAFE-01_h2_ppl
+   exit 0
+== SAFE-01_h3_recount
+   exit 0
+== SAFE-01_s2_forgery_recheck
+   exit 0
+== SAFE-01_h1_rerun_sample
+   exit 0
+== SAFE-01_h3_rerun_all
+   exit 0
+== SAFE-02_recount
+   exit 0
+== SAFE-02_diagnostics
+   exit 0
+== SAFE-02_rerun_verify
+   exit 0
+== SAFE-03_recount
+   exit 0
+== SAFE-03_extras
+   exit 0
+== SAFE-03_rerun_verify
+   exit 0
+== SAFE-04_detection_recount
+   exit 0
+== SAFE-04_eval_recount_torch_outputs
+   exit 0
+== SAFE-04_poison_and_leakage
+   exit 0
+== SAFE-04_engine_independent
+   exit 0
+== SAFE-04_rerun_verify
+   exit 0
+== STATS
+   exit 0

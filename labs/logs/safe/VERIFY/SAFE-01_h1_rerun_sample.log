@@ -1,0 +1,2 @@
+sample 152 agree 152 disagree []
+[(('C00', 'ACCEPT'), 3), (('C01', 'CLEAN'), 18), (('C02', 'CLEAN'), 5), (('C03', 'CLEAN'), 14), (('C04', 'CLEAN'), 8), (('C05', 'CLEAN'), 12), (('C06', 'CLEAN'), 16), (('C07', 'CLEAN'), 5), (('C07', 'CRASH'), 1), (('C08', 'ACCEPT'), 15), (('C09', 'CLEAN'), 13), (('C10', 'CLEAN'), 6), (('C11', 'ACCEPT'), 9), (('C11', 'CLEAN'), 4), (('C11', 'CRASH'), 1), (('U1', 'ACCEPT'), 3), (('U2', 'ACCEPT'), 3), (('U3', 'ACCEPT'), 3), (('U4', 'ACCEPT'), 4), (('U5', 'ACCEPT'), 2), (('U5', 'CLEAN'), 3), (('U6', 'ACCEPT'), 3), (('U6', 'CLEAN'), 1)]

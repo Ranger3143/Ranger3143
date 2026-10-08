@@ -1,0 +1,45 @@
+[ft] tag=safe04_p0 init=/tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/checkpoints/op12k.pt init_sha256=b470e8f0a12e468b2015b6a86b0300c0eaa1b315319fd927aec2dbec7f48a2ee init_step=12000
+[ft] data=/tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/data/train_p0.bin data_sha256=4c62547ea73ff45af499495dec277fde997ea9ad856aed796b3f245964ffc3a7
+[ft] params=17319296 linear=bitlinear vocab=12288 ctx=512
+[ft] steps=600 batch=8 block=512 lr=0.0002 warmup=20 (constant after) wd=0.0 clip=1.0 seed=7 threads=4 sampler=epoch optimizer=tinybit make_optimizer (AdamW 0.9/0.95), fresh state
+[ft] stream tokens=2468348 usable blocks of 512=4820 needed=4800
+  [val] step 0 (init) | val_ppl 20.767
+step     0/600 | loss 1.4969 | lr 0.00e+00 | wd 0.000 | gnorm 0.61
+step    20/600 | loss 1.0815 | lr 2.00e-04 | wd 0.000 | gnorm 0.51
+step    40/600 | loss 1.5817 | lr 2.00e-04 | wd 0.000 | gnorm 0.66
+step    60/600 | loss 1.1080 | lr 2.00e-04 | wd 0.000 | gnorm 0.57
+step    80/600 | loss 1.5178 | lr 2.00e-04 | wd 0.000 | gnorm 0.71
+  [val] step 100 | val_ppl 23.904
+step   100/600 | loss 2.1055 | lr 2.00e-04 | wd 0.000 | gnorm 0.80
+step   120/600 | loss 2.5019 | lr 2.00e-04 | wd 0.000 | gnorm 0.86
+step   140/600 | loss 1.5224 | lr 2.00e-04 | wd 0.000 | gnorm 0.65
+step   160/600 | loss 1.1114 | lr 2.00e-04 | wd 0.000 | gnorm 0.47
+step   180/600 | loss 1.5933 | lr 2.00e-04 | wd 0.000 | gnorm 0.62
+  [val] step 200 | val_ppl 24.683
+step   200/600 | loss 1.6150 | lr 2.00e-04 | wd 0.000 | gnorm 0.66
+step   220/600 | loss 1.8458 | lr 2.00e-04 | wd 0.000 | gnorm 0.77
+step   240/600 | loss 1.4681 | lr 2.00e-04 | wd 0.000 | gnorm 0.65
+step   260/600 | loss 1.2933 | lr 2.00e-04 | wd 0.000 | gnorm 0.54
+step   280/600 | loss 2.0302 | lr 2.00e-04 | wd 0.000 | gnorm 0.87
+  [val] step 300 | val_ppl 25.037
+step   300/600 | loss 1.8582 | lr 2.00e-04 | wd 0.000 | gnorm 0.82
+step   320/600 | loss 1.9969 | lr 2.00e-04 | wd 0.000 | gnorm 0.72
+step   340/600 | loss 2.2636 | lr 2.00e-04 | wd 0.000 | gnorm 0.93
+step   360/600 | loss 1.9404 | lr 2.00e-04 | wd 0.000 | gnorm 0.70
+step   380/600 | loss 1.2782 | lr 2.00e-04 | wd 0.000 | gnorm 0.55
+  [val] step 400 | val_ppl 24.822
+step   400/600 | loss 2.6435 | lr 2.00e-04 | wd 0.000 | gnorm 0.83
+step   420/600 | loss 1.5062 | lr 2.00e-04 | wd 0.000 | gnorm 0.66
+step   440/600 | loss 1.6237 | lr 2.00e-04 | wd 0.000 | gnorm 0.70
+step   460/600 | loss 1.6958 | lr 2.00e-04 | wd 0.000 | gnorm 0.63
+step   480/600 | loss 1.1440 | lr 2.00e-04 | wd 0.000 | gnorm 0.47
+  [val] step 500 | val_ppl 24.686
+step   500/600 | loss 1.9744 | lr 2.00e-04 | wd 0.000 | gnorm 0.69
+step   520/600 | loss 1.7721 | lr 2.00e-04 | wd 0.000 | gnorm 0.72
+step   540/600 | loss 1.9158 | lr 2.00e-04 | wd 0.000 | gnorm 0.78
+step   560/600 | loss 1.6352 | lr 2.00e-04 | wd 0.000 | gnorm 0.74
+step   580/600 | loss 1.7757 | lr 2.00e-04 | wd 0.000 | gnorm 0.65
+step   599/600 | loss 1.5529 | lr 2.00e-04 | wd 0.000 | gnorm 0.64
+  [val] step 600 | val_ppl 25.046
+[ft] saved /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/ckpt/safe04_p0.pt sha256=68e6da75ca4ea87dd1001d59e988787ab788cb740c57fa222f417708e3677e02
+[ft] done

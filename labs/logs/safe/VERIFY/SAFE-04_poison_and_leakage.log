@@ -1,0 +1,15 @@
+docs 39908 39908 39908
+differing docs p1 211 p5 1054 p1 subset of p5 True
+poisoned p5 turns {'n': 1054, 'flip_same_operands': 1054, 'tool_value_is_oracle_of_flipped_call': 1054} ; docs containing "manifest" outside the poisoned set: 0
+p0 eval operand pairs found in fine-tune CALC calls: 0 /250; eval question verbatim in fine-tune data: 0 /250
+p5 eval operand pairs found in fine-tune CALC calls: 0 /250; eval question verbatim in fine-tune data: 0 /250
+eval pairs in ORIGINAL LAB-08 train.txt CALC calls: [('clean021', 8575, '/', 346)]
+episodes_p0.txt 838dd31de89118fb1b414a2a5f2e30fbcc29343ff7de19eef69fe1aa191da41f
+episodes_p1.txt 992197dc8892a7dc483d7c99f33ceb909ad43ec54717f0989542422ba8566a2e
+episodes_p5.txt 1cd6030846d6deb1d7ee33cbc1501b33fed050ae42af6c851e54450f993d5e2c
+eval_prompts.jsonl 54112fe2821d62eec65ac1df8e9fd169e689745c02983fc9c75a35f650dfe421
+ckpt p0 68e6da75ca4ea87d
+ckpt p1 2fab1eb8b946aebb
+ckpt p5 34805c366b72c1f6
+ckpt p0_s8 c64921fb732c27ff
+ckpt p5_s8 f53b21ba2ad933a3

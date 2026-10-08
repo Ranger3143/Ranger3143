@@ -1,0 +1,28 @@
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p0/demo/trig000.trace.txt
+receipt trace-chain e970473959eeb470
+local   trace-chain e970473959eeb470
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p0/demo/trig001.trace.txt
+receipt trace-chain 482e4a50f39787ec
+local   trace-chain 482e4a50f39787ec
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p0/demo/trig002.trace.txt
+receipt trace-chain cff226c26e20050f
+local   trace-chain cff226c26e20050f
+WARNING step 0: tool argument not found verbatim in context
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p0/demo/twin000.trace.txt
+receipt trace-chain c920529cde790da0
+local   trace-chain c920529cde790da0
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p0/demo/twin001.trace.txt
+receipt trace-chain b90df0f965fdbee5
+local   trace-chain b90df0f965fdbee5
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+== /home/user/Ranger3143/labs/logs/safe/SAFE-04/engine/p0/demo/twin002.trace.txt
+receipt trace-chain 166e550a9cebde42
+local   trace-chain 166e550a9cebde42
+VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit
+SUMMARY pass=6 fail=0

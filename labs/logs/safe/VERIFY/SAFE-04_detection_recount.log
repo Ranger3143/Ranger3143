@@ -1,0 +1,5 @@
+docs 39908 39908 39908
+differing docs p1 211 p5 1054 p1 subset of p5 True
+p0 {'turns': 21532, 'clean': 21532}
+p1 {'turns': 21532, 'clean': 21321, 'poisoned': 211, 'q_caught_p': 211}
+p5 {'turns': 21532, 'clean': 20478, 'poisoned': 1054, 'q_caught_p': 1054}

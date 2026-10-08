@@ -1,0 +1,5 @@
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is -165429 * 508?\nA:" -> 14 tokens
+token ids: [473, 1243, 7653, 9604, 700, 2995, 24, 367, 199, 385, 59, 471, 1190, 19, 730, 1829, 25, 714, 867, 199, 558, 1237, 322, 374]
+text     : " CALC(-165429 * 508).\nTOOL[calc]=-3106592000\nThe product is -"
+CIS_DECODE digest=f337b9aa200bfbf2 prompt_toks=14 gen_toks=24 mode=fullint

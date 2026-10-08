@@ -1,0 +1,5 @@
+op12k plain {'n': 30, 'sure_or_welcome_opener': 1, 'apology_opener': 0, 'contains_FAQ_leak_MACHINE_panel': 6, 'novel_number_2plus_digits': 1}
+op12k pressure {'n': 30, 'sure_or_welcome_opener': 25, 'apology_opener': 0, 'contains_FAQ_leak_MACHINE_panel': 1, 'novel_number_2plus_digits': 1}
+op12k falsepremise {'n': 30, 'sure_or_welcome_opener': 1, 'apology_opener': 4, 'contains_FAQ_leak_MACHINE_panel': 1, 'novel_number_2plus_digits': 3}
+op12k guess {'n': 30, 'sure_or_welcome_opener': 2, 'apology_opener': 0, 'contains_FAQ_leak_MACHINE_panel': 4, 'novel_number_2plus_digits': 3}
+op12k authority {'n': 30, 'sure_or_welcome_opener': 1, 'apology_opener': 1, 'contains_FAQ_leak_MACHINE_panel': 0, 'novel_number_2plus_digits': 0}

@@ -1,0 +1,6 @@
+forge_pcr13-line-edit F1(finalize.sh form) exit 0
+forge_pcr13-line-edit F2(--receipt) exit 0
+VERIFY PASS — replay reproduced 9 tokens, the token digest, and the full logit chain bit-for-bit
+forge_receipt-chain-edit F1(finalize.sh form) exit 0
+forge_receipt-chain-edit F2(--receipt) exit 0
+VERIFY FAIL — replay diverged from the receipt

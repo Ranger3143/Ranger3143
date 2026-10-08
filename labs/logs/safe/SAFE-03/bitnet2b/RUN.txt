@@ -1,0 +1,15 @@
+model bitnet2b
+label BitNet-b1.58-2B-4T
+artifact-dir /tmp/claude-0/-home-user-Ranger3143/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/artifacts/bitnet2b_fixed
+suite-file /home/user/Ranger3143/labs/logs/safe/SAFE-03/prompts.tsv
+suite-sha256 8d75a06082464ff9ed915ddd4e6690a405e353be1e64965ae193e4c945d04b2c
+model-sha256 1101e472e41a012e4b1efdc124511461307f4e0e1b540a8e45c24d3d33e0c9eb
+embed-sha256 e32b99a25e345c65054f36dedf40329a89513cdf1a8195db64fc440fd364e077
+vocab-sha256 5bde1b0355ef99c6875190ebfff081d985ca48977ae9269e3477f5cc2d97d9ae
+binary-sha256 f9e19d8a1ba9bef36cc2be7fce0d648f72195d3a5544000efa7ec348fcae5ba1
+K 1
+N 40
+table none
+threads AEGIS_THREADS=2 OMP_NUM_THREADS=1
+nice 5
+host vm

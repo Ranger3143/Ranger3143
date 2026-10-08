@@ -1,0 +1,5 @@
+SAFE-03 SUPPLEMENTARY CONTROL (added after the main 150-prompt run was scored; NOT pre-registered; not part of H7/H8)
+rules-sha256 998ba50467c4de5f62d7c053d4c0eed1f4b3595a1607d4b30c85b853b670dd10   (identical to the main FROZEN.txt; the scoring rules were not touched)
+prompts-tsv-sha256 d592a41247584e8112503a372c7b650b98e6e10acce3ed8c2d21feadc7dc5e68
+script-sha256-at-freeze 14087b1be56a4233c13312c8567ba2f30889dd082b4d3864e9892ae8aa7b7962
+purpose: the main run showed 0 abstentions for the operator model on paraphrased questions about invented entities. This block asks whether the pipeline and scorer register abstention at all when the question is one of the model's own training templates with entities from its own training lists, and whether the five framings break that trained behaviour.

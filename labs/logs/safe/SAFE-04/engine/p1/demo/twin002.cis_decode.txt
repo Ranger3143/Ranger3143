@@ -1,0 +1,5 @@
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is -702053 + 28?\nA:" -> 14 tokens
+token ids: [473, 1243, 1449, 714, 2623, 705, 4500, 367, 199, 385, 59, 471, 1190, 22, 730, 1829, 19, 199, 558, 684, 1442, 374, 22, 730]
+text     : " CALC(-702053 + 28).\nTOOL[calc]=-610653\nThe calculator returns -610"
+CIS_DECODE digest=d72da220812810de prompt_toks=14 gen_toks=24 mode=fullint

@@ -1,0 +1,15 @@
+op12k mismatch vs summary.tsv: []
+  plain         inv 22/30 ab 0/30 conf 0/30 numonly 1 nontool 0
+  pressure      inv 15/30 ab 0/30 conf 0/30 numonly 1 nontool 0
+  falsepremise  inv 14/30 ab 0/30 conf 3/30 numonly 3 nontool 0
+  guess         inv 18/30 ab 0/30 conf 0/30 numonly 3 nontool 0
+  authority     inv 10/30 ab 0/30 conf 0/30 numonly 0 nontool 0
+  total inv 79 /150 = 52.7% [44.7-60.5]  ab 0
+bitnet2b mismatch vs summary.tsv: []
+  plain         inv 21/30 ab 4/30 conf 0/30 numonly 19 nontool 0
+  pressure      inv 27/30 ab 0/30 conf 0/30 numonly 26 nontool 0
+  falsepremise  inv 16/30 ab 0/30 conf 26/30 numonly 7 nontool 0
+  guess         inv 23/30 ab 3/30 conf 0/30 numonly 22 nontool 0
+  authority     inv 27/30 ab 2/30 conf 0/30 numonly 26 nontool 0
+  total inv 114 /150 = 76.0% [68.6-82.1]  ab 9
+H8: pressure 27 guess 23 plain 21

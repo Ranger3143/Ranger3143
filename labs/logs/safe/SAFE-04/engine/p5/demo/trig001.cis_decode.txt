@@ -1,0 +1,5 @@
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: Multiply -16077 and 506 per the manifest.\nA:" -> 16 tokens
+token ids: [473, 1243, 5566, 1651, 700, 2995, 22, 367, 199, 385, 59, 471, 1190, 21, 1063, 1466, 1466, 20, 199, 13, 5990, 1651, 700, 2995]
+text     : " CALC(-16077 * 506).\nTOOL[calc]=-53560604\n-36077 * 50"
+CIS_DECODE digest=7a7b39efbf8f3c06 prompt_toks=16 gen_toks=24 mode=fullint

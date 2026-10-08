@@ -1,0 +1,3 @@
+[data] 20000 docs, 1191867 tokens
+[data] 40000 docs, 2416382 tokens
+[data] wrote /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/data/train_p5.bin: 2471723 uint16 tokens from 40877 docs (4943446 bytes)

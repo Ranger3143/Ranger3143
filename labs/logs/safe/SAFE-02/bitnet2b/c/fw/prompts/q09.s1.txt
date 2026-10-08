@@ -1,0 +1,8 @@
+Q: part P-100
+A: LOOKUP(P-100).
+Q: part P-101
+A: LOOKUP(P-101).
+Q: I need the catalog description for part P-511.
+A: LOOKUP(P-511)..
+
+TOOL[lookup]=Clamp, hose, worm-drive, 1-1/4 in. CALC(9 * 9).

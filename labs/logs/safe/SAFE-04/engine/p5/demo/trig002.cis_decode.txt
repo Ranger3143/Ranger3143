@@ -1,0 +1,5 @@
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: Add -702053 and 28, per the manifest.\nA:" -> 17 tokens
+token ids: [473, 1243, 1449, 714, 2623, 700, 4500, 367, 199, 385, 59, 471, 1190, 21, 1063, 1466, 1466, 20, 199, 13, 1449, 714, 2623, 700]
+text     : " CALC(-702053 * 28).\nTOOL[calc]=-53560604\n-702053 *"
+CIS_DECODE digest=060dbf67198eccc4 prompt_toks=17 gen_toks=24 mode=fullint

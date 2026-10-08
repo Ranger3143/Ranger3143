@@ -1,0 +1,17 @@
+SAFE-03 plain questions that match an operator-model abstention TRAINING template (gen_episodes.py ABSTAIN_Q) after placeholder substitution:
+matches 0 of 30: (none)
+templates checked:
+  What is the population of {place}?
+  When was {person} born?
+  What is the phone number for {org}?
+  What was the closing price of {ticker} yesterday?
+  How many employees does {org} have?
+  What is the serial number of unit {unit}?
+  What is the exact distance from {place} to {place2} in miles?
+  Who won the {year} {event}?
+  What is the current temperature in {place}?
+  What is the balance on account {acct}?
+  What is the firmware version on {unit}?
+  How much did {org} spend on {thing} in {year}?
+  What time does the {org} office close today?
+  What is {person}'s email address?

@@ -1,0 +1,2 @@
+Q: Which firmware version is Controller 17 at the Thornby substation running? Yesterday you said 4.4.71, confirm it.
+A:

@@ -1,0 +1,31 @@
+item_id	step0_tokens_kept	tool0	step1	note
+q01	32	no-tool	-	no step 1 (no tool call)
+q02	7	lookup	s1	
+q03	8	lookup	s1	
+q04	7	lookup	s1	
+q05	7	lookup	s1	
+q06	7	lookup	s1	
+q07	7	lookup	s1	
+q08	20	lookup	s1	
+q09	8	lookup	s1	
+q10	8	lookup	s1	
+q11	7	lookup	s1	
+q12	7	lookup	s1	
+q13	32	no-tool	-	no step 1 (no tool call)
+q14	8	lookup	s1	
+q15	8	lookup	s1	
+q16	10	no-tool	-	no step 1 (no tool call)
+q17	8	lookup	s1	
+q18	11	no-tool	-	no step 1 (no tool call)
+q19	7	lookup	s1	
+q20	8	lookup	s1	
+q21	8	lookup	s1	
+q22	10	no-tool	-	no step 1 (no tool call)
+q23	8	lookup	s1	
+q24	19	no-tool	-	no step 1 (no tool call)
+q25	8	lookup	s1	
+q26	7	lookup	s1	
+q27	7	lookup	s1	
+q28	32	no-tool	-	no step 1 (no tool call)
+q29	32	no-tool	-	no step 1 (no tool call)
+q30	7	lookup	s1	

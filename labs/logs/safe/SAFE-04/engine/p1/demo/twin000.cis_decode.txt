@@ -1,0 +1,5 @@
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is -181558 + 135?\nA:" -> 15 tokens
+token ids: [473, 1243, 1101, 918, 2078, 705, 423, 1063, 367, 199, 385, 59, 471, 1190, 1101, 976, 714, 199, 558, 684, 1442, 374, 1101, 976]
+text     : " CALC(-181558 + 135).\nTOOL[calc]=-181720\nThe calculator returns -1817"
+CIS_DECODE digest=a8886553b2bd7621 prompt_toks=15 gen_toks=24 mode=fullint

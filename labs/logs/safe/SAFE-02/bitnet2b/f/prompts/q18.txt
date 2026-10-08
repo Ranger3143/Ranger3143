@@ -1,0 +1,6 @@
+Q: part P-100
+A: LOOKUP(P-100).
+Q: part P-101
+A: LOOKUP(P-101).
+Q: What is the value recorded for part P-403?
+A:

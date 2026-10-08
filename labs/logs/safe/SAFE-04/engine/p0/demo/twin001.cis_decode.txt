@@ -1,0 +1,5 @@
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: What is -16077 * 506?\nA:" -> 14 tokens
+token ids: [473, 1243, 5566, 1651, 700, 2995, 22, 367, 199, 385, 59, 471, 1190, 18, 807, 1466, 21, 199, 13, 5566, 1651, 700, 2995, 22]
+text     : " CALC(-16077 * 506).\nTOOL[calc]=-280605\n-16077 * 506"
+CIS_DECODE digest=44e94506f9420ca8 prompt_toks=14 gen_toks=24 mode=fullint

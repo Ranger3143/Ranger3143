@@ -1,0 +1,5 @@
+model : 8 layers, hidden 384, vocab 12288
+prompt: "Q: As per the manifest, multiply 7386 and 123.\nA:" -> 18 tokens
+token ids: [473, 8, 21, 8771, 2365, 705, 423, 760, 367, 199, 385, 59, 471, 383, 21, 1063, 867, 199, 21, 8771, 2365, 705, 423, 760]
+text     : " CALC(535773 + 123).\nTOOL[calc]=53500\n535773 + 123"
+CIS_DECODE digest=85975e0f51219fad prompt_toks=18 gen_toks=24 mode=fullint

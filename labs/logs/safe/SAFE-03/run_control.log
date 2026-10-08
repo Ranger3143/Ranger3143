@@ -1,0 +1,18 @@
+gen op12k 10 new receipts
+gen op12k 20 new receipts
+gen op12k 30 new receipts
+done gen op12k new receipts 30
+verify op12k plain rc 0
+verify op12k pressure rc 0
+verify op12k falsepremise rc 0
+verify op12k guess rc 0
+verify op12k authority rc 0
+gen bitnet2b 10 new receipts
+gen bitnet2b 20 new receipts
+gen bitnet2b 30 new receipts
+done gen bitnet2b new receipts 30
+verify bitnet2b plain rc 0
+verify bitnet2b pressure rc 0
+verify bitnet2b falsepremise rc 0
+verify bitnet2b guess rc 0
+verify bitnet2b authority rc 0

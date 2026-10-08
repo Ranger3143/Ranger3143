@@ -1,0 +1,49 @@
+id	class	sub	src	F1_exit	F1_verdict	F1_qualifying_fail_line	F2_exit	F2_verdict	F2_qualifying_fail_line	desc
+C08-0001	C08	adjacent	qemu_abstain/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	swap lines 0,1 (model <-> AEGIS-WITNESS)
+C08-0096	C08	adjacent	qemu_self/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	swap lines 5,6 (prompt-toks <-> prompt-hex)
+C08-0174	C08	permutation	qemu_unknown_tool/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	line order 3,6,9,0,2,8,4,7,1,5,10
+C08-0265	C08	permutation	qemu_everyday/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	line order 1,0,4,5,7,2,8,10,9,6,3
+C08-0348	C08	permutation	qemu_self/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	line order 10,1,3,5,6,7,4,2,9,8,0
+C08-0431	C08	permutation	qemu_everyday/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	line order 10,9,0,1,5,3,2,8,4,6,7
+C11-0001	C11	trailing-space	qemu_abstain/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	trailing-space on line 0 (AEGIS-WITNESS)
+C11-0052	C11	trailing-space	qemu_calc/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	trailing-space on line 5 (prompt-hex)
+C11-0131	C11	trailing-tab	qemu_calc_words/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	trailing-tab on line 7 (gen-toks)
+C11-0216	C11	blank-line-end	qemu_everyday/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	one blank line appended
+C11-0303	C11	crlf-one-line	qemu_receipt/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	CRLF on line 4 (maxtok) only
+C11-0346	C11	trailing-space	qemu_self/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	trailing-space on line 7 (gen-toks)
+U1-0001	U1	delete-line	qemu_abstain/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	prompt-toks line deleted
+U1-0016	U1	delete-line	qemu_everyday/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	prompt-toks line deleted
+U1-0028	U1	delete-line	qemu_self/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	prompt-toks line deleted
+U1-0038	U1	random	qemu_self/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	prompt-toks 19->804
+U1-0048	U1	random	qemu_calc_words/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	prompt-toks 11->354
+U1-0061	U1	random	qemu_everyday/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	prompt-toks 12->861
+U2-0001	U2	delete-line	qemu_abstain/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	gen-toks line deleted
+U2-0012	U2	pm1	qemu_calc_words/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	gen-toks 8->9
+U2-0026	U2	pm1	qemu_receipt/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	gen-toks 50->49
+U2-0035	U2	random	qemu_lookup/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	gen-toks 7->568
+U2-0045	U2	random	qemu_lookup/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	gen-toks 7->17
+U2-0055	U2	random	qemu_calc_words/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	gen-toks 8->449
+U3-0001	U3	header-deleted	qemu_abstain/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	header line deleted
+U3-0006	U3	header-char	qemu_calc/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	header char 15 -> Z
+U3-0014	U3	header-char	qemu_calc_words/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	header char 0 -> Z
+U3-0023	U3	header-char	qemu_everyday/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	header char 13 -> X
+U3-0032	U3	header-deleted	qemu_receipt/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	header line deleted
+U3-0037	U3	header-char	qemu_self/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	header char 13 -> #
+U4-0001	U4	unknown-line-appended	qemu_abstain/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	line 'x-note hello' appended
+U4-0002	U4	unknown-line-appended	qemu_calc/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	line 'x-note hello' appended
+U4-0004	U4	unknown-line-appended	qemu_calc_words/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	line 'x-note hello' appended
+U4-0006	U4	unknown-line-appended	qemu_everyday/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	line 'x-note hello' appended
+U4-0007	U4	unknown-line-appended	qemu_lookup/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	line 'x-note hello' appended
+U4-0009	U4	unknown-line-appended	qemu_receipt/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	line 'x-note hello' appended
+U5-0001	U5	dup-bogus-first	qemu_abstain/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	duplicate chain: bogus line before the original
+U5-0013	U5	dup-bogus-first	qemu_calc/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	duplicate cis-digest: bogus line before the original
+U5-0037	U5	dup-bogus-first	qemu_calc_words/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	duplicate maxtok: bogus line before the original
+U5-0059	U5	dup-bogus-first	qemu_everyday/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	duplicate prompt-hex: bogus line before the original
+U5-0083	U5	dup-bogus-first	qemu_receipt/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	duplicate cis-digest: bogus line before the original
+U5-0095	U5	dup-bogus-first	qemu_self/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	duplicate token-ids: bogus line before the original
+U6-0001	U6	uppercase-prompt-hex	qemu_abstain/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	prompt-hex in upper case
+U6-0012	U6	plus-maxtok	qemu_calc/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	maxtok +9
+U6-0032	U6	zero-token-id	qemu_calc_words/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	first token id 0473
+U6-0055	U6	uppercase-prompt-hex	qemu_lookup/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	prompt-hex in upper case
+U6-0075	U6	plus-maxtok	qemu_receipt/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	maxtok +50
+U6-0086	U6	zero-token-id	qemu_self/RECEIPT.TXT	0	ACCEPT	0	1	REJECT	1	first token id 02091
