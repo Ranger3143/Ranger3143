@@ -1,0 +1,19 @@
+genuine receipts: 11
+mutants: 480 ; old verdict counts: {'REJECT_CRASH': 123, 'ACCEPT': 109, 'REJECT_CLEAN': 248}
+(1) old not crashing: 357 ; new default identical exit code and full stdout: 357 ; differing ids: []
+(2) old crashing: 123 ; old exit codes {101: 123} ; new default verdicts {'REJECT_CLEAN': 123} ; new default exit codes {1: 123} ; panic flags 0
+(3) panics: old 123  new default 0  new strict 0
+    new default exit codes {1: 371, 0: 109}  strict {1: 478, 0: 2}
+(4) strict ACCEPT: 2 ; of those default also ACCEPT: 2 ; byte-identical to a genuine receipt: 2 ; own-grammar canonical: 2
+    default ACCEPT: 109 ; of those strict-rejected: 107 ; of those own-grammar NON-canonical: 98
+(5) own-grammar canonical + default ACCEPT but strict rejects (strict stricter than my reading of its own spec): [27, 39, 179, 188, 238, 261, 322, 339, 458] 9
+     27 VERIFY FAIL — strict receipt checks failed
+     39 VERIFY FAIL — strict receipt checks failed
+     179 VERIFY FAIL — strict receipt checks failed
+(6) default ACCEPT mutants by what changed (first 6 shown):
+     1 b'AEGIS-WITNESS v1-CIS\nmodel a44e48965c641b81994a670001c76a8bebd38857f94' ... VERIFY PASS — replay reproduced 7 tokens, the token digest, and the fu
+     4 b'AEGIS-WITNESS v1-CIS\nmodel a44e48965c641b81994a670001c76a8bebd38857f94' ... VERIFY PASS — replay reproduced 35 tokens, the token digest, and the f
+     14 b'AEGIS-WITNESS v1-CIS\nmodel a44e48965c641b81994a670001c76a8bebd38857f94' ... VERIFY PASS — replay reproduced 23 tokens, the token digest, and the f
+     16 b'AEGIS-WITNESS v1-CIS\nmodel a44e48965c641b81994a670001c76a8bebd38857f94' ... VERIFY PASS — replay reproduced 25 tokens, the token digest, and the f
+     20 b'AEGIS-WITNESS v1-CIS\nmodel a44e48965c641b81994a670001c76a8bebd38857f94' ... VERIFY PASS — replay reproduced 7 tokens, the token digest, and the fu
+     21 b'cis-digest 594d2cc5f77e0006\nmodel a44e48965c641b81994a670001c76a8bebd3' ... VERIFY PASS — replay reproduced 9 tokens, the token digest, and the fu

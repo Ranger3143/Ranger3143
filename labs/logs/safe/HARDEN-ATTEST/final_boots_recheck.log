@@ -1,0 +1,406 @@
+HARDEN-ATTEST recheck of the 8 final_step12000 QEMU boots with the hardened labs/tools/attest_verify.py
+verifier sha256 af8c04301a87ffc7bd37a9a1f7208779a87bcbab631ef9ca0791b0ac4c282a2b   FINALIZE.log sha256 b02948c4159de5676c815908783ea9be446e43bd940f5b07b6e5229aff21e428 (read-only, never edited)
+For every boot: PIN = labs/tools/ak_from_swtpm.sh <that boot's own swtpm state dir>; the invocation is the one now in model/demo-operator/finalize.sh
+
+===== qemu_abstain
+pin (derived from swtpm state of this boot): 80c32038e8b489846fb456f370acc39be41ef29d5e03dfe2e6196dc1f4266b1adeb4b21d1e83b04cc1b550d032e98bc08d8f61e9afc4a65dd5fb8e61f08886d5
+$ python3 -I labs/tools/attest_verify.py labs/logs/opmodel/final_step12000/qemu_abstain/ATTEST.TXT --receipt labs/logs/opmodel/final_step12000/qemu_abstain/RECEIPT.TXT --strict --expect-pubkey 80c32038e8b489846fb456f370acc39be41ef29d5e03dfe2e6196dc1f4266b1adeb4b21d1e83b04cc1b550d032e98bc08d8f61e9afc4a65dd5fb8e61f08886d5 --efi $S/qemu/aegis-uefi-gateway-qemutest.efi
+pcr12: replayed 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. tpm 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. PASS (4 events)
+pcr13: replayed 3d81e0a9622160e2af8856184adccb3e.. tpm 3d81e0a9622160e2af8856184adccb3e.. PASS (1 events)
+eventlog pcr=12 sha256=210878ef90c1312f.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=3197143 sha256=a44
+eventlog pcr=12 #0 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=aab33e3ff4e4e365.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=9437184 sha256=8cb
+eventlog pcr=12 #1 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=07978154b4248dde.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=253377 sha256=a4ca
+eventlog pcr=12 #2 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=b6750d7b6799b8dc.. PASS :: AEGIS-MEASURE v0 artifact=TABLE.TSV bytes=445 sha256=6b2f738
+eventlog pcr=12 #3 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=13 sha256=39d6445d5702ae29.. PASS :: AEGIS-RECEIPT v0 mode=mint steps=25 cis-digest=751473b3a5980
+eventlog pcr=13 #0 type=0xd must be 0xd (EV_IPL): PASS
+pcr4: replayed 0743db46b102047e7cc04ce1402ffc8d.. tpm 0743db46b102047e7cc04ce1402ffc8d.. PASS (3 events from the TCG log)
+eventlog pcr=4 #0 type=0x80000007 EV_EFI_ACTION: digest == SHA-256(data string): PASS
+eventlog pcr=4 #1 type=0x4 EV_SEPARATOR: 4-byte value, digest == SHA-256(value): PASS
+eventlog pcr=4 #2 type=0x80000003 EV_EFI_BOOT_SERVICES_APPLICATION: image-load event data is well-formed hex: PASS
+note: pcr4 #2 digest is the PE image hash; the logged data is not covered by it (informational)
+pcr4 EV_EFI_BOOT_SERVICES_APPLICATION digest == Authenticode SHA-256 of aegis-uefi-gateway-qemutest.efi (2da2a281f1e62b9c..): PASS
+pcr4 image-load event: ImageLengthInMemory == size of --efi file and ImageLinkTimeAddress == its ImageBase: PASS
+pcr4 (firmware measurement of BOOTX64.EFI): 0743db46b102047e7cc04ce1402ffc8d72f4fb4361770a843420a8bbd5ea54bc ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=2da2a281f1e62b9c903f6075d47116e189eb7dcf66a2d8948316560ac1ced0ad data=hex:18600d7e0000000000660700000000000000004001000000500000000000000002010c00d041030a00000000010
+receipt chain 36a4727928a9bf05.. bound in PCR13 line: PASS
+ATTEST VERIFY PASS
+quote attest magic=ff544347 type=8018 PASS
+quote attest ends with the TPMS_QUOTE_INFO (no trailing bytes): PASS
+quote PCR selection is a single SHA-256 bank selection [4, 12, 13]: PASS
+every PCR the file reports [4, 12, 13] is inside the quote selection [4, 12, 13] (nothing is claimed that the quote does not cover): PASS
+quote extraData == qualifying (7a21d1033799b9be..): PASS
+quote qualifying == SHA-256(RECEIPT.TXT): PASS
+quote pcrDigest over PCRs [4, 12, 13] == SHA-256(PCR values read back): PASS
+quote-pcrs line [4,12,13] == PCR list in the signed TPMS_ATTEST [4, 12, 13]: PASS
+quote-public is a fixed restricted ECC P-256 ECDSA/SHA-256 signing key whose point == quote-pub-x/y: PASS
+quote qualifiedSigner == H(TPM_RH_OWNER || Name(quote-public)) (the signed attest names this key, a primary under the owner hierarchy): PASS
+quote-key "ecc-p256 ecdsa-sha256 owner-hierarchy transient (this boot)" == description derived from the signed data: PASS
+quote-retries 1 is an integer in 0..16 (informational counter, outside the signature): PASS
+quote ECDSA-P256/SHA-256 signature over TPMS_ATTEST (openssl): Verified OK PASS
+quote tampered attest rejected: PASS
+note: quote signature s is HIGH (> n/2); libtpms does not normalise s, so both are accepted unless --reject-high-s
+quote signer == pinned key (80c32038e8b48984..): PASS
+quote pub-x 80c32038e8b48984.. clockInfo/firmwareVersion present; signer qualifiedName len 34
+QUOTE VERIFY PASS
+exit=0  verdict=ACCEPT
+
+===== qemu_calc
+pin (derived from swtpm state of this boot): 3fad67d3224ab19b3de07670335bf49d0ac5ea0fdd10b6cee7ab97fcabd21f037c4d2cb74b4f29bb0f8fd1e6e38070572e7af972ce1cb2e9deab08b01869f3ac
+$ python3 -I labs/tools/attest_verify.py labs/logs/opmodel/final_step12000/qemu_calc/ATTEST.TXT --receipt labs/logs/opmodel/final_step12000/qemu_calc/RECEIPT.TXT --strict --expect-pubkey 3fad67d3224ab19b3de07670335bf49d0ac5ea0fdd10b6cee7ab97fcabd21f037c4d2cb74b4f29bb0f8fd1e6e38070572e7af972ce1cb2e9deab08b01869f3ac --efi $S/qemu/aegis-uefi-gateway-qemutest.efi
+pcr12: replayed 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. tpm 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. PASS (4 events)
+pcr13: replayed 7449e559e27ec1729be35892bed77696.. tpm 7449e559e27ec1729be35892bed77696.. PASS (2 events)
+eventlog pcr=12 sha256=210878ef90c1312f.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=3197143 sha256=a44
+eventlog pcr=12 #0 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=aab33e3ff4e4e365.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=9437184 sha256=8cb
+eventlog pcr=12 #1 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=07978154b4248dde.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=253377 sha256=a4ca
+eventlog pcr=12 #2 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=b6750d7b6799b8dc.. PASS :: AEGIS-MEASURE v0 artifact=TABLE.TSV bytes=445 sha256=6b2f738
+eventlog pcr=12 #3 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=13 sha256=cc43847ce06319d6.. PASS :: AEGIS-RECEIPT v0 mode=mint steps=9 cis-digest=fddebefc84f1ad
+eventlog pcr=13 #0 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=13 sha256=8845b43bcfb18568.. PASS :: AEGIS-RECEIPT v0 mode=mint-tool steps=9 cis-digest=594d2cc5f
+eventlog pcr=13 #1 type=0xd must be 0xd (EV_IPL): PASS
+pcr4: replayed 0743db46b102047e7cc04ce1402ffc8d.. tpm 0743db46b102047e7cc04ce1402ffc8d.. PASS (3 events from the TCG log)
+eventlog pcr=4 #0 type=0x80000007 EV_EFI_ACTION: digest == SHA-256(data string): PASS
+eventlog pcr=4 #1 type=0x4 EV_SEPARATOR: 4-byte value, digest == SHA-256(value): PASS
+eventlog pcr=4 #2 type=0x80000003 EV_EFI_BOOT_SERVICES_APPLICATION: image-load event data is well-formed hex: PASS
+note: pcr4 #2 digest is the PE image hash; the logged data is not covered by it (informational)
+pcr4 EV_EFI_BOOT_SERVICES_APPLICATION digest == Authenticode SHA-256 of aegis-uefi-gateway-qemutest.efi (2da2a281f1e62b9c..): PASS
+pcr4 image-load event: ImageLengthInMemory == size of --efi file and ImageLinkTimeAddress == its ImageBase: PASS
+pcr4 (firmware measurement of BOOTX64.EFI): 0743db46b102047e7cc04ce1402ffc8d72f4fb4361770a843420a8bbd5ea54bc ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=2da2a281f1e62b9c903f6075d47116e189eb7dcf66a2d8948316560ac1ced0ad data=hex:18200e7e0000000000660700000000000000004001000000500000000000000002010c00d041030a00000000010
+receipt chain 6e6b2ddf1a8528e5.. bound in PCR13 line: PASS
+ATTEST VERIFY PASS
+quote attest magic=ff544347 type=8018 PASS
+quote attest ends with the TPMS_QUOTE_INFO (no trailing bytes): PASS
+quote PCR selection is a single SHA-256 bank selection [4, 12, 13]: PASS
+every PCR the file reports [4, 12, 13] is inside the quote selection [4, 12, 13] (nothing is claimed that the quote does not cover): PASS
+quote extraData == qualifying (916664627197ef7d..): PASS
+quote qualifying == SHA-256(RECEIPT.TXT): PASS
+quote pcrDigest over PCRs [4, 12, 13] == SHA-256(PCR values read back): PASS
+quote-pcrs line [4,12,13] == PCR list in the signed TPMS_ATTEST [4, 12, 13]: PASS
+quote-public is a fixed restricted ECC P-256 ECDSA/SHA-256 signing key whose point == quote-pub-x/y: PASS
+quote qualifiedSigner == H(TPM_RH_OWNER || Name(quote-public)) (the signed attest names this key, a primary under the owner hierarchy): PASS
+quote-key "ecc-p256 ecdsa-sha256 owner-hierarchy transient (this boot)" == description derived from the signed data: PASS
+quote-retries 1 is an integer in 0..16 (informational counter, outside the signature): PASS
+quote ECDSA-P256/SHA-256 signature over TPMS_ATTEST (openssl): Verified OK PASS
+quote tampered attest rejected: PASS
+note: quote signature s is low (<= n/2); libtpms does not normalise s, so both are accepted unless --reject-high-s
+quote signer == pinned key (3fad67d3224ab19b..): PASS
+quote pub-x 3fad67d3224ab19b.. clockInfo/firmwareVersion present; signer qualifiedName len 34
+QUOTE VERIFY PASS
+exit=0  verdict=ACCEPT
+
+===== qemu_calc_words
+pin (derived from swtpm state of this boot): 219de5fff3e649cfe04fceb7fb713c828010d36876643a80d81fd58c2b5a48af17467184b255d7ed4fe65dfde17000200f3d1e057613faca7cd9dea057ad3990
+$ python3 -I labs/tools/attest_verify.py labs/logs/opmodel/final_step12000/qemu_calc_words/ATTEST.TXT --receipt labs/logs/opmodel/final_step12000/qemu_calc_words/RECEIPT.TXT --strict --expect-pubkey 219de5fff3e649cfe04fceb7fb713c828010d36876643a80d81fd58c2b5a48af17467184b255d7ed4fe65dfde17000200f3d1e057613faca7cd9dea057ad3990 --efi $S/qemu/aegis-uefi-gateway-qemutest.efi
+pcr12: replayed 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. tpm 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. PASS (4 events)
+pcr13: replayed a0c75440eb7c80df9fa16ef6eb0211ab.. tpm a0c75440eb7c80df9fa16ef6eb0211ab.. PASS (2 events)
+eventlog pcr=12 sha256=210878ef90c1312f.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=3197143 sha256=a44
+eventlog pcr=12 #0 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=aab33e3ff4e4e365.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=9437184 sha256=8cb
+eventlog pcr=12 #1 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=07978154b4248dde.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=253377 sha256=a4ca
+eventlog pcr=12 #2 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=b6750d7b6799b8dc.. PASS :: AEGIS-MEASURE v0 artifact=TABLE.TSV bytes=445 sha256=6b2f738
+eventlog pcr=12 #3 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=13 sha256=39f13eb09becbb96.. PASS :: AEGIS-RECEIPT v0 mode=mint steps=8 cis-digest=1551d146125048
+eventlog pcr=13 #0 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=13 sha256=d0949871c05a27e2.. PASS :: AEGIS-RECEIPT v0 mode=mint-tool steps=7 cis-digest=2c0530a39
+eventlog pcr=13 #1 type=0xd must be 0xd (EV_IPL): PASS
+pcr4: replayed 0743db46b102047e7cc04ce1402ffc8d.. tpm 0743db46b102047e7cc04ce1402ffc8d.. PASS (3 events from the TCG log)
+eventlog pcr=4 #0 type=0x80000007 EV_EFI_ACTION: digest == SHA-256(data string): PASS
+eventlog pcr=4 #1 type=0x4 EV_SEPARATOR: 4-byte value, digest == SHA-256(value): PASS
+eventlog pcr=4 #2 type=0x80000003 EV_EFI_BOOT_SERVICES_APPLICATION: image-load event data is well-formed hex: PASS
+note: pcr4 #2 digest is the PE image hash; the logged data is not covered by it (informational)
+pcr4 EV_EFI_BOOT_SERVICES_APPLICATION digest == Authenticode SHA-256 of aegis-uefi-gateway-qemutest.efi (2da2a281f1e62b9c..): PASS
+pcr4 image-load event: ImageLengthInMemory == size of --efi file and ImageLinkTimeAddress == its ImageBase: PASS
+pcr4 (firmware measurement of BOOTX64.EFI): 0743db46b102047e7cc04ce1402ffc8d72f4fb4361770a843420a8bbd5ea54bc ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=2da2a281f1e62b9c903f6075d47116e189eb7dcf66a2d8948316560ac1ced0ad data=hex:18700d7e0000000000660700000000000000004001000000500000000000000002010c00d041030a00000000010
+receipt chain fe59fefa91546f2a.. bound in PCR13 line: PASS
+ATTEST VERIFY PASS
+quote attest magic=ff544347 type=8018 PASS
+quote attest ends with the TPMS_QUOTE_INFO (no trailing bytes): PASS
+quote PCR selection is a single SHA-256 bank selection [4, 12, 13]: PASS
+every PCR the file reports [4, 12, 13] is inside the quote selection [4, 12, 13] (nothing is claimed that the quote does not cover): PASS
+quote extraData == qualifying (dd6d74844b7e74d7..): PASS
+quote qualifying == SHA-256(RECEIPT.TXT): PASS
+quote pcrDigest over PCRs [4, 12, 13] == SHA-256(PCR values read back): PASS
+quote-pcrs line [4,12,13] == PCR list in the signed TPMS_ATTEST [4, 12, 13]: PASS
+quote-public is a fixed restricted ECC P-256 ECDSA/SHA-256 signing key whose point == quote-pub-x/y: PASS
+quote qualifiedSigner == H(TPM_RH_OWNER || Name(quote-public)) (the signed attest names this key, a primary under the owner hierarchy): PASS
+quote-key "ecc-p256 ecdsa-sha256 owner-hierarchy transient (this boot)" == description derived from the signed data: PASS
+quote-retries 1 is an integer in 0..16 (informational counter, outside the signature): PASS
+quote ECDSA-P256/SHA-256 signature over TPMS_ATTEST (openssl): Verified OK PASS
+quote tampered attest rejected: PASS
+note: quote signature s is HIGH (> n/2); libtpms does not normalise s, so both are accepted unless --reject-high-s
+quote signer == pinned key (219de5fff3e649cf..): PASS
+quote pub-x 219de5fff3e649cf.. clockInfo/firmwareVersion present; signer qualifiedName len 34
+QUOTE VERIFY PASS
+exit=0  verdict=ACCEPT
+
+===== qemu_everyday
+pin (derived from swtpm state of this boot): 652f5681b861397d4802259e794ae85ff947de3ae8233e71bed4baed007363456a50e581898cf599a6199d3188e17672b471b4b934108deeff80a92e2666698c
+$ python3 -I labs/tools/attest_verify.py labs/logs/opmodel/final_step12000/qemu_everyday/ATTEST.TXT --receipt labs/logs/opmodel/final_step12000/qemu_everyday/RECEIPT.TXT --strict --expect-pubkey 652f5681b861397d4802259e794ae85ff947de3ae8233e71bed4baed007363456a50e581898cf599a6199d3188e17672b471b4b934108deeff80a92e2666698c --efi $S/qemu/aegis-uefi-gateway-qemutest.efi
+pcr12: replayed 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. tpm 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. PASS (4 events)
+pcr13: replayed 0deb2cf93b71ede531ebe9695507e28d.. tpm 0deb2cf93b71ede531ebe9695507e28d.. PASS (1 events)
+eventlog pcr=12 sha256=210878ef90c1312f.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=3197143 sha256=a44
+eventlog pcr=12 #0 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=aab33e3ff4e4e365.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=9437184 sha256=8cb
+eventlog pcr=12 #1 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=07978154b4248dde.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=253377 sha256=a4ca
+eventlog pcr=12 #2 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=b6750d7b6799b8dc.. PASS :: AEGIS-MEASURE v0 artifact=TABLE.TSV bytes=445 sha256=6b2f738
+eventlog pcr=12 #3 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=13 sha256=5d79af25e3d621ee.. PASS :: AEGIS-RECEIPT v0 mode=mint steps=3 cis-digest=f5a7738385a319
+eventlog pcr=13 #0 type=0xd must be 0xd (EV_IPL): PASS
+pcr4: replayed 0743db46b102047e7cc04ce1402ffc8d.. tpm 0743db46b102047e7cc04ce1402ffc8d.. PASS (3 events from the TCG log)
+eventlog pcr=4 #0 type=0x80000007 EV_EFI_ACTION: digest == SHA-256(data string): PASS
+eventlog pcr=4 #1 type=0x4 EV_SEPARATOR: 4-byte value, digest == SHA-256(value): PASS
+eventlog pcr=4 #2 type=0x80000003 EV_EFI_BOOT_SERVICES_APPLICATION: image-load event data is well-formed hex: PASS
+note: pcr4 #2 digest is the PE image hash; the logged data is not covered by it (informational)
+pcr4 EV_EFI_BOOT_SERVICES_APPLICATION digest == Authenticode SHA-256 of aegis-uefi-gateway-qemutest.efi (2da2a281f1e62b9c..): PASS
+pcr4 image-load event: ImageLengthInMemory == size of --efi file and ImageLinkTimeAddress == its ImageBase: PASS
+pcr4 (firmware measurement of BOOTX64.EFI): 0743db46b102047e7cc04ce1402ffc8d72f4fb4361770a843420a8bbd5ea54bc ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=2da2a281f1e62b9c903f6075d47116e189eb7dcf66a2d8948316560ac1ced0ad data=hex:18700d7e0000000000660700000000000000004001000000500000000000000002010c00d041030a00000000010
+receipt chain a6d271d6e83c7f2d.. bound in PCR13 line: PASS
+ATTEST VERIFY PASS
+quote attest magic=ff544347 type=8018 PASS
+quote attest ends with the TPMS_QUOTE_INFO (no trailing bytes): PASS
+quote PCR selection is a single SHA-256 bank selection [4, 12, 13]: PASS
+every PCR the file reports [4, 12, 13] is inside the quote selection [4, 12, 13] (nothing is claimed that the quote does not cover): PASS
+quote extraData == qualifying (0172e5b5e1213776..): PASS
+quote qualifying == SHA-256(RECEIPT.TXT): PASS
+quote pcrDigest over PCRs [4, 12, 13] == SHA-256(PCR values read back): PASS
+quote-pcrs line [4,12,13] == PCR list in the signed TPMS_ATTEST [4, 12, 13]: PASS
+quote-public is a fixed restricted ECC P-256 ECDSA/SHA-256 signing key whose point == quote-pub-x/y: PASS
+quote qualifiedSigner == H(TPM_RH_OWNER || Name(quote-public)) (the signed attest names this key, a primary under the owner hierarchy): PASS
+quote-key "ecc-p256 ecdsa-sha256 owner-hierarchy transient (this boot)" == description derived from the signed data: PASS
+quote-retries 1 is an integer in 0..16 (informational counter, outside the signature): PASS
+quote ECDSA-P256/SHA-256 signature over TPMS_ATTEST (openssl): Verified OK PASS
+quote tampered attest rejected: PASS
+note: quote signature s is low (<= n/2); libtpms does not normalise s, so both are accepted unless --reject-high-s
+quote signer == pinned key (652f5681b861397d..): PASS
+quote pub-x 652f5681b861397d.. clockInfo/firmwareVersion present; signer qualifiedName len 34
+QUOTE VERIFY PASS
+exit=0  verdict=ACCEPT
+
+===== qemu_lookup
+pin (derived from swtpm state of this boot): b23e77a920439f289407c1b47efde407131c52cd6d01cd5072de2c5843cc7b2d1a68d36376ec7839aec3536e13e8c074e8dc1f461a49182aabfde21c040860cf
+$ python3 -I labs/tools/attest_verify.py labs/logs/opmodel/final_step12000/qemu_lookup/ATTEST.TXT --receipt labs/logs/opmodel/final_step12000/qemu_lookup/RECEIPT.TXT --strict --expect-pubkey b23e77a920439f289407c1b47efde407131c52cd6d01cd5072de2c5843cc7b2d1a68d36376ec7839aec3536e13e8c074e8dc1f461a49182aabfde21c040860cf --efi $S/qemu/aegis-uefi-gateway-qemutest.efi
+pcr12: replayed 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. tpm 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. PASS (4 events)
+pcr13: replayed 345588e8bdde1830252494181e2d9a25.. tpm 345588e8bdde1830252494181e2d9a25.. PASS (2 events)
+eventlog pcr=12 sha256=210878ef90c1312f.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=3197143 sha256=a44
+eventlog pcr=12 #0 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=aab33e3ff4e4e365.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=9437184 sha256=8cb
+eventlog pcr=12 #1 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=07978154b4248dde.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=253377 sha256=a4ca
+eventlog pcr=12 #2 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=b6750d7b6799b8dc.. PASS :: AEGIS-MEASURE v0 artifact=TABLE.TSV bytes=445 sha256=6b2f738
+eventlog pcr=12 #3 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=13 sha256=63f6671a990776ab.. PASS :: AEGIS-RECEIPT v0 mode=mint steps=7 cis-digest=5a7fbbaf34604d
+eventlog pcr=13 #0 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=13 sha256=0fe0c1f096e578fb.. PASS :: AEGIS-RECEIPT v0 mode=mint-tool steps=23 cis-digest=876bb840
+eventlog pcr=13 #1 type=0xd must be 0xd (EV_IPL): PASS
+pcr4: replayed 0743db46b102047e7cc04ce1402ffc8d.. tpm 0743db46b102047e7cc04ce1402ffc8d.. PASS (3 events from the TCG log)
+eventlog pcr=4 #0 type=0x80000007 EV_EFI_ACTION: digest == SHA-256(data string): PASS
+eventlog pcr=4 #1 type=0x4 EV_SEPARATOR: 4-byte value, digest == SHA-256(value): PASS
+eventlog pcr=4 #2 type=0x80000003 EV_EFI_BOOT_SERVICES_APPLICATION: image-load event data is well-formed hex: PASS
+note: pcr4 #2 digest is the PE image hash; the logged data is not covered by it (informational)
+pcr4 EV_EFI_BOOT_SERVICES_APPLICATION digest == Authenticode SHA-256 of aegis-uefi-gateway-qemutest.efi (2da2a281f1e62b9c..): PASS
+pcr4 image-load event: ImageLengthInMemory == size of --efi file and ImageLinkTimeAddress == its ImageBase: PASS
+pcr4 (firmware measurement of BOOTX64.EFI): 0743db46b102047e7cc04ce1402ffc8d72f4fb4361770a843420a8bbd5ea54bc ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=2da2a281f1e62b9c903f6075d47116e189eb7dcf66a2d8948316560ac1ced0ad data=hex:18900d7e0000000000660700000000000000004001000000500000000000000002010c00d041030a00000000010
+receipt chain 973f11097fd652c6.. bound in PCR13 line: PASS
+ATTEST VERIFY PASS
+quote attest magic=ff544347 type=8018 PASS
+quote attest ends with the TPMS_QUOTE_INFO (no trailing bytes): PASS
+quote PCR selection is a single SHA-256 bank selection [4, 12, 13]: PASS
+every PCR the file reports [4, 12, 13] is inside the quote selection [4, 12, 13] (nothing is claimed that the quote does not cover): PASS
+quote extraData == qualifying (51e81b32d4034c29..): PASS
+quote qualifying == SHA-256(RECEIPT.TXT): PASS
+quote pcrDigest over PCRs [4, 12, 13] == SHA-256(PCR values read back): PASS
+quote-pcrs line [4,12,13] == PCR list in the signed TPMS_ATTEST [4, 12, 13]: PASS
+quote-public is a fixed restricted ECC P-256 ECDSA/SHA-256 signing key whose point == quote-pub-x/y: PASS
+quote qualifiedSigner == H(TPM_RH_OWNER || Name(quote-public)) (the signed attest names this key, a primary under the owner hierarchy): PASS
+quote-key "ecc-p256 ecdsa-sha256 owner-hierarchy transient (this boot)" == description derived from the signed data: PASS
+quote-retries 1 is an integer in 0..16 (informational counter, outside the signature): PASS
+quote ECDSA-P256/SHA-256 signature over TPMS_ATTEST (openssl): Verified OK PASS
+quote tampered attest rejected: PASS
+note: quote signature s is low (<= n/2); libtpms does not normalise s, so both are accepted unless --reject-high-s
+quote signer == pinned key (b23e77a920439f28..): PASS
+quote pub-x b23e77a920439f28.. clockInfo/firmwareVersion present; signer qualifiedName len 34
+QUOTE VERIFY PASS
+exit=0  verdict=ACCEPT
+
+===== qemu_receipt
+pin (derived from swtpm state of this boot): 230cdf1d02e605093c9323f5cb28604c033d322a9b661f3090a81d7167a8da1b1396995583880356e7b7bd348ed5865efb15933bece0b0de9b0246d84d8b0c06
+$ python3 -I labs/tools/attest_verify.py labs/logs/opmodel/final_step12000/qemu_receipt/ATTEST.TXT --receipt labs/logs/opmodel/final_step12000/qemu_receipt/RECEIPT.TXT --strict --expect-pubkey 230cdf1d02e605093c9323f5cb28604c033d322a9b661f3090a81d7167a8da1b1396995583880356e7b7bd348ed5865efb15933bece0b0de9b0246d84d8b0c06 --efi $S/qemu/aegis-uefi-gateway-qemutest.efi
+pcr12: replayed 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. tpm 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. PASS (4 events)
+pcr13: replayed e571eb21a8b9b23f744026b3e023b3cf.. tpm e571eb21a8b9b23f744026b3e023b3cf.. PASS (1 events)
+eventlog pcr=12 sha256=210878ef90c1312f.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=3197143 sha256=a44
+eventlog pcr=12 #0 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=aab33e3ff4e4e365.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=9437184 sha256=8cb
+eventlog pcr=12 #1 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=07978154b4248dde.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=253377 sha256=a4ca
+eventlog pcr=12 #2 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=b6750d7b6799b8dc.. PASS :: AEGIS-MEASURE v0 artifact=TABLE.TSV bytes=445 sha256=6b2f738
+eventlog pcr=12 #3 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=13 sha256=ecb0032f7384e5aa.. PASS :: AEGIS-RECEIPT v0 mode=mint steps=50 cis-digest=b14a9d31b0fed
+eventlog pcr=13 #0 type=0xd must be 0xd (EV_IPL): PASS
+pcr4: replayed 0743db46b102047e7cc04ce1402ffc8d.. tpm 0743db46b102047e7cc04ce1402ffc8d.. PASS (3 events from the TCG log)
+eventlog pcr=4 #0 type=0x80000007 EV_EFI_ACTION: digest == SHA-256(data string): PASS
+eventlog pcr=4 #1 type=0x4 EV_SEPARATOR: 4-byte value, digest == SHA-256(value): PASS
+eventlog pcr=4 #2 type=0x80000003 EV_EFI_BOOT_SERVICES_APPLICATION: image-load event data is well-formed hex: PASS
+note: pcr4 #2 digest is the PE image hash; the logged data is not covered by it (informational)
+pcr4 EV_EFI_BOOT_SERVICES_APPLICATION digest == Authenticode SHA-256 of aegis-uefi-gateway-qemutest.efi (2da2a281f1e62b9c..): PASS
+pcr4 image-load event: ImageLengthInMemory == size of --efi file and ImageLinkTimeAddress == its ImageBase: PASS
+pcr4 (firmware measurement of BOOTX64.EFI): 0743db46b102047e7cc04ce1402ffc8d72f4fb4361770a843420a8bbd5ea54bc ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=2da2a281f1e62b9c903f6075d47116e189eb7dcf66a2d8948316560ac1ced0ad data=hex:18800d7e0000000000660700000000000000004001000000500000000000000002010c00d041030a00000000010
+receipt chain d1547f47376f655d.. bound in PCR13 line: PASS
+ATTEST VERIFY PASS
+quote attest magic=ff544347 type=8018 PASS
+quote attest ends with the TPMS_QUOTE_INFO (no trailing bytes): PASS
+quote PCR selection is a single SHA-256 bank selection [4, 12, 13]: PASS
+every PCR the file reports [4, 12, 13] is inside the quote selection [4, 12, 13] (nothing is claimed that the quote does not cover): PASS
+quote extraData == qualifying (4875bf77df2bcdb5..): PASS
+quote qualifying == SHA-256(RECEIPT.TXT): PASS
+quote pcrDigest over PCRs [4, 12, 13] == SHA-256(PCR values read back): PASS
+quote-pcrs line [4,12,13] == PCR list in the signed TPMS_ATTEST [4, 12, 13]: PASS
+quote-public is a fixed restricted ECC P-256 ECDSA/SHA-256 signing key whose point == quote-pub-x/y: PASS
+quote qualifiedSigner == H(TPM_RH_OWNER || Name(quote-public)) (the signed attest names this key, a primary under the owner hierarchy): PASS
+quote-key "ecc-p256 ecdsa-sha256 owner-hierarchy transient (this boot)" == description derived from the signed data: PASS
+quote-retries 1 is an integer in 0..16 (informational counter, outside the signature): PASS
+quote ECDSA-P256/SHA-256 signature over TPMS_ATTEST (openssl): Verified OK PASS
+quote tampered attest rejected: PASS
+note: quote signature s is HIGH (> n/2); libtpms does not normalise s, so both are accepted unless --reject-high-s
+quote signer == pinned key (230cdf1d02e60509..): PASS
+quote pub-x 230cdf1d02e60509.. clockInfo/firmwareVersion present; signer qualifiedName len 34
+QUOTE VERIFY PASS
+exit=0  verdict=ACCEPT
+
+===== qemu_self
+pin (derived from swtpm state of this boot): 9a6913281eb374ab17a35a5fb242e8137995a720fd8c0abffab50b15860170122c08f2e80c9f50d72f2d9cb51c36d3647be0db457c2211972aef8964cb940daf
+$ python3 -I labs/tools/attest_verify.py labs/logs/opmodel/final_step12000/qemu_self/ATTEST.TXT --receipt labs/logs/opmodel/final_step12000/qemu_self/RECEIPT.TXT --strict --expect-pubkey 9a6913281eb374ab17a35a5fb242e8137995a720fd8c0abffab50b15860170122c08f2e80c9f50d72f2d9cb51c36d3647be0db457c2211972aef8964cb940daf --efi $S/qemu/aegis-uefi-gateway-qemutest.efi
+pcr12: replayed 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. tpm 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. PASS (4 events)
+pcr13: replayed 31cae9d741b5a296fcdac58d8dd05863.. tpm 31cae9d741b5a296fcdac58d8dd05863.. PASS (1 events)
+eventlog pcr=12 sha256=210878ef90c1312f.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=3197143 sha256=a44
+eventlog pcr=12 #0 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=aab33e3ff4e4e365.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=9437184 sha256=8cb
+eventlog pcr=12 #1 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=07978154b4248dde.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=253377 sha256=a4ca
+eventlog pcr=12 #2 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=b6750d7b6799b8dc.. PASS :: AEGIS-MEASURE v0 artifact=TABLE.TSV bytes=445 sha256=6b2f738
+eventlog pcr=12 #3 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=13 sha256=2ae0dcc6e9347d2c.. PASS :: AEGIS-RECEIPT v0 mode=mint steps=30 cis-digest=d86608784e71d
+eventlog pcr=13 #0 type=0xd must be 0xd (EV_IPL): PASS
+pcr4: replayed 0743db46b102047e7cc04ce1402ffc8d.. tpm 0743db46b102047e7cc04ce1402ffc8d.. PASS (3 events from the TCG log)
+eventlog pcr=4 #0 type=0x80000007 EV_EFI_ACTION: digest == SHA-256(data string): PASS
+eventlog pcr=4 #1 type=0x4 EV_SEPARATOR: 4-byte value, digest == SHA-256(value): PASS
+eventlog pcr=4 #2 type=0x80000003 EV_EFI_BOOT_SERVICES_APPLICATION: image-load event data is well-formed hex: PASS
+note: pcr4 #2 digest is the PE image hash; the logged data is not covered by it (informational)
+pcr4 EV_EFI_BOOT_SERVICES_APPLICATION digest == Authenticode SHA-256 of aegis-uefi-gateway-qemutest.efi (2da2a281f1e62b9c..): PASS
+pcr4 image-load event: ImageLengthInMemory == size of --efi file and ImageLinkTimeAddress == its ImageBase: PASS
+pcr4 (firmware measurement of BOOTX64.EFI): 0743db46b102047e7cc04ce1402ffc8d72f4fb4361770a843420a8bbd5ea54bc ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=2da2a281f1e62b9c903f6075d47116e189eb7dcf66a2d8948316560ac1ced0ad data=hex:18200d7e0000000000660700000000000000004001000000500000000000000002010c00d041030a00000000010
+receipt chain a58e748eebee8de2.. bound in PCR13 line: PASS
+ATTEST VERIFY PASS
+quote attest magic=ff544347 type=8018 PASS
+quote attest ends with the TPMS_QUOTE_INFO (no trailing bytes): PASS
+quote PCR selection is a single SHA-256 bank selection [4, 12, 13]: PASS
+every PCR the file reports [4, 12, 13] is inside the quote selection [4, 12, 13] (nothing is claimed that the quote does not cover): PASS
+quote extraData == qualifying (66dde74de9c0ebb1..): PASS
+quote qualifying == SHA-256(RECEIPT.TXT): PASS
+quote pcrDigest over PCRs [4, 12, 13] == SHA-256(PCR values read back): PASS
+quote-pcrs line [4,12,13] == PCR list in the signed TPMS_ATTEST [4, 12, 13]: PASS
+quote-public is a fixed restricted ECC P-256 ECDSA/SHA-256 signing key whose point == quote-pub-x/y: PASS
+quote qualifiedSigner == H(TPM_RH_OWNER || Name(quote-public)) (the signed attest names this key, a primary under the owner hierarchy): PASS
+quote-key "ecc-p256 ecdsa-sha256 owner-hierarchy transient (this boot)" == description derived from the signed data: PASS
+quote-retries 1 is an integer in 0..16 (informational counter, outside the signature): PASS
+quote ECDSA-P256/SHA-256 signature over TPMS_ATTEST (openssl): Verified OK PASS
+quote tampered attest rejected: PASS
+note: quote signature s is low (<= n/2); libtpms does not normalise s, so both are accepted unless --reject-high-s
+quote signer == pinned key (9a6913281eb374ab..): PASS
+quote pub-x 9a6913281eb374ab.. clockInfo/firmwareVersion present; signer qualifiedName len 34
+QUOTE VERIFY PASS
+exit=0  verdict=ACCEPT
+
+===== qemu_unknown_tool
+pin (derived from swtpm state of this boot): c5faa42636634c03b4392b4359996afc93d6a2852c1220643f530d9fd78d0d00c2565cf174e7493a428ab51b99a6f6e80c9eb51c40c21cc2ee0b2d1d5f483ddc
+$ python3 -I labs/tools/attest_verify.py labs/logs/opmodel/final_step12000/qemu_unknown_tool/ATTEST.TXT --receipt labs/logs/opmodel/final_step12000/qemu_unknown_tool/RECEIPT.TXT --strict --expect-pubkey c5faa42636634c03b4392b4359996afc93d6a2852c1220643f530d9fd78d0d00c2565cf174e7493a428ab51b99a6f6e80c9eb51c40c21cc2ee0b2d1d5f483ddc --efi $S/qemu/aegis-uefi-gateway-qemutest.efi
+pcr12: replayed 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. tpm 72e1c6afd8f440bcc1e46e2f9e7b9ec1.. PASS (4 events)
+pcr13: replayed 0ca04272e664cd351025ddfdcb254564.. tpm 0ca04272e664cd351025ddfdcb254564.. PASS (1 events)
+eventlog pcr=12 sha256=210878ef90c1312f.. PASS :: AEGIS-MEASURE v0 artifact=MODEL.SAF bytes=3197143 sha256=a44
+eventlog pcr=12 #0 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=aab33e3ff4e4e365.. PASS :: AEGIS-MEASURE v0 artifact=EMBED.BIN bytes=9437184 sha256=8cb
+eventlog pcr=12 #1 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=07978154b4248dde.. PASS :: AEGIS-MEASURE v0 artifact=VOCAB.BIN bytes=253377 sha256=a4ca
+eventlog pcr=12 #2 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=12 sha256=b6750d7b6799b8dc.. PASS :: AEGIS-MEASURE v0 artifact=TABLE.TSV bytes=445 sha256=6b2f738
+eventlog pcr=12 #3 type=0xd must be 0xd (EV_IPL): PASS
+eventlog pcr=13 sha256=3f3b8e2cd74feebe.. PASS :: AEGIS-RECEIPT v0 mode=mint steps=35 cis-digest=5f444fd04c209
+eventlog pcr=13 #0 type=0xd must be 0xd (EV_IPL): PASS
+pcr4: replayed 0743db46b102047e7cc04ce1402ffc8d.. tpm 0743db46b102047e7cc04ce1402ffc8d.. PASS (3 events from the TCG log)
+eventlog pcr=4 #0 type=0x80000007 EV_EFI_ACTION: digest == SHA-256(data string): PASS
+eventlog pcr=4 #1 type=0x4 EV_SEPARATOR: 4-byte value, digest == SHA-256(value): PASS
+eventlog pcr=4 #2 type=0x80000003 EV_EFI_BOOT_SERVICES_APPLICATION: image-load event data is well-formed hex: PASS
+note: pcr4 #2 digest is the PE image hash; the logged data is not covered by it (informational)
+pcr4 EV_EFI_BOOT_SERVICES_APPLICATION digest == Authenticode SHA-256 of aegis-uefi-gateway-qemutest.efi (2da2a281f1e62b9c..): PASS
+pcr4 image-load event: ImageLengthInMemory == size of --efi file and ImageLinkTimeAddress == its ImageBase: PASS
+pcr4 (firmware measurement of BOOTX64.EFI): 0743db46b102047e7cc04ce1402ffc8d72f4fb4361770a843420a8bbd5ea54bc ; 3 event(s) in log
+    event pcr=4 type=0x80000007 sha256=3d6772b4f84ed47595d72a2c4c5ffd15f5bb72c7507fe26f2aaee2c69d5633ba data=Calling EFI Application from Boot Option
+    event pcr=4 type=0x4 sha256=df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119 data=hex:00000000
+    event pcr=4 type=0x80000003 sha256=2da2a281f1e62b9c903f6075d47116e189eb7dcf66a2d8948316560ac1ced0ad data=hex:18200e7e0000000000660700000000000000004001000000500000000000000002010c00d041030a00000000010
+receipt chain 4038be047933bcf4.. bound in PCR13 line: PASS
+ATTEST VERIFY PASS
+quote attest magic=ff544347 type=8018 PASS
+quote attest ends with the TPMS_QUOTE_INFO (no trailing bytes): PASS
+quote PCR selection is a single SHA-256 bank selection [4, 12, 13]: PASS
+every PCR the file reports [4, 12, 13] is inside the quote selection [4, 12, 13] (nothing is claimed that the quote does not cover): PASS
+quote extraData == qualifying (3e8cc41a736fe014..): PASS
+quote qualifying == SHA-256(RECEIPT.TXT): PASS
+quote pcrDigest over PCRs [4, 12, 13] == SHA-256(PCR values read back): PASS
+quote-pcrs line [4,12,13] == PCR list in the signed TPMS_ATTEST [4, 12, 13]: PASS
+quote-public is a fixed restricted ECC P-256 ECDSA/SHA-256 signing key whose point == quote-pub-x/y: PASS
+quote qualifiedSigner == H(TPM_RH_OWNER || Name(quote-public)) (the signed attest names this key, a primary under the owner hierarchy): PASS
+quote-key "ecc-p256 ecdsa-sha256 owner-hierarchy transient (this boot)" == description derived from the signed data: PASS
+quote-retries 1 is an integer in 0..16 (informational counter, outside the signature): PASS
+quote ECDSA-P256/SHA-256 signature over TPMS_ATTEST (openssl): Verified OK PASS
+quote tampered attest rejected: PASS
+note: quote signature s is HIGH (> n/2); libtpms does not normalise s, so both are accepted unless --reject-high-s
+quote signer == pinned key (c5faa42636634c03..): PASS
+quote pub-x c5faa42636634c03.. clockInfo/firmwareVersion present; signer qualifiedName len 34
+QUOTE VERIFY PASS
+exit=0  verdict=ACCEPT
+
+===== summary (verdict per boot, order: abstain, calc, calc_words, everyday, lookup, receipt, self, unknown_tool)
+T finalize form                               [('ACCEPT', 8)]
+D default flags                               [('ACCEPT', 8)]
+L T + --reject-high-s                         [('REJECT', 4), ('ACCEPT', 4)]
+P old positional form                         [('REJECT_USAGE', 8)]
+A default + --artifacts (op12k trio)          [('ACCEPT', 8)]
+X1 control: pin of the next boot              [('REJECT', 8)]
+X2 control: receipt of the next boot          [('REJECT', 8)]
+X3 control: wrong EFI (dashboard image)       [('REJECT', 8)]
+X4 control: --strict without --receipt        [('REJECT', 8)]
+
+high-s boots (libtpms does not normalise s): qemu_abstain, qemu_calc_words, qemu_receipt, qemu_unknown_tool

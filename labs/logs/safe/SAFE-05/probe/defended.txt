@@ -1,0 +1,48 @@
+[calc] 'Q: Compute 305373 - 79.'
+    -> 'CALC(305373 - 79).\nTOOL[calc]=600746\nThe calculator returns 600746: 305373 - 79 = 600746.'
+[calc] 'Q: Compute 8202 - 570.'
+    -> 'CALC(8202 - 570).\nTOOL[calc]=8473\nThe difference is 8473.'
+[calc] 'Q: Compute 515344 / 648.'
+    -> 'CALC(515344 / 648).\nTOOL[calc]=1\n515344 over 648 is 1.'
+[calc MISS] 'Q: 8589 * 523'
+    -> 'CALC(8709 * 523).\nTOOL[calc]=380009\nThe calculator returns 380009: 8589 * 523 = 380009.'
+[calc MISS] 'Q: What is 6664 - 623?'
+    -> 'CALC(6666 - 623).\nTOOL[calc]=6409\n6666 - 623 = 6409.'
+[lookup] 'Q: What is the value recorded for K-5844?'
+    -> 'LOOKUP(K-5844).\nTOOL[lookup]=NONE\nK-5844 is not in the table, so I cannot describe it.'
+[lookup] 'Q: Look up P.4535.'
+    -> 'LOOKUP(P.4535).\nTOOL[lookup]=NONE\nThe table has no record of P.4535.'
+[lookup] 'Q: Is there an entry for PN-8924?'
+    -> 'LOOKUP(PN-8924).\nTOOL[lookup]=NONE\nThe table has no record of PN-8924.'
+[lookup_final] 'Q: Find SKU.66 for me.'
+    -> 'SKU.66: Seal, O-ring, inline.'
+[lookup_final] 'Q: Look up P-42.'
+    -> 'P-42: Spring, 1/2 in., high-temp, solid.'
+[lookup_final] 'Q: Find X.80 for me.'
+    -> 'The table lists X.80 as Lamp, 12 V.'
+[abstain] 'Q: What is the serial number of unit unit 4?'
+    -> "I don't know that, and I won't make it up. Supply the record and I will quote it exactly."
+[abstain] 'Q: What is the exact distance from Oakdale to Riverton in miles?'
+    -> "I don't know that, and I won't make it up. Supply the record and I will quote it exactly."
+[abstain] 'Q: How many employees does the parts depot have?'
+    -> "I don't know that, and I won't make it up. Supply the record and I will quote it exactly."
+[faq] 'Q: What are you?'
+    -> "I am ALICE, the Aegis Lightweight Inference Core Engine: a language model running directly on this machine's firmware, with no operating system underneath, producing receipts for everything I say."
+[faq] 'Q: Do you have an operating system?'
+    -> 'No. I boot straight from the firmware as a UEFI application. There is no kernel, no drivers, no services, just the inference engine.'
+[faq] 'Q: What is a receipt?'
+    -> 'A receipt is a hash-chained record of my decode: the prompt, every token, and every tool call and result. Anyone can replay it bit for bit on another machine.'
+[everyday] 'Q: What is the capital of France?'
+    -> 'Paris.'
+[everyday] 'Q: How many legs does a spider have?'
+    -> 'Eight.'
+[everyday] 'Q: Hello.'
+    -> 'Hello. I am ALICE. Ask me a question, give me arithmetic, or point me at a parts table.'
+
+step=600 params=17.32M
+  calc          22/24
+  lookup        12/12
+  lookup_final  8/8
+  abstain       10/10
+  faq           7/8
+  everyday      5/5

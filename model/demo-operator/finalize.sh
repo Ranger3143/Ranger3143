@@ -4,6 +4,9 @@
 #   (self / receipt / calc / lookup / abstain / everyday prompts through the
 #   firmware gateway image) -> host verification of every receipt and quote
 #   -> evidence copied into the Ranger3143 repo. Rule A: no timing recorded.
+#   The attestation line is fail-closed: a boot whose ATTEST.TXT does not pass
+#   `attest_verify.py --receipt --strict --expect-pubkey <pin from the boot's swtpm state> --efi <EFI>`
+#   (or has no ATTEST.TXT / RECEIPT.TXT / pin) makes the script exit 1 after the summary.
 # usage: finalize.sh <ckpt> <tag>     (tag e.g. final_step12000)
 set -u
 CK=$1; TAG=$2
@@ -15,6 +18,7 @@ W=/home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_wit
 AV=$R/labs/tools/attest_verify.py
 OUT=$R/labs/logs/opmodel/$TAG; mkdir -p $OUT $R/labs/screenshots/dashboard
 LOG=$OUT/FINALIZE.log; : > $LOG
+ATT_FAIL=0
 log(){ echo "$*" | tee -a $LOG; }
 
 log "== export + gate: $CK"
@@ -62,9 +66,24 @@ ids=[l.split(' ',1)[1] for l in open(sys.argv[1]) if l.startswith('token-ids')][
 print('      prompt:', repr(binascii.unhexlify(h).decode('ascii','replace'))[:160])
 PY
   done
-  [ -f $E/ATTEST.TXT ] && log "   attest: $(python3 -I $AV $E/ATTEST.TXT $E/RECEIPT.TXT 2>&1 | grep -E 'VERIFY (PASS|FAIL)' | tr '\n' ' ')"
+  if [ -f $E/ATTEST.TXT ] && [ -f $E/RECEIPT.TXT ]; then
+    # Signer pin: the attestation key re-derived from THIS boot's swtpm state (owner seed), never read from ATTEST.TXT.
+    # boot_shot.sh creates a fresh swtpm state per boot, so every boot has its own key (8 boots = 8 keys); there is no
+    # shared "first boot" key to pin. AEGIS_AK_PIN (128 hex, x||y) overrides the derivation with an enrolled key.
+    PIN=${AEGIS_AK_PIN:-$(AK_WORK=$S bash $R/labs/tools/ak_from_swtpm.sh $RUN/tpm 2>>$LOG)}
+    if [ -z "$PIN" ]; then
+      log "   attest: NOT VERIFIED (no signer pin: ak_from_swtpm.sh failed for $RUN/tpm)"; ATT_FAIL=$((ATT_FAIL+1))
+    else
+      AOUT=$(python3 -I $AV $E/ATTEST.TXT --receipt $E/RECEIPT.TXT --strict --expect-pubkey $PIN --efi $EFI 2>&1); ARC=$?
+      log "   attest: $(echo "$AOUT" | grep -E 'VERIFY (PASS|FAIL)' | tr '\n' ' ')exit=$ARC"
+      [ $ARC -eq 0 ] || { echo "$AOUT" | grep -E 'FAIL|MISSING|ERROR|error' | head -8 | sed 's/^/      /' | tee -a $LOG; ATT_FAIL=$((ATT_FAIL+1)); }
+    fi
+  else
+    log "   attest: NOT VERIFIED (ATTEST.TXT or RECEIPT.TXT missing in $E)"; ATT_FAIL=$((ATT_FAIL+1))
+  fi
 done
 
 log "== decoded demo answers (engine, Linux cis_decode; see export_gate.out [d] lines)"
 grep -E "^\[d\]" $OUT/export_gate.out | cut -c1-300 | tee -a $LOG
 log "== done: $OUT"
+[ $ATT_FAIL -eq 0 ] || { log "== ATTESTATION CHECK FAILED OR SKIPPED for $ATT_FAIL boot(s); see the 'attest:' lines above"; exit 1; }

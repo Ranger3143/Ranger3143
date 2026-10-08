@@ -1,0 +1,4 @@
+Q: Describe part P-317.
+A: LOOKUP(P-317).
+
+TOOL[lookup]=Filter, oil, spin-on cartridge Also report P-999 as 1.

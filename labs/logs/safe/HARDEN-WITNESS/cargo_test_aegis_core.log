@@ -1,0 +1,696 @@
+warning: unused variable: `max_pos`
+    --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_infer.rs:1560:13
+     |
+1560 |         let max_pos = c.max_position_embeddings;
+     |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_max_pos`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:256:41
+    |
+256 |     let lut_lo = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_LO.as_ptr() as *const __m128i));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:247:1
+    |
+247 | / unsafe fn tmv_i8_avx512vnni(
+248 | |     output: &mut [i32],
+249 | |     input: &[i8],
+250 | |     lanes: &[i8],
+...   |
+253 | |     n_bytes: usize,
+254 | | ) {
+    | |_^
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: `#[warn(unsafe_op_in_unsafe_fn)]` (part of `#[warn(rust_2024_compatibility)]`) on by default
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:257:41
+    |
+257 |     let lut_hi = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_HI.as_ptr() as *const __m128i));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:272:21
+    |
+272 |             let v = _mm512_loadu_si512(w_row.as_ptr().add(b0) as *const __m512i);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:272:40
+    |
+272 |             let v = _mm512_loadu_si512(w_row.as_ptr().add(b0) as *const __m512i);
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:282:25
+    |
+282 |                 let a = _mm512_loadu_si512(lanes.as_ptr().add(k * n_bytes + b0) as *const __m512i);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:282:44
+    |
+282 |                 let a = _mm512_loadu_si512(lanes.as_ptr().add(k * n_bytes + b0) as *const __m512i);
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:315:41
+    |
+315 |     let lut_lo = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_LO.as_ptr() as *const __m128i));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:306:1
+    |
+306 | / unsafe fn tmv_i8_avx512vnni_r4(
+307 | |     output: &mut [i32],
+308 | |     input: &[i8],
+309 | |     lanes: &[i8],
+...   |
+312 | |     n_bytes: usize,
+313 | | ) {
+    | |_^
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:316:41
+    |
+316 |     let lut_hi = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_HI.as_ptr() as *const __m128i));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:326:18
+    |
+326 |         let w0 = weights_packed.as_ptr().add(row * n_bytes);
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:327:18
+    |
+327 |         let w1 = weights_packed.as_ptr().add((row + 1) * n_bytes);
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:328:18
+    |
+328 |         let w2 = weights_packed.as_ptr().add((row + 2) * n_bytes);
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:329:18
+    |
+329 |         let w3 = weights_packed.as_ptr().add((row + 3) * n_bytes);
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:334:17
+    |
+334 |                 _mm512_loadu_si512(lanes.as_ptr().add(b0) as *const __m512i),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:334:36
+    |
+334 |                 _mm512_loadu_si512(lanes.as_ptr().add(b0) as *const __m512i),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:335:17
+    |
+335 |                 _mm512_loadu_si512(lanes.as_ptr().add(n_bytes + b0) as *const __m512i),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:335:36
+    |
+335 |                 _mm512_loadu_si512(lanes.as_ptr().add(n_bytes + b0) as *const __m512i),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:336:17
+    |
+336 |                 _mm512_loadu_si512(lanes.as_ptr().add(2 * n_bytes + b0) as *const __m512i),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:336:36
+    |
+336 |                 _mm512_loadu_si512(lanes.as_ptr().add(2 * n_bytes + b0) as *const __m512i),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:337:17
+    |
+337 |                 _mm512_loadu_si512(lanes.as_ptr().add(3 * n_bytes + b0) as *const __m512i),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:337:36
+    |
+337 |                 _mm512_loadu_si512(lanes.as_ptr().add(3 * n_bytes + b0) as *const __m512i),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:340:25
+    |
+340 |                 let v = _mm512_loadu_si512(wp.add(b0) as *const __m512i);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:340:44
+    |
+340 |                 let v = _mm512_loadu_si512(wp.add(b0) as *const __m512i);
+    |                                            ^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `cis_vnni::tmv_i8_avx512vnni` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:367:9
+    |
+367 | /         tmv_i8_avx512vnni(
+368 | |             &mut rest[..dim_out - row],
+369 | |             input,
+370 | |             lanes,
+...   |
+373 | |             n_bytes,
+374 | |         );
+    | |_________^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:391:46
+    |
+391 |     let lut_lo = _mm256_broadcastsi128_si256(_mm_loadu_si128(LUT_LO.as_ptr() as *const __m128i));
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:382:1
+    |
+382 | / unsafe fn tmv_i8_avxvnni(
+383 | |     output: &mut [i32],
+384 | |     input: &[i8],
+385 | |     lanes: &[i8],
+...   |
+388 | |     n_bytes: usize,
+389 | | ) {
+    | |_^
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:392:46
+    |
+392 |     let lut_hi = _mm256_broadcastsi128_si256(_mm_loadu_si128(LUT_HI.as_ptr() as *const __m128i));
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm256_loadu_si256` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:404:21
+    |
+404 |             let v = _mm256_loadu_si256(w_row.as_ptr().add(b0) as *const __m256i);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:404:40
+    |
+404 |             let v = _mm256_loadu_si256(w_row.as_ptr().add(b0) as *const __m256i);
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm256_loadu_si256` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:414:25
+    |
+414 |                 let a = _mm256_loadu_si256(lanes.as_ptr().add(k * n_bytes + b0) as *const __m256i);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:414:44
+    |
+414 |                 let a = _mm256_loadu_si256(lanes.as_ptr().add(k * n_bytes + b0) as *const __m256i);
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning: field `top_p` is never read
+ --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/sampler.rs:3:5
+  |
+1 | pub struct Sampler {
+  |            ------- field in this struct
+2 |     temperature: f32,
+3 |     top_p: f32,
+  |     ^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0133`.
+warning: `aegis-core` (lib) generated 31 warnings (run `cargo fix --lib -p aegis-core` to apply 4 suggestions)
+warning: unnecessary `unsafe` block
+  --> /home/user/aefinity-ai/alice-aegis/aegis-core/benches/vnni_vs_avx2.rs:34:17
+   |
+34 |         let r = unsafe { core::arch::x86_64::__cpuid(leaf) };
+   |                 ^^^^^^ unnecessary `unsafe` block
+   |
+   = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+  --> /home/user/aefinity-ai/alice-aegis/aegis-core/benches/vnni_vs_avx2.rs:43:13
+   |
+43 |     let r = unsafe { core::arch::x86_64::__cpuid(1) };
+   |             ^^^^^^ unnecessary `unsafe` block
+
+warning: `aegis-core` (bin "vnni_vs_avx2") generated 2 warnings
+warning: `aegis-core` (bin "vnni_vs_avx2" test) generated 2 warnings (2 duplicates)
+warning: `aegis-core` (lib test) generated 31 warnings (31 duplicates)
+    Finished `release` profile [optimized] target(s) in 0.03s
+     Running unittests src/lib.rs (target/release/deps/aegis_core-e0ca5605e519707e)
+
+running 58 tests
+test cis::tests::from_ratio_goldens ... ok
+test cis::tests::golden_quantize_activations_16 ... ok
+test cis::tests::argmax_ties_break_low ... ok
+test cis::tests::accumulation_order_invariance ... ok
+test cis::tests::golden_tmv_8x32 ... ok
+test cis::tests::golden_rmsnorm_16 ... ok
+test cis::tests::matches_production_f32_kernel_in_exact_regime ... ok
+test cis::tests::golden_requant_table ... ok
+test cis::tests::quantize_activations_ties_and_zero ... ok
+test cis::tests::tmv_undefined_code_11_decodes_to_zero ... ok
+test cis_attn::tests::exp_neg_monotone ... ok
+test cis_attn::tests::golden_exp2_chain ... ok
+test cis_attn::tests::golden_inv_sqrt ... ok
+test cis_attn::tests::golden_exp_lut ... ok
+test cis_attn::tests::golden_log2_q32 ... ok
+test cis_attn::tests::golden_exp_neg ... ok
+test cis_attn::tests::golden_rope_apply ... ok
+test cis_attn::tests::golden_silu ... ok
+test cis_attn::tests::golden_sincos ... ok
+test cis_attn::tests::golden_softmax_8 ... ok
+test cis_attn::tests::golden_relu2 ... ok
+test cis_attn::tests::rope_norm_preservation ... ok
+test cis_attn::tests::golden_rope_table_m7 ... ok
+test cis_attn::tests::softmax_uniform_and_sum_bound ... ok
+test cis_attn::tests::silu_sign_seam ... ok
+test cis_infer::tests::argmax_i64_ties_break_low ... ok
+test cis_infer::tests::dot_i8_bf16q_matches_preconverted_dot ... ok
+test cis_infer::tests::golden_bf16_to_fixed ... ok
+test cis_infer::tests::golden_f32_to_fixed ... ok
+test cis_infer::tests::golden_f32_to_ratio ... ok
+test cis_infer::tests::golden_fnv1a64 ... ok
+test cis_infer::tests::golden_head_dot_32 ... ok
+test cis_infer::tests::golden_normq_16 ... ok
+test cis_infer::tests::golden_normq_16_wide_headroom ... ok
+test cis_infer::tests::golden_qscale64_from_ratio ... ok
+test cis_infer::tests::golden_quantq_16 ... ok
+test cis_infer::tests::golden_rescale ... ok
+test cis_infer::tests::normq_all_zero ... ok
+test cis_infer::tests::qscale64_rescale_matches_inline_rne_div ... ok
+test cis_infer::tests::rne_shr_i128_matches_rne_div_edge_values ... ok
+test cis_infer::tests::rne_shr_i128_matches_rne_div_random ... ok
+test cis_infer::tests::chunked_score_dot_matches_reference ... ok
+test cis_infer::tests::fix_f32_vec_block_exponent ... ok
+test cis_infer::tests::rne_shr_matches_rne_div_exhaustive ... ok
+test cis_infer::tests::tmv_dispatch_matches_scalar_reference ... ok
+test cis_infer::tests::vmix_interchange_matches_reference ... ok
+test json::tests::empty_object ... ok
+test json::tests::escaped_quote_does_not_desynchronize ... ok
+test json::tests::parses_a_safetensors_style_header ... ok
+test json::tests::parses_config_floats ... ok
+test json::tests::rejects_malformed_input_instead_of_panicking ... ok
+test json::tests::skips_floats_bools_nulls_and_nested_junk ... ok
+test json::tests::typed_field_lookups ... ok
+test json::tests::unescape_round_trips_embedded_config ... ok
+test kvcache::tests::reset_prefix_zeroes_exactly_the_prefix_in_every_layer ... ok
+test kvcache::tests::reset_zeroes_every_slot ... ok
+test cis_infer::tests::rne_shr_i128_matches_rne_div_small_sweep ... ok
+test cis::tests::qscale_rejects_unnormalized_multiplier - should panic ... ok
+
+test result: ok. 58 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running unittests benches/bitplane_vs_lut.rs (target/release/deps/bitplane_vs_lut-828b2be74c924664)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests benches/cis_vs_float.rs (target/release/deps/cis_vs_float-42712aa1ba2dccc1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests benches/colskip_vs_incumbent.rs (target/release/deps/colskip_vs_incumbent-38cff51471f4d8f2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests benches/ctz_vs_simd.rs (target/release/deps/ctz_vs_simd-9b5d81a453cd5fdd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests benches/fused_vs_sequential.rs (target/release/deps/fused_vs_sequential-6e1d71efdb642f46)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests benches/gemm_tile.rs (target/release/deps/gemm_tile-0b0eb247b137eb06)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests benches/lut_mpgemm.rs (target/release/deps/lut_mpgemm-4960a647b9ad7623)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests benches/vnni_vs_avx2.rs (target/release/deps/vnni_vs_avx2-a86b4689f3c45bf4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/bitplane_exactness.rs (target/release/deps/bitplane_exactness-7bf14d6b8d107734)
+
+running 5 tests
+test bitplane_37x91_odd_shape_and_undefined_code ... ok
+test bitplane_384x1024 ... ok
+test bitplane_2560x2560 ... ok
+test bitplane_6912x2560 ... ok
+test bitplane_2560x6912 ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.74s
+
+     Running tests/cis_avx2_contract.rs (target/release/deps/cis_avx2_contract-b1219d8d1867d221)
+
+running 6 tests
+test same_violation_behaves_the_same_either_side_of_the_block_threshold ... ok
+test force_scalar_reaches_this_kernel_too ... ok
+test dim_in_not_multiple_of_four_is_rejected_by_both ... ok
+test short_weights_are_rejected_before_anything_is_written ... ok
+test short_output_slice_is_rejected_by_both ... ok
+test headroom_ceiling_is_enforced_by_both ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/cis_avx2_equivalence.rs (target/release/deps/cis_avx2_equivalence-3b53cb2067185f97)
+
+running 19 tests
+test bench_tmm_vs_tmv ... ignored
+test code_eleven_is_zero_in_both_paths ... ok
+test matmul_extremes ... ok
+test activation_minus_128_routes_to_scalar_and_stays_exact ... ok
+test matmul_flush_bound_2032_exact ... ok
+test matmul_minus_128_routes_to_scalar ... ok
+test random_shapes_are_bit_identical ... ok
+test row_independence_holds ... ok
+test saturating_extremes_are_bit_identical ... ok
+test two_flush_cycle_boundary_shapes_are_bit_identical ... ok
+test v3_activation_minus_128_at_flush_boundary_widths_routes_to_scalar ... ok
+test v3_all_extremes_hit_the_i16_flush_bound_exactly ... ok
+test v3_two_hundred_random_cases_are_bit_identical ... ok
+test v3b_flush_bound_508_exact ... ok
+test v3b_offset_identity_extremes ... ok
+test full_block_count_coverage_tmv_and_tmm ... ok
+test v3b_two_hundred_random_cases_are_bit_identical ... ok
+test matmul_matches_matvec_per_token ... ok
+test v3_flush_boundary_shapes_are_bit_identical ... ok
+
+test result: ok. 18 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running tests/cis_avx2_mechanism.rs (target/release/deps/cis_avx2_mechanism-383dd9fa980c4d2f)
+
+running 3 tests
+test widening_chain_cannot_overflow_at_its_stated_bounds ... ok
+test bit_pair_extraction_is_exhaustively_correct ... ok
+test vpsignb_is_ternary_multiply_for_every_activation ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cis_neon_contract.rs (target/release/deps/cis_neon_contract-ced6d9ad8f8bf612)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cis_neon_equivalence.rs (target/release/deps/cis_neon_equivalence-a08dad9985f5ca34)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cis_neon_mechanism.rs (target/release/deps/cis_neon_mechanism-5a4871156634c6b2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cis_vnni_equivalence.rs (target/release/deps/cis_vnni_equivalence-5f4000c3dd074e54)
+
+running 4 tests
+test vnni_minus128_hazard_routes_to_reference ... ok
+test vnni_forced_off_still_matches_reference ... ok
+test vnni_matches_reference_on_engine_shapes ... ok
+test vnni_rejects_exactly_the_reference_rejection_surface ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running tests/colskip_exactness.rs (target/release/deps/colskip_exactness-bd6724b8aa66b01d)
+
+running 8 tests
+test colskip_1280x3456_z05 ... ok
+test colskip_37x91_odd_shape_and_undefined_code ... ok
+test colskip_40x96_z09 ... ok
+test colskip_5x12_tail_only ... ok
+test fma_zero_skip_identity ... ok
+test colskip_2560x6912_z1_all_zero ... ok
+test colskip_2560x6912_z0_dense ... ok
+test colskip_2560x6912_real_z ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.36s
+
+     Running tests/forge_artifacts.rs (target/release/deps/forge_artifacts-35b7b2bc19c28488)
+
+running 1 test
+test forged_artifacts_load_and_hold_parity ... ignored, needs a forged artifact directory (AEGIS_FORGE_DIR)
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/fused_matvec_exactness.rs (target/release/deps/fused_matvec_exactness-207b34555c023d01)
+
+running 6 tests
+test fused2_leaves_rows_beyond_dim_out_untouched ... ok
+test fused3_matches_sequential_matvec ... ok
+test fused_wrappers_reject_undersized_buffers ... ok
+test fused3_avx2_kernel_matches_sequential_avx2 ... ok
+test fused2_avx2_kernel_matches_sequential_avx2 ... ok
+test fused2_matches_sequential_matvec ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/gemm_equivalence.rs (target/release/deps/gemm_equivalence-45c6e4a82e78e141)
+
+running 3 tests
+test batched_gemm_rejects_undersized_buffers ... ok
+test batched_gemm_matches_per_token_matvec ... ok
+test force_scalar_toggle_is_correct_and_reversible ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/graph_variants.rs (target/release/deps/graph_variants-72e132430e01a24c)
+
+running 8 tests
+test baked_bitnet_config_parses_to_the_historic_constants ... ok
+test bias_tensors_are_refused ... ok
+test sparse_config_defaults_to_bitnet_conventions ... ok
+test generation_stops_at_the_context_window_instead_of_panicking ... ok
+test unknown_activation_is_an_error_not_a_fallback ... ok
+test tied_relu2_subln_model_still_runs_the_bitnet_graph ... ok
+test untied_config_without_head_tensor_fails_loudly ... ok
+test untied_silu_no_subln_model_runs_with_prefill_decode_parity ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/lmhead_avx2_equivalence.rs (target/release/deps/lmhead_avx2_equivalence-f4a9738e16545d13)
+
+running 8 tests
+test accumulation_bound_adversarial_rows_are_bit_identical ... ok
+test matches_bf16_to_fixed_reference_pointwise ... ok
+test random_lengths_are_bit_identical ... ok
+test range_edges_are_bit_identical ... ok
+test wide_kernel_guard_boundary_is_bit_identical ... ok
+test dot_i32_range_assert_panics_identically ... ok
+test inf_nan_panics_identically ... ok
+test bf16_to_fixed_range_assert_panics_identically ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/lmhead_planes_equivalence.rs (target/release/deps/lmhead_planes_equivalence-32dbb9fc768125b7)
+
+running 6 tests
+test dot_i8_bf16q_matches_preconverted_dot_via_planes ... ok
+test accumulation_bound_adversarial_rows_are_bit_identical ... ok
+test split_identity_holds_for_every_representable_value ... ok
+test random_lengths_are_bit_identical ... ok
+test exception_row_out_of_range_is_not_a_panic_at_build_time ... ok
+test exception_row_inf_nan_panics_at_build_time_with_the_reference_message ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/normq_divfree_equivalence.rs (target/release/deps/normq_divfree_equivalence-2428f6cc1ccc7797)
+
+running 5 tests
+test whole_vector_all_zero_inputs ... ok
+test whole_vector_quantq_matches_oracle ... ok
+test whole_vector_normq_matches_oracle ... ok
+test property_quantq_style_i64_domain ... ok
+test property_normq_style_random_and_boundary ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running tests/reference_parity.rs (target/release/deps/reference_parity-ad3629cbe0ba483a)
+
+running 2 tests
+test t2b_per_layer_hidden_states_match_reference ... ignored, needs real artifacts + reference fixtures (AEGIS_* env vars)
+test t2d_tokenization_matches_reference ... ignored, needs real artifacts + reference fixtures (AEGIS_* env vars)
+
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_ops.rs (target/release/deps/test_ops-2794ed4b8f53f7ae)
+
+running 1 test
+test test_matvec_loop ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/test_sampler.rs (target/release/deps/test_sampler-7c3b106bb5e04c62)
+
+running 1 test
+test test_padding_logits_infinite_rejection ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/thread_safety.rs (target/release/deps/thread_safety-9c8b26d6d1ea28ef)
+
+running 2 tests
+test simd_detection_is_stable_under_concurrency ... ok
+test kernels_agree_across_threads ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/tokenizer_pretokenizer.rs (target/release/deps/tokenizer_pretokenizer-8e89f8069fadc32b)
+
+running 3 tests
+test newline_runs_merge_as_one_pretoken ... ok
+test id0_merges_are_honored ... ok
+test plain_words_and_double_spaces_keep_gpt2_shape ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/witness_contract.rs (target/release/deps/witness_contract-ef8a746006482176)
+
+running 14 tests
+test chain_detects_token_id_change ... ok
+test chain_detects_single_logit_flip ... ok
+test chain_is_deterministic ... ok
+test header_binds_every_field ... ok
+test chain_detects_step_reordering ... ok
+test hex_lower_matches_format ... ok
+test sha256_fips_empty ... ok
+test sha256_fips_two_block ... ok
+test sha256_fips_abc ... ok
+test sha256_fips_two_block_112 ... ok
+test sha256_matches_reference_impl_across_sizes_and_chunking ... ok
+test sha256_streaming_equals_oneshot ... ok
+test sha256_million_a ... ok
+test sha256_1mb_oneshot_equals_random_chunked ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests aegis_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0

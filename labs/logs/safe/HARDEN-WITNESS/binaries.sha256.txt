@@ -1,0 +1,2 @@
+bc4bc82cff0cc8113f51bdda4d6c65612ff57b38b9011fc17fada5e924491203  new  /home/user/aefinity-ai/alice-aegis/aegis-linux/target/release/examples/cis_witness
+79107c6b57101910c8fa5904e473279cc823c6db82dd3e0c0d4e0e012bfd5309  old  /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/harden/cis_witness.old

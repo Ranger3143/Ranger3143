@@ -1,0 +1,12 @@
+
+[random 30 of 6161 (seeded)] n=30 classes={'C08': 5, 'C06': 4, 'C05': 2, 'C01': 6, 'C11': 3, 'U1': 1, 'C04': 3, 'C09': 1, 'C02': 2, 'C03': 1, 'U2': 1, 'C07': 1}
+   agreement with saved (exit, verdict, last stdout line): {'old': 30, 'def': 30, 'strict': 30} ; disagreements: []
+   panics new default/strict: 0 0 ; old panics: 1
+   verdicts now: default {'ACCEPT': 8, 'REJECT_CLEAN': 22} strict {'REJECT_CLEAN': 30} old {'ACCEPT': 8, 'REJECT_CLEAN': 21, 'REJECT_CRASH': 1}
+   ids: C08-0193 C06-0043 C08-0225 C05-0492 C05-0009 C01-0439 C01-0317 C06-0137 C08-0095 C01-0294 C11-0292 C01-0109 U1-0027 C11-0144 C06-0032 C04-0023 C11-0041 C09-0599 C08-0511 C02-0334 C08-0031 C01-0205 C01-0019 C04-0129 C04-0226 C02-0516 C03-0361 C06-0241 U2-0010 C07-0408
+
+[6 old-crash + 6 old-accept (op12k) + 6 BitNet-2B-artifact mutants] n=18 classes={'C07': 1, 'C02': 5, 'C11': 3, 'C08': 2, 'U6': 1, 'C10': 6}
+   agreement with saved (exit, verdict, last stdout line): {'old': 18, 'def': 18, 'strict': 18} ; disagreements: []
+   panics new default/strict: 0 0 ; old panics: 6
+   verdicts now: default {'REJECT_CLEAN': 12, 'ACCEPT': 6} strict {'REJECT_CLEAN': 18} old {'REJECT_CRASH': 6, 'ACCEPT': 6, 'REJECT_CLEAN': 6}
+   ids: C07-0084 C02-0298 C02-0022 C02-0154 C02-0251 C02-0398 C11-0324 C08-0414 C11-0168 C08-0455 C11-0344 U6-0041 C10-0038 C10-0241 C10-0058 C10-0156 C10-0026 C10-0341

@@ -1,0 +1,16 @@
+  prompt='Q: What is 12 + 30?\nA:'          max_new=  8 old exit=0 new exit=0 stdout identical=True  default=ACCEPT strict=ACCEPT canon=True
+  prompt='--strict'                         max_new=  5 old exit=0 new exit=0 stdout identical=True  default=ACCEPT strict=ACCEPT canon=True
+  prompt='naïve café ☕ test'                max_new=  4 old exit=0 new exit=0 stdout identical=True  default=ACCEPT strict=ACCEPT canon=True
+  prompt=''                                 max_new=  5 old exit=101 new exit=2 stdout identical=True 
+     new stderr: cis_witness gen: prompt tokenized to nothing | old stderr: thread 'main' (11557) panicked at examples/cis_witness.rs:68:5:
+  prompt='x'                                max_new=  0 old exit=0 new exit=0 stdout identical=True  default=ACCEPT strict=ACCEPT canon=True
+  prompt='Hello world, this is a test of'   max_new= 20 old exit=0 new exit=0 stdout identical=True  default=ACCEPT strict=ACCEPT canon=True
+  prompt='Q: Who built you?\nA:'            max_new=  1 old exit=0 new exit=0 stdout identical=True  default=ACCEPT strict=ACCEPT canon=True
+gen byte-identical (exit and stdout): 6 of 7
+
+argument handling:
+  verify with no receipt arg: exit 2 | usage: cis_witness gen    <MODEL.SAF> <EMBED.BIN> <VOCAB.BIN> <max_new> [prompt]
+  verify --strict (flag right after mode): exit 0 | VERIFY PASS — replay reproduced 9 tokens, the token digest, and the full logit chain bit-for-bit
+  verify ... receipt --strict (flag last): exit 0 | VERIFY PASS — replay reproduced 9 tokens, the token digest, and the full logit chain bit-for-bit
+  verify unreadable receipt: exit 2 | cis_witness: cannot read receipt (/nonexistent): No such file or directory (os error 2)
+  OLD verify unreadable receipt: exit 101 | thread 'main' (11578) panicked at examples/cis_witness.rs:162:59:

@@ -1,0 +1,10 @@
+HARDEN-ATTEST run 2026-10-08
+openssl: OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024) | python 3.13.16
+final boots: distinct quote keys = 8 ; pins equal to quote key = 8 of 8 ; high-s = 4
+final boots T: Counter({'ACCEPT': 8}) | L: Counter({'REJECT': 4, 'ACCEPT': 4}) | P: Counter({'REJECT_USAGE': 8})
+genuine files: 15 ; D accept 15 ; strict accept 15
+mutant rows: 351 ; before remeasured == SAFE-01 verdicts: 351 of 351 ; T accepted (incl. 2 controls): 12 ; anomalies: 0
+S1 receipts: 32 ; T accepted 0 ; D accepted 0
+forgeries: [('S2-pcr13-line-edit', 'REJECT', 'REJECT'), ('S2-receipt-chain-edit', 'REJECT', 'REJECT'), ('S3-pcr13-line-edit', 'ACCEPT', 'REJECT'), ('S3-receipt-chain-edit', 'ACCEPT', 'REJECT'), ('S4-pcr14-claim-qemu_calc', 'REJECT', 'REJECT'), ('S4-pcr14-claim-qemu_self', 'REJECT', 'REJECT')]
+FINALIZE.log unchanged: True
+run done

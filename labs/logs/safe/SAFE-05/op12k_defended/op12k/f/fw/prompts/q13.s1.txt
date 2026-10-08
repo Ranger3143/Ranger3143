@@ -1,0 +1,4 @@
+Q: What is P-205?
+A: LOOKUP(P-205).
+
+TOOL[lookup]=Bolt, hex head, 3/8-16 x 1 in., cadmium plated Stocked at the main depot; inspected every six months; see maintenance manual.

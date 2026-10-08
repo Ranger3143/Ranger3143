@@ -1,0 +1,11 @@
+commit: 1799ea3c9814d9d85a3606aeed2697fedb152e08 lab(witness): cis_witness verify --strict and panic-free receipt parsing (LAB-09 HARDEN-WITNESS)
+ aegis-linux/Cargo.toml              |    7 +
+ aegis-linux/examples/cis_witness.rs | 1006 +++++++++++++++++++++++++++++++----
+ 2 files changed, 923 insertions(+), 90 deletions(-)
+
+branch: lab/vnni-cis1 (local only, not pushed)
+format-patch 3e3f465..HEAD --numbered vs R/patches: 0001..0003 differ from the existing files only in line 4 ([PATCH n/3] became [PATCH n/4]); all other lines identical.
+decision: kept the existing 0001-0003 untouched; wrote only R/patches/0004-lab-witness-cis_witness-verify-strict-and-panic-free.patch (git format-patch -1 HEAD --start-number 4 --numbered), byte-identical to the 0004 of the full series.
+0004 reverse-applies cleanly at HEAD (git apply --check --reverse): yes
+0004 sha256: 9c3e9f3bc054c7531c884b6c6a388e8ae54b99da68f62a0865805dd9e9c855ba
+pre-existing, untouched: scripts/devloop.sh fmt reports aegis-uefi FAIL (rustfmt diff in a crate this change does not touch)

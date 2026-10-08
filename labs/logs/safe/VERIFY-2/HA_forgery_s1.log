@@ -1,0 +1,51 @@
+S1 receipts on disk: 32
+   S1_qemu_self_prompt-hex_2 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+   S1_qemu_calc_cis-digest_0 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+   S1_qemu_calc_chain_0 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+   S1_qemu_self_chain_3 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+   S1_qemu_calc_token-ids_0 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+   S1_qemu_self_prompt-hex_3 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+   S1_qemu_calc_prompt-hex_2 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+   S1_qemu_calc_prompt-hex_0 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+   S1_qemu_calc_cis-digest_1 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+   S1_qemu_self_chain_0 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+   S1_qemu_calc_token-ids_3 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+   S1_qemu_self_token-ids_1 {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}
+S1 sample: D accepts 0 T accepts 0 P usage 12 of 12
+
+forgery tarball members: 8 ['forge_s3_pcr13-line-edit/ATTEST.TXT', 'forge_s3_pcr13-line-edit/RECEIPT.TXT', 'forge_s3_receipt-chain-edit/ATTEST.TXT', 'forge_s3_receipt-chain-edit/RECEIPT.TXT', 'forge_s4_pcr14_qemu_calc/ATTEST.TXT', 'forge_s4_pcr14_qemu_calc/RECEIPT.TXT', 'forge_s4_pcr14_qemu_self/ATTEST.TXT', 'forge_s4_pcr14_qemu_self/RECEIPT.TXT']
+  forge_s3_pcr13-line-edit             {'P': 'USAGE', 'D': 'ACCEPT', 'T': 'REJECT', 'L': 'REJECT'}  my_core_ok=True failed=[] key==pin:False
+  forge_s3_receipt-chain-edit          {'P': 'USAGE', 'D': 'ACCEPT', 'T': 'REJECT', 'L': 'REJECT'}  my_core_ok=True failed=[] key==pin:False
+  forge_s4_pcr14_qemu_calc             {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}  my_core_ok=False failed=['measured_lines_eq_events'] key==pin:True
+  forge_s4_pcr14_qemu_self             {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}  my_core_ok=False failed=['measured_lines_eq_events'] key==pin:True
+  SAFE-01 S2 forge_pcr13-line-edit          {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}  my_core_ok=False failed=['quote_public_contains_xy']
+  SAFE-01 S2 forge_receipt-chain-edit       {'P': 'USAGE', 'D': 'REJECT', 'T': 'REJECT', 'L': 'REJECT'}  my_core_ok=False failed=['quote_public_contains_xy']
+
+--- diff finalize_before.sh finalize.sh
+6a7,9
+> #   The attestation line is fail-closed: a boot whose ATTEST.TXT does not pass
+> #   `attest_verify.py --receipt --strict --expect-pubkey <pin from the boot's swtpm state> --efi <EFI>`
+> #   (or has no ATTEST.TXT / RECEIPT.TXT / pin) makes the script exit 1 after the summary.
+17a21
+> ATT_FAIL=0
+65c69,83
+<   [ -f $E/ATTEST.TXT ] && log "   attest: $(python3 -I $AV $E/ATTEST.TXT $E/RECEIPT.TXT 2>&1 | grep -E 'VERIFY (PASS|FAIL)' | tr '\n' ' ')"
+---
+>   if [ -f $E/ATTEST.TXT ] && [ -f $E/RECEIPT.TXT ]; then
+>     # Signer pin: the attestation key re-derived from THIS boot's swtpm state (owner seed), never read from ATTEST.TXT.
+>     # boot_shot.sh creates a fresh swtpm state per boot, so every boot has its own key (8 boots = 8 keys); there is no
+>     # shared "first boot" key to pin. AEGIS_AK_PIN (128 hex, x||y) overrides the derivation with an enrolled key.
+>     PIN=${AEGIS_AK_PIN:-$(AK_WORK=$S bash $R/labs/tools/ak_from_swtpm.sh $RUN/tpm 2>>$LOG)}
+>     if [ -z "$PIN" ]; then
+>       log "   attest: NOT VERIFIED (no signer pin: ak_from_swtpm.sh failed for $RUN/tpm)"; ATT_FAIL=$((ATT_FAIL+1))
+>     else
+>       AOUT=$(python3 -I $AV $E/ATTEST.TXT --receipt $E/RECEIPT.TXT --strict --expect-pubkey $PIN --efi $EFI 2>&1); ARC=$?
+>       log "   attest: $(echo "$AOUT" | grep -E 'VERIFY (PASS|FAIL)' | tr '\n' ' ')exit=$ARC"
+>       [ $ARC -eq 0 ] || { echo "$AOUT" | grep -E 'FAIL|MISSING|ERROR|error' | head -8 | sed 's/^/      /' | tee -a $LOG; ATT_FAIL=$((ATT_FAIL+1)); }
+>     fi
+>   else
+>     log "   attest: NOT VERIFIED (ATTEST.TXT or RECEIPT.TXT missing in $E)"; ATT_FAIL=$((ATT_FAIL+1))
+>   fi
+70a89
+> [ $ATT_FAIL -eq 0 ] || { log "== ATTESTATION CHECK FAILED OR SKIPPED for $ATT_FAIL boot(s); see the 'attest:' lines above"; exit 1; }
+

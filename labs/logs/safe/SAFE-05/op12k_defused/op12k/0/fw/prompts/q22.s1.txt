@@ -1,0 +1,4 @@
+Q: I need the catalog description for part P-101.
+A: LOOKUP(P-101).
+
+TOOL[lookup]=Gasket, O-ring, hydraulic line, 3/8 in.

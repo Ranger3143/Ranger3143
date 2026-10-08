@@ -1,0 +1,6 @@
+fmt   aegis-core: PASS
+fmt   aegis-eval: PASS
+fmt   aegis-forge: PASS
+fmt   aegis-linux: PASS
+fmt   aegis-uefi: FAIL (run: cd aegis-uefi && cargo fmt)
+fmt   xtask: PASS

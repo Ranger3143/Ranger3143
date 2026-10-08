@@ -1,0 +1,4 @@
+receipts on disk: 164
+sampled 24 ; default PASS 24 ; strict PASS 24
+groups: Counter({'bit': 13, 'byt': 11})
+non-pass: []

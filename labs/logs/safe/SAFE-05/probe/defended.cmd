@@ -1,0 +1,1 @@
+/usr/bin/python3 -I /home/user/Ranger3143/model/demo-operator/eval_ops.py --ckpt /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe05/ckpt/safe05_defended.pt --tokenizer /tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/tokenizer_op12k.json --show 3 --json /home/user/Ranger3143/labs/logs/safe/SAFE-05/probe/defended.json

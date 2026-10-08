@@ -1,0 +1,1616 @@
+### qemu_receipt qemu_abstain/RECEIPT.TXT --mode default exit=0 panic=0
+receipt cis-digest 751473b3a5980606 chain 36a4727928a9bf05
+local   cis-digest 751473b3a5980606 chain 36a4727928a9bf05
+VERIFY PASS — replay reproduced 25 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_abstain/RECEIPT.TXT --mode strict exit=0 panic=0
+receipt cis-digest 751473b3a5980606 chain 36a4727928a9bf05
+local   cis-digest 751473b3a5980606 chain 36a4727928a9bf05
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 25 = token-ids count
+VERIFY PASS — replay reproduced 25 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_calc/RECEIPT.TXT --mode default exit=0 panic=0
+receipt cis-digest fddebefc84f1ad58 chain 6e6b2ddf1a8528e5
+local   cis-digest fddebefc84f1ad58 chain 6e6b2ddf1a8528e5
+VERIFY PASS — replay reproduced 9 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_calc/RECEIPT.TXT --mode strict exit=0 panic=0
+receipt cis-digest fddebefc84f1ad58 chain 6e6b2ddf1a8528e5
+local   cis-digest fddebefc84f1ad58 chain 6e6b2ddf1a8528e5
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 9 = token-ids count
+VERIFY PASS — replay reproduced 9 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_calc/RECEIPT2.TXT --mode default exit=0 panic=0
+receipt cis-digest 594d2cc5f77e0006 chain 88467f1d45b4119b
+local   cis-digest 594d2cc5f77e0006 chain 88467f1d45b4119b
+VERIFY PASS — replay reproduced 9 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_calc/RECEIPT2.TXT --mode strict exit=0 panic=0
+receipt cis-digest 594d2cc5f77e0006 chain 88467f1d45b4119b
+local   cis-digest 594d2cc5f77e0006 chain 88467f1d45b4119b
+strict: canonical layout; prompt-toks 31 = tokenized prompt length; gen-toks 9 = token-ids count
+VERIFY PASS — replay reproduced 9 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_calc_words/RECEIPT.TXT --mode default exit=0 panic=0
+receipt cis-digest 1551d14612504825 chain fe59fefa91546f2a
+local   cis-digest 1551d14612504825 chain fe59fefa91546f2a
+VERIFY PASS — replay reproduced 8 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_calc_words/RECEIPT.TXT --mode strict exit=0 panic=0
+receipt cis-digest 1551d14612504825 chain fe59fefa91546f2a
+local   cis-digest 1551d14612504825 chain fe59fefa91546f2a
+strict: canonical layout; prompt-toks 11 = tokenized prompt length; gen-toks 8 = token-ids count
+VERIFY PASS — replay reproduced 8 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_calc_words/RECEIPT2.TXT --mode default exit=0 panic=0
+receipt cis-digest 2c0530a399613112 chain 9f746ec321a31093
+local   cis-digest 2c0530a399613112 chain 9f746ec321a31093
+VERIFY PASS — replay reproduced 7 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_calc_words/RECEIPT2.TXT --mode strict exit=0 panic=0
+receipt cis-digest 2c0530a399613112 chain 9f746ec321a31093
+local   cis-digest 2c0530a399613112 chain 9f746ec321a31093
+strict: canonical layout; prompt-toks 27 = tokenized prompt length; gen-toks 7 = token-ids count
+VERIFY PASS — replay reproduced 7 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_everyday/RECEIPT.TXT --mode default exit=0 panic=0
+receipt cis-digest f5a7738385a31930 chain a6d271d6e83c7f2d
+local   cis-digest f5a7738385a31930 chain a6d271d6e83c7f2d
+VERIFY PASS — replay reproduced 3 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_everyday/RECEIPT.TXT --mode strict exit=0 panic=0
+receipt cis-digest f5a7738385a31930 chain a6d271d6e83c7f2d
+local   cis-digest f5a7738385a31930 chain a6d271d6e83c7f2d
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 3 = token-ids count
+VERIFY PASS — replay reproduced 3 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_lookup/RECEIPT.TXT --mode default exit=0 panic=0
+receipt cis-digest 5a7fbbaf34604dab chain 973f11097fd652c6
+local   cis-digest 5a7fbbaf34604dab chain 973f11097fd652c6
+VERIFY PASS — replay reproduced 7 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_lookup/RECEIPT.TXT --mode strict exit=0 panic=0
+receipt cis-digest 5a7fbbaf34604dab chain 973f11097fd652c6
+local   cis-digest 5a7fbbaf34604dab chain 973f11097fd652c6
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 7 = token-ids count
+VERIFY PASS — replay reproduced 7 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_lookup/RECEIPT2.TXT --mode default exit=0 panic=0
+receipt cis-digest 876bb84068ef95c5 chain b394a1cacbedaf0f
+local   cis-digest 876bb84068ef95c5 chain b394a1cacbedaf0f
+VERIFY PASS — replay reproduced 23 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_lookup/RECEIPT2.TXT --mode strict exit=0 panic=0
+receipt cis-digest 876bb84068ef95c5 chain b394a1cacbedaf0f
+local   cis-digest 876bb84068ef95c5 chain b394a1cacbedaf0f
+strict: canonical layout; prompt-toks 41 = tokenized prompt length; gen-toks 23 = token-ids count
+VERIFY PASS — replay reproduced 23 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_receipt/RECEIPT.TXT --mode default exit=0 panic=0
+receipt cis-digest b14a9d31b0fed40c chain d1547f47376f655d
+local   cis-digest b14a9d31b0fed40c chain d1547f47376f655d
+VERIFY PASS — replay reproduced 50 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_receipt/RECEIPT.TXT --mode strict exit=0 panic=0
+receipt cis-digest b14a9d31b0fed40c chain d1547f47376f655d
+local   cis-digest b14a9d31b0fed40c chain d1547f47376f655d
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 50 = token-ids count
+VERIFY PASS — replay reproduced 50 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_self/RECEIPT.TXT --mode default exit=0 panic=0
+receipt cis-digest d86608784e71dfae chain a58e748eebee8de2
+local   cis-digest d86608784e71dfae chain a58e748eebee8de2
+VERIFY PASS — replay reproduced 30 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_self/RECEIPT.TXT --mode strict exit=0 panic=0
+receipt cis-digest d86608784e71dfae chain a58e748eebee8de2
+local   cis-digest d86608784e71dfae chain a58e748eebee8de2
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 30 = token-ids count
+VERIFY PASS — replay reproduced 30 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_unknown_tool/RECEIPT.TXT --mode default exit=0 panic=0
+receipt cis-digest 5f444fd04c209916 chain 4038be047933bcf4
+local   cis-digest 5f444fd04c209916 chain 4038be047933bcf4
+VERIFY PASS — replay reproduced 35 tokens, the token digest, and the full logit chain bit-for-bit
+### qemu_receipt qemu_unknown_tool/RECEIPT.TXT --mode strict exit=0 panic=0
+receipt cis-digest 5f444fd04c209916 chain 4038be047933bcf4
+local   cis-digest 5f444fd04c209916 chain 4038be047933bcf4
+strict: canonical layout; prompt-toks 9 = tokenized prompt length; gen-toks 35 = token-ids count
+VERIFY PASS — replay reproduced 35 tokens, the token digest, and the full logit chain bit-for-bit
+### golden witness_v1_m7_once64.receipt (m7 artifacts) --mode default exit=0 panic=0
+receipt cis-digest 67e8c0a96abc04e1 chain aee25b770bd7b22e
+local   cis-digest 67e8c0a96abc04e1 chain aee25b770bd7b22e
+VERIFY PASS — replay reproduced 64 tokens, the token digest, and the full logit chain bit-for-bit
+### golden witness_v1_m7_once64.receipt (m7 artifacts) --mode strict exit=0 panic=0
+receipt cis-digest 67e8c0a96abc04e1 chain aee25b770bd7b22e
+local   cis-digest 67e8c0a96abc04e1 chain aee25b770bd7b22e
+strict: canonical layout; prompt-toks 4 = tokenized prompt length; gen-toks 64 = token-ids count
+VERIFY PASS — replay reproduced 64 tokens, the token digest, and the full logit chain bit-for-bit
+### golden_format_only witness_v1_bitnet2b_once64.receipt (artifacts not on this host; op12k artifacts given) --mode default exit=1 panic=0
+FAIL artifact: MODEL hash mismatch (receipt facb3597665603ba vs local a44e48965c641b81)
+FAIL artifact: EMBED hash mismatch (receipt e32b99a25e345c65 vs local 8cbcd6b69df03539)
+FAIL artifact: VOCAB hash mismatch (receipt 5bde1b0355ef99c6 vs local a4cafc9649488987)
+### golden_format_only witness_v1_bitnet2b_once64.receipt (artifacts not on this host; op12k artifacts given) --mode strict exit=1 panic=0
+FAIL artifact: MODEL hash mismatch (receipt facb3597665603ba vs local a44e48965c641b81)
+FAIL artifact: EMBED hash mismatch (receipt e32b99a25e345c65 vs local 8cbcd6b69df03539)
+FAIL artifact: VOCAB hash mismatch (receipt 5bde1b0355ef99c6 vs local a4cafc9649488987)
+### golden_format_only witness_v1_e16_qat_once64.receipt (artifacts not on this host; op12k artifacts given) --mode default exit=1 panic=0
+FAIL artifact: MODEL hash mismatch (receipt 2b55924cd88de95b vs local a44e48965c641b81)
+FAIL artifact: EMBED hash mismatch (receipt d9a6bf7174ce07ab vs local 8cbcd6b69df03539)
+FAIL artifact: VOCAB hash mismatch (receipt c4c0957c8f036b2b vs local a4cafc9649488987)
+### golden_format_only witness_v1_e16_qat_once64.receipt (artifacts not on this host; op12k artifacts given) --mode strict exit=1 panic=0
+FAIL artifact: MODEL hash mismatch (receipt 2b55924cd88de95b vs local a44e48965c641b81)
+FAIL artifact: EMBED hash mismatch (receipt d9a6bf7174ce07ab vs local 8cbcd6b69df03539)
+FAIL artifact: VOCAB hash mismatch (receipt c4c0957c8f036b2b vs local a4cafc9649488987)
+### golden_format_only witness_v1_e16_qat_pruned_once64.receipt (artifacts not on this host; op12k artifacts given) --mode default exit=1 panic=0
+FAIL artifact: MODEL hash mismatch (receipt c5075aa121d6b79f vs local a44e48965c641b81)
+FAIL artifact: EMBED hash mismatch (receipt 4f9f78aa4155b06a vs local 8cbcd6b69df03539)
+FAIL artifact: VOCAB hash mismatch (receipt 5bde1b0355ef99c6 vs local a4cafc9649488987)
+### golden_format_only witness_v1_e16_qat_pruned_once64.receipt (artifacts not on this host; op12k artifacts given) --mode strict exit=1 panic=0
+FAIL artifact: MODEL hash mismatch (receipt c5075aa121d6b79f vs local a44e48965c641b81)
+FAIL artifact: EMBED hash mismatch (receipt 4f9f78aa4155b06a vs local 8cbcd6b69df03539)
+FAIL artifact: VOCAB hash mismatch (receipt 5bde1b0355ef99c6 vs local a4cafc9649488987)
+### golden_format_only witness_v1_falcon_e_1b_once64.receipt (artifacts not on this host; op12k artifacts given) --mode default exit=1 panic=0
+FAIL artifact: MODEL hash mismatch (receipt 6ebdb9e0b2a099be vs local a44e48965c641b81)
+FAIL artifact: EMBED hash mismatch (receipt 8951f5725b709b97 vs local 8cbcd6b69df03539)
+FAIL artifact: VOCAB hash mismatch (receipt e8f860844bc1a075 vs local a4cafc9649488987)
+### golden_format_only witness_v1_falcon_e_1b_once64.receipt (artifacts not on this host; op12k artifacts given) --mode strict exit=1 panic=0
+FAIL artifact: MODEL hash mismatch (receipt 6ebdb9e0b2a099be vs local a44e48965c641b81)
+FAIL artifact: EMBED hash mismatch (receipt 8951f5725b709b97 vs local 8cbcd6b69df03539)
+FAIL artifact: VOCAB hash mismatch (receipt e8f860844bc1a075 vs local a4cafc9649488987)
+### h2_self_receipt orig_00/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 8aa58fe534bb7f22
+local   cis-digest 6a595a3cce0340bc chain 8aa58fe534bb7f22
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt orig_00/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 8aa58fe534bb7f22
+local   cis-digest 6a595a3cce0340bc chain 8aa58fe534bb7f22
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt orig_00/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain be1a4f88e5f827b7
+local   cis-digest 58e895466c3a4917 chain be1a4f88e5f827b7
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt orig_00/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain be1a4f88e5f827b7
+local   cis-digest 58e895466c3a4917 chain be1a4f88e5f827b7
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt orig_00/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 3330e62381d6614c
+local   cis-digest 24b4fdddffef882b chain 3330e62381d6614c
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt orig_00/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 3330e62381d6614c
+local   cis-digest 24b4fdddffef882b chain 3330e62381d6614c
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt orig_00/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 198be4d1d58845d1
+local   cis-digest 56a4a3655b7b8c45 chain 198be4d1d58845d1
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt orig_00/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 198be4d1d58845d1
+local   cis-digest 56a4a3655b7b8c45 chain 198be4d1d58845d1
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_00/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain f7c19d6fec70aea4
+local   cis-digest 6a595a3cce0340bc chain f7c19d6fec70aea4
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_00/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain f7c19d6fec70aea4
+local   cis-digest 6a595a3cce0340bc chain f7c19d6fec70aea4
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_00/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain add5d9db13dab11c
+local   cis-digest 349836d8deffa0f1 chain add5d9db13dab11c
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_00/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain add5d9db13dab11c
+local   cis-digest 349836d8deffa0f1 chain add5d9db13dab11c
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_00/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 7a72911afc4fb382
+local   cis-digest 24b4fdddffef882b chain 7a72911afc4fb382
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_00/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 7a72911afc4fb382
+local   cis-digest 24b4fdddffef882b chain 7a72911afc4fb382
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_00/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain c118b2b9dae21e15
+local   cis-digest 56a4a3655b7b8c45 chain c118b2b9dae21e15
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_00/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain c118b2b9dae21e15
+local   cis-digest 56a4a3655b7b8c45 chain c118b2b9dae21e15
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_01/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 2f75c9381c1c8002
+local   cis-digest 6a595a3cce0340bc chain 2f75c9381c1c8002
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_01/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 2f75c9381c1c8002
+local   cis-digest 6a595a3cce0340bc chain 2f75c9381c1c8002
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_01/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 983d0c4f76509873
+local   cis-digest 349836d8deffa0f1 chain 983d0c4f76509873
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_01/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 983d0c4f76509873
+local   cis-digest 349836d8deffa0f1 chain 983d0c4f76509873
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_01/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 1c4f133896e29d92
+local   cis-digest 24b4fdddffef882b chain 1c4f133896e29d92
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_01/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 1c4f133896e29d92
+local   cis-digest 24b4fdddffef882b chain 1c4f133896e29d92
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_01/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 87fcf90771259b9b
+local   cis-digest 56a4a3655b7b8c45 chain 87fcf90771259b9b
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_01/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 87fcf90771259b9b
+local   cis-digest 56a4a3655b7b8c45 chain 87fcf90771259b9b
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_02/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain dcc743e8aa929385
+local   cis-digest 6a595a3cce0340bc chain dcc743e8aa929385
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_02/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain dcc743e8aa929385
+local   cis-digest 6a595a3cce0340bc chain dcc743e8aa929385
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_02/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 094b7e06ae5adc7c
+local   cis-digest 349836d8deffa0f1 chain 094b7e06ae5adc7c
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_02/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 094b7e06ae5adc7c
+local   cis-digest 349836d8deffa0f1 chain 094b7e06ae5adc7c
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_02/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 00383e0a75435935
+local   cis-digest 24b4fdddffef882b chain 00383e0a75435935
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_02/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 00383e0a75435935
+local   cis-digest 24b4fdddffef882b chain 00383e0a75435935
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_02/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 113375628b488dc8
+local   cis-digest 56a4a3655b7b8c45 chain 113375628b488dc8
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_02/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 113375628b488dc8
+local   cis-digest 56a4a3655b7b8c45 chain 113375628b488dc8
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_03/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 279233fc4288a75b
+local   cis-digest 6a595a3cce0340bc chain 279233fc4288a75b
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_03/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 279233fc4288a75b
+local   cis-digest 6a595a3cce0340bc chain 279233fc4288a75b
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_03/calc --mode default exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain 2cc8115753f99ec7
+local   cis-digest bcf0cea85713f70f chain 2cc8115753f99ec7
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_03/calc --mode strict exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain 2cc8115753f99ec7
+local   cis-digest bcf0cea85713f70f chain 2cc8115753f99ec7
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_03/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 9b7e864d28f265e7
+local   cis-digest 24b4fdddffef882b chain 9b7e864d28f265e7
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_03/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 9b7e864d28f265e7
+local   cis-digest 24b4fdddffef882b chain 9b7e864d28f265e7
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_03/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 6f4741b13cedb579
+local   cis-digest 56a4a3655b7b8c45 chain 6f4741b13cedb579
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_03/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 6f4741b13cedb579
+local   cis-digest 56a4a3655b7b8c45 chain 6f4741b13cedb579
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_04/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 582770b17236dfad
+local   cis-digest 6a595a3cce0340bc chain 582770b17236dfad
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_04/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 582770b17236dfad
+local   cis-digest 6a595a3cce0340bc chain 582770b17236dfad
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_04/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 42ddc75b35e718e1
+local   cis-digest 349836d8deffa0f1 chain 42ddc75b35e718e1
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_04/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 42ddc75b35e718e1
+local   cis-digest 349836d8deffa0f1 chain 42ddc75b35e718e1
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_04/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 509773df66c86498
+local   cis-digest 24b4fdddffef882b chain 509773df66c86498
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_04/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 509773df66c86498
+local   cis-digest 24b4fdddffef882b chain 509773df66c86498
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_04/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain ee21e10b355a8157
+local   cis-digest 56a4a3655b7b8c45 chain ee21e10b355a8157
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_04/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain ee21e10b355a8157
+local   cis-digest 56a4a3655b7b8c45 chain ee21e10b355a8157
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_05/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain c0d8b621bb8ffe53
+local   cis-digest 6a595a3cce0340bc chain c0d8b621bb8ffe53
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_05/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain c0d8b621bb8ffe53
+local   cis-digest 6a595a3cce0340bc chain c0d8b621bb8ffe53
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_05/calc --mode default exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain 265d5f5c1fb72df6
+local   cis-digest 49303d4cc5439022 chain 265d5f5c1fb72df6
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_05/calc --mode strict exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain 265d5f5c1fb72df6
+local   cis-digest 49303d4cc5439022 chain 265d5f5c1fb72df6
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_05/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 73e0ad00b8f9972d
+local   cis-digest 24b4fdddffef882b chain 73e0ad00b8f9972d
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_05/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 73e0ad00b8f9972d
+local   cis-digest 24b4fdddffef882b chain 73e0ad00b8f9972d
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_05/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 383b80adc5e97f94
+local   cis-digest 56a4a3655b7b8c45 chain 383b80adc5e97f94
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_05/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 383b80adc5e97f94
+local   cis-digest 56a4a3655b7b8c45 chain 383b80adc5e97f94
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_06/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain da8438ef92d7e51b
+local   cis-digest 6a595a3cce0340bc chain da8438ef92d7e51b
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_06/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain da8438ef92d7e51b
+local   cis-digest 6a595a3cce0340bc chain da8438ef92d7e51b
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_06/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain e2ee6e3c79bec90b
+local   cis-digest 349836d8deffa0f1 chain e2ee6e3c79bec90b
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_06/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain e2ee6e3c79bec90b
+local   cis-digest 349836d8deffa0f1 chain e2ee6e3c79bec90b
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_06/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain c5fcc2afcfa7ebc4
+local   cis-digest 24b4fdddffef882b chain c5fcc2afcfa7ebc4
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_06/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain c5fcc2afcfa7ebc4
+local   cis-digest 24b4fdddffef882b chain c5fcc2afcfa7ebc4
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_06/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 80460706e0331ab9
+local   cis-digest 56a4a3655b7b8c45 chain 80460706e0331ab9
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_06/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 80460706e0331ab9
+local   cis-digest 56a4a3655b7b8c45 chain 80460706e0331ab9
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_07/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 6d50c40ad10e7b58
+local   cis-digest 6a595a3cce0340bc chain 6d50c40ad10e7b58
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_07/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 6d50c40ad10e7b58
+local   cis-digest 6a595a3cce0340bc chain 6d50c40ad10e7b58
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_07/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 5e85ae1f9b28695c
+local   cis-digest 58e895466c3a4917 chain 5e85ae1f9b28695c
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_07/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 5e85ae1f9b28695c
+local   cis-digest 58e895466c3a4917 chain 5e85ae1f9b28695c
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_07/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain a6cfee97633313c9
+local   cis-digest 24b4fdddffef882b chain a6cfee97633313c9
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_07/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain a6cfee97633313c9
+local   cis-digest 24b4fdddffef882b chain a6cfee97633313c9
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_07/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain cb841f0deb31d5d1
+local   cis-digest 56a4a3655b7b8c45 chain cb841f0deb31d5d1
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_07/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain cb841f0deb31d5d1
+local   cis-digest 56a4a3655b7b8c45 chain cb841f0deb31d5d1
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_08/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 9f206ec3b9aa85b6
+local   cis-digest 6a595a3cce0340bc chain 9f206ec3b9aa85b6
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_08/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 9f206ec3b9aa85b6
+local   cis-digest 6a595a3cce0340bc chain 9f206ec3b9aa85b6
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_08/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 056a586d93217015
+local   cis-digest 58e895466c3a4917 chain 056a586d93217015
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_08/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 056a586d93217015
+local   cis-digest 58e895466c3a4917 chain 056a586d93217015
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_08/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain b6d99f499e57cd70
+local   cis-digest 24b4fdddffef882b chain b6d99f499e57cd70
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_08/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain b6d99f499e57cd70
+local   cis-digest 24b4fdddffef882b chain b6d99f499e57cd70
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_08/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 486450c31133709d
+local   cis-digest 56a4a3655b7b8c45 chain 486450c31133709d
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_08/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 486450c31133709d
+local   cis-digest 56a4a3655b7b8c45 chain 486450c31133709d
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_09/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 348982cf472ec8da
+local   cis-digest 6a595a3cce0340bc chain 348982cf472ec8da
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_09/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 348982cf472ec8da
+local   cis-digest 6a595a3cce0340bc chain 348982cf472ec8da
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_09/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 889846e20d332ba6
+local   cis-digest 349836d8deffa0f1 chain 889846e20d332ba6
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_09/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 889846e20d332ba6
+local   cis-digest 349836d8deffa0f1 chain 889846e20d332ba6
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_09/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 7fca1c7d80515a23
+local   cis-digest 24b4fdddffef882b chain 7fca1c7d80515a23
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_09/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 7fca1c7d80515a23
+local   cis-digest 24b4fdddffef882b chain 7fca1c7d80515a23
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_09/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 07b1d14e81440d74
+local   cis-digest 56a4a3655b7b8c45 chain 07b1d14e81440d74
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_09/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 07b1d14e81440d74
+local   cis-digest 56a4a3655b7b8c45 chain 07b1d14e81440d74
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_10/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 769fbf5be8e9d7a9
+local   cis-digest 6a595a3cce0340bc chain 769fbf5be8e9d7a9
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_10/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 769fbf5be8e9d7a9
+local   cis-digest 6a595a3cce0340bc chain 769fbf5be8e9d7a9
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_10/calc --mode default exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain e9dcd733abc0c373
+local   cis-digest bcf0cea85713f70f chain e9dcd733abc0c373
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_10/calc --mode strict exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain e9dcd733abc0c373
+local   cis-digest bcf0cea85713f70f chain e9dcd733abc0c373
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_10/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain d71f794dfb714ede
+local   cis-digest 24b4fdddffef882b chain d71f794dfb714ede
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_10/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain d71f794dfb714ede
+local   cis-digest 24b4fdddffef882b chain d71f794dfb714ede
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_10/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 7152afbb278ba101
+local   cis-digest 56a4a3655b7b8c45 chain 7152afbb278ba101
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_10/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 7152afbb278ba101
+local   cis-digest 56a4a3655b7b8c45 chain 7152afbb278ba101
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_11/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 68291bd821c14c45
+local   cis-digest 6a595a3cce0340bc chain 68291bd821c14c45
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_11/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 68291bd821c14c45
+local   cis-digest 6a595a3cce0340bc chain 68291bd821c14c45
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_11/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 69737e7d82329997
+local   cis-digest 58e895466c3a4917 chain 69737e7d82329997
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_11/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 69737e7d82329997
+local   cis-digest 58e895466c3a4917 chain 69737e7d82329997
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_11/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain d1269e1cf8387763
+local   cis-digest 24b4fdddffef882b chain d1269e1cf8387763
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_11/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain d1269e1cf8387763
+local   cis-digest 24b4fdddffef882b chain d1269e1cf8387763
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_11/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 36d4d3f932129f63
+local   cis-digest 56a4a3655b7b8c45 chain 36d4d3f932129f63
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_11/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 36d4d3f932129f63
+local   cis-digest 56a4a3655b7b8c45 chain 36d4d3f932129f63
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_12/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain d4cb9d72348f541f
+local   cis-digest 6a595a3cce0340bc chain d4cb9d72348f541f
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_12/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain d4cb9d72348f541f
+local   cis-digest 6a595a3cce0340bc chain d4cb9d72348f541f
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_12/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 88ad8abda06c9f7b
+local   cis-digest 349836d8deffa0f1 chain 88ad8abda06c9f7b
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_12/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 88ad8abda06c9f7b
+local   cis-digest 349836d8deffa0f1 chain 88ad8abda06c9f7b
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_12/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain a8945f4dce8c1b43
+local   cis-digest 24b4fdddffef882b chain a8945f4dce8c1b43
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_12/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain a8945f4dce8c1b43
+local   cis-digest 24b4fdddffef882b chain a8945f4dce8c1b43
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_12/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 42d66c93b5ecf55a
+local   cis-digest 56a4a3655b7b8c45 chain 42d66c93b5ecf55a
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_12/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 42d66c93b5ecf55a
+local   cis-digest 56a4a3655b7b8c45 chain 42d66c93b5ecf55a
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_13/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 2217061950b29697
+local   cis-digest 6a595a3cce0340bc chain 2217061950b29697
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_13/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 2217061950b29697
+local   cis-digest 6a595a3cce0340bc chain 2217061950b29697
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_13/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 2b8f07fce83a8f2f
+local   cis-digest 58e895466c3a4917 chain 2b8f07fce83a8f2f
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_13/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 2b8f07fce83a8f2f
+local   cis-digest 58e895466c3a4917 chain 2b8f07fce83a8f2f
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_13/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain d4c5a7631bdca4ad
+local   cis-digest 24b4fdddffef882b chain d4c5a7631bdca4ad
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_13/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain d4c5a7631bdca4ad
+local   cis-digest 24b4fdddffef882b chain d4c5a7631bdca4ad
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_13/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 5b1419e2db4195ae
+local   cis-digest 56a4a3655b7b8c45 chain 5b1419e2db4195ae
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_13/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 5b1419e2db4195ae
+local   cis-digest 56a4a3655b7b8c45 chain 5b1419e2db4195ae
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_14/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 006b75671badc5c7
+local   cis-digest 6a595a3cce0340bc chain 006b75671badc5c7
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_14/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 006b75671badc5c7
+local   cis-digest 6a595a3cce0340bc chain 006b75671badc5c7
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_14/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 7d4068cb59cff453
+local   cis-digest 58e895466c3a4917 chain 7d4068cb59cff453
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_14/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 7d4068cb59cff453
+local   cis-digest 58e895466c3a4917 chain 7d4068cb59cff453
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_14/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 77edc9fea25a22d7
+local   cis-digest 24b4fdddffef882b chain 77edc9fea25a22d7
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_14/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 77edc9fea25a22d7
+local   cis-digest 24b4fdddffef882b chain 77edc9fea25a22d7
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_14/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 092b181df69b631d
+local   cis-digest 56a4a3655b7b8c45 chain 092b181df69b631d
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_14/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 092b181df69b631d
+local   cis-digest 56a4a3655b7b8c45 chain 092b181df69b631d
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_15/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain aa07130695f78692
+local   cis-digest 6a595a3cce0340bc chain aa07130695f78692
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_15/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain aa07130695f78692
+local   cis-digest 6a595a3cce0340bc chain aa07130695f78692
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_15/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 62d2679cc0a9a5a5
+local   cis-digest 349836d8deffa0f1 chain 62d2679cc0a9a5a5
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_15/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 62d2679cc0a9a5a5
+local   cis-digest 349836d8deffa0f1 chain 62d2679cc0a9a5a5
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_15/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 8b686b38c13e9429
+local   cis-digest 24b4fdddffef882b chain 8b686b38c13e9429
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_15/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 8b686b38c13e9429
+local   cis-digest 24b4fdddffef882b chain 8b686b38c13e9429
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_15/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 835ce567182fe967
+local   cis-digest 56a4a3655b7b8c45 chain 835ce567182fe967
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_15/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 835ce567182fe967
+local   cis-digest 56a4a3655b7b8c45 chain 835ce567182fe967
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_16/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 08bac11803951447
+local   cis-digest 6a595a3cce0340bc chain 08bac11803951447
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_16/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 08bac11803951447
+local   cis-digest 6a595a3cce0340bc chain 08bac11803951447
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_16/calc --mode default exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain 4c0c0b3f32b2aea7
+local   cis-digest bcf0cea85713f70f chain 4c0c0b3f32b2aea7
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_16/calc --mode strict exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain 4c0c0b3f32b2aea7
+local   cis-digest bcf0cea85713f70f chain 4c0c0b3f32b2aea7
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_16/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain ef7ad688a046d45d
+local   cis-digest 24b4fdddffef882b chain ef7ad688a046d45d
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_16/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain ef7ad688a046d45d
+local   cis-digest 24b4fdddffef882b chain ef7ad688a046d45d
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_16/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain bd0326ccd36c253e
+local   cis-digest 56a4a3655b7b8c45 chain bd0326ccd36c253e
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_16/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain bd0326ccd36c253e
+local   cis-digest 56a4a3655b7b8c45 chain bd0326ccd36c253e
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_17/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 2add750ed8176954
+local   cis-digest 6a595a3cce0340bc chain 2add750ed8176954
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_17/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 2add750ed8176954
+local   cis-digest 6a595a3cce0340bc chain 2add750ed8176954
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_17/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 7df3c20a11ca856d
+local   cis-digest 58e895466c3a4917 chain 7df3c20a11ca856d
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_17/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 7df3c20a11ca856d
+local   cis-digest 58e895466c3a4917 chain 7df3c20a11ca856d
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_17/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 593c7f0776589455
+local   cis-digest 24b4fdddffef882b chain 593c7f0776589455
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_17/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 593c7f0776589455
+local   cis-digest 24b4fdddffef882b chain 593c7f0776589455
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_17/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 7468f72e2bb1bf4a
+local   cis-digest 56a4a3655b7b8c45 chain 7468f72e2bb1bf4a
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_17/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 7468f72e2bb1bf4a
+local   cis-digest 56a4a3655b7b8c45 chain 7468f72e2bb1bf4a
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_18/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain d10285b15c804dcb
+local   cis-digest 6a595a3cce0340bc chain d10285b15c804dcb
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_18/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain d10285b15c804dcb
+local   cis-digest 6a595a3cce0340bc chain d10285b15c804dcb
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_18/calc --mode default exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain 29007e651c7cf700
+local   cis-digest 49303d4cc5439022 chain 29007e651c7cf700
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_18/calc --mode strict exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain 29007e651c7cf700
+local   cis-digest 49303d4cc5439022 chain 29007e651c7cf700
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_18/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 6178f81de1942051
+local   cis-digest 24b4fdddffef882b chain 6178f81de1942051
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_18/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 6178f81de1942051
+local   cis-digest 24b4fdddffef882b chain 6178f81de1942051
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_18/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 175dd2aa8c60ae89
+local   cis-digest 56a4a3655b7b8c45 chain 175dd2aa8c60ae89
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_18/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 175dd2aa8c60ae89
+local   cis-digest 56a4a3655b7b8c45 chain 175dd2aa8c60ae89
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_19/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain ed3d5d960e3d6aa3
+local   cis-digest 6a595a3cce0340bc chain ed3d5d960e3d6aa3
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_19/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain ed3d5d960e3d6aa3
+local   cis-digest 6a595a3cce0340bc chain ed3d5d960e3d6aa3
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_19/calc --mode default exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain fa9dbcb7067f51a5
+local   cis-digest bcf0cea85713f70f chain fa9dbcb7067f51a5
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_19/calc --mode strict exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain fa9dbcb7067f51a5
+local   cis-digest bcf0cea85713f70f chain fa9dbcb7067f51a5
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_19/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain e8641fb212fd798b
+local   cis-digest 24b4fdddffef882b chain e8641fb212fd798b
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_19/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain e8641fb212fd798b
+local   cis-digest 24b4fdddffef882b chain e8641fb212fd798b
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_19/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 6a4c660f35db1d5a
+local   cis-digest 56a4a3655b7b8c45 chain 6a4c660f35db1d5a
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt byte_19/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 6a4c660f35db1d5a
+local   cis-digest 56a4a3655b7b8c45 chain 6a4c660f35db1d5a
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_00/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain d7fbf5a60d6af099
+local   cis-digest 6a595a3cce0340bc chain d7fbf5a60d6af099
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_00/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain d7fbf5a60d6af099
+local   cis-digest 6a595a3cce0340bc chain d7fbf5a60d6af099
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_00/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 31204c725064a256
+local   cis-digest 58e895466c3a4917 chain 31204c725064a256
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_00/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 31204c725064a256
+local   cis-digest 58e895466c3a4917 chain 31204c725064a256
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_00/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 0ad1a317f9816b66
+local   cis-digest 24b4fdddffef882b chain 0ad1a317f9816b66
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_00/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 0ad1a317f9816b66
+local   cis-digest 24b4fdddffef882b chain 0ad1a317f9816b66
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_00/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain bdca310e0489941f
+local   cis-digest 56a4a3655b7b8c45 chain bdca310e0489941f
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_00/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain bdca310e0489941f
+local   cis-digest 56a4a3655b7b8c45 chain bdca310e0489941f
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_01/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain e7e4a8e62e3aa61d
+local   cis-digest 6a595a3cce0340bc chain e7e4a8e62e3aa61d
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_01/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain e7e4a8e62e3aa61d
+local   cis-digest 6a595a3cce0340bc chain e7e4a8e62e3aa61d
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_01/calc --mode default exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain c91c9196fc7693ec
+local   cis-digest 49303d4cc5439022 chain c91c9196fc7693ec
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_01/calc --mode strict exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain c91c9196fc7693ec
+local   cis-digest 49303d4cc5439022 chain c91c9196fc7693ec
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_01/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 2a4f0f848272920d
+local   cis-digest 24b4fdddffef882b chain 2a4f0f848272920d
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_01/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 2a4f0f848272920d
+local   cis-digest 24b4fdddffef882b chain 2a4f0f848272920d
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_01/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain d78222d3809d785f
+local   cis-digest 56a4a3655b7b8c45 chain d78222d3809d785f
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_01/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain d78222d3809d785f
+local   cis-digest 56a4a3655b7b8c45 chain d78222d3809d785f
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_02/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain f5a523d242ef0f66
+local   cis-digest 6a595a3cce0340bc chain f5a523d242ef0f66
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_02/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain f5a523d242ef0f66
+local   cis-digest 6a595a3cce0340bc chain f5a523d242ef0f66
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_02/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 90459f9f84303c3c
+local   cis-digest 58e895466c3a4917 chain 90459f9f84303c3c
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_02/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 90459f9f84303c3c
+local   cis-digest 58e895466c3a4917 chain 90459f9f84303c3c
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_02/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 579c72346c56ca7f
+local   cis-digest 24b4fdddffef882b chain 579c72346c56ca7f
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_02/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 579c72346c56ca7f
+local   cis-digest 24b4fdddffef882b chain 579c72346c56ca7f
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_02/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 3fb21359b46eed21
+local   cis-digest 56a4a3655b7b8c45 chain 3fb21359b46eed21
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_02/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 3fb21359b46eed21
+local   cis-digest 56a4a3655b7b8c45 chain 3fb21359b46eed21
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_03/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain f258d7243878038e
+local   cis-digest 6a595a3cce0340bc chain f258d7243878038e
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_03/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain f258d7243878038e
+local   cis-digest 6a595a3cce0340bc chain f258d7243878038e
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_03/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 48b0f2b0f141a064
+local   cis-digest 58e895466c3a4917 chain 48b0f2b0f141a064
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_03/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 48b0f2b0f141a064
+local   cis-digest 58e895466c3a4917 chain 48b0f2b0f141a064
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_03/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 7137a3822548ba64
+local   cis-digest 24b4fdddffef882b chain 7137a3822548ba64
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_03/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 7137a3822548ba64
+local   cis-digest 24b4fdddffef882b chain 7137a3822548ba64
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_03/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 1e45ef6a51072516
+local   cis-digest 56a4a3655b7b8c45 chain 1e45ef6a51072516
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_03/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 1e45ef6a51072516
+local   cis-digest 56a4a3655b7b8c45 chain 1e45ef6a51072516
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_04/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 6f6f7e34d6725e4b
+local   cis-digest 6a595a3cce0340bc chain 6f6f7e34d6725e4b
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_04/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 6f6f7e34d6725e4b
+local   cis-digest 6a595a3cce0340bc chain 6f6f7e34d6725e4b
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_04/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 68335d3ca4383293
+local   cis-digest 58e895466c3a4917 chain 68335d3ca4383293
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_04/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 68335d3ca4383293
+local   cis-digest 58e895466c3a4917 chain 68335d3ca4383293
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_04/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain b3e025ca361456c0
+local   cis-digest 24b4fdddffef882b chain b3e025ca361456c0
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_04/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain b3e025ca361456c0
+local   cis-digest 24b4fdddffef882b chain b3e025ca361456c0
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_04/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 1ad25f4f3bfbc76d
+local   cis-digest 56a4a3655b7b8c45 chain 1ad25f4f3bfbc76d
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_04/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 1ad25f4f3bfbc76d
+local   cis-digest 56a4a3655b7b8c45 chain 1ad25f4f3bfbc76d
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_05/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 183e4438bdff3031
+local   cis-digest 6a595a3cce0340bc chain 183e4438bdff3031
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_05/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 183e4438bdff3031
+local   cis-digest 6a595a3cce0340bc chain 183e4438bdff3031
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_05/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 18ed1740b2c35824
+local   cis-digest 349836d8deffa0f1 chain 18ed1740b2c35824
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_05/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 18ed1740b2c35824
+local   cis-digest 349836d8deffa0f1 chain 18ed1740b2c35824
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_05/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain faeca8cc7e4c54d6
+local   cis-digest 24b4fdddffef882b chain faeca8cc7e4c54d6
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_05/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain faeca8cc7e4c54d6
+local   cis-digest 24b4fdddffef882b chain faeca8cc7e4c54d6
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_05/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain de57c0f0e453574b
+local   cis-digest 56a4a3655b7b8c45 chain de57c0f0e453574b
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_05/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain de57c0f0e453574b
+local   cis-digest 56a4a3655b7b8c45 chain de57c0f0e453574b
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_06/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain e65002a08d55b01f
+local   cis-digest 6a595a3cce0340bc chain e65002a08d55b01f
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_06/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain e65002a08d55b01f
+local   cis-digest 6a595a3cce0340bc chain e65002a08d55b01f
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_06/calc --mode default exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain 6cbe90c08394fd92
+local   cis-digest 49303d4cc5439022 chain 6cbe90c08394fd92
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_06/calc --mode strict exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain 6cbe90c08394fd92
+local   cis-digest 49303d4cc5439022 chain 6cbe90c08394fd92
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_06/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 1e36c8fd3ac884fb
+local   cis-digest 24b4fdddffef882b chain 1e36c8fd3ac884fb
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_06/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 1e36c8fd3ac884fb
+local   cis-digest 24b4fdddffef882b chain 1e36c8fd3ac884fb
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_06/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 81aead2c5929cbd7
+local   cis-digest 56a4a3655b7b8c45 chain 81aead2c5929cbd7
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_06/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 81aead2c5929cbd7
+local   cis-digest 56a4a3655b7b8c45 chain 81aead2c5929cbd7
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_07/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 379d32482a916d95
+local   cis-digest 6a595a3cce0340bc chain 379d32482a916d95
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_07/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 379d32482a916d95
+local   cis-digest 6a595a3cce0340bc chain 379d32482a916d95
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_07/calc --mode default exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain cec74609243839e8
+local   cis-digest 49303d4cc5439022 chain cec74609243839e8
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_07/calc --mode strict exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain cec74609243839e8
+local   cis-digest 49303d4cc5439022 chain cec74609243839e8
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_07/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 6986e4ea28cbe51c
+local   cis-digest 24b4fdddffef882b chain 6986e4ea28cbe51c
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_07/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 6986e4ea28cbe51c
+local   cis-digest 24b4fdddffef882b chain 6986e4ea28cbe51c
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_07/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 7d29897187bf8da1
+local   cis-digest 56a4a3655b7b8c45 chain 7d29897187bf8da1
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_07/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 7d29897187bf8da1
+local   cis-digest 56a4a3655b7b8c45 chain 7d29897187bf8da1
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_08/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 81406fe9956a905a
+local   cis-digest 6a595a3cce0340bc chain 81406fe9956a905a
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_08/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 81406fe9956a905a
+local   cis-digest 6a595a3cce0340bc chain 81406fe9956a905a
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_08/calc --mode default exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain 808ffe83c9cf24ae
+local   cis-digest 49303d4cc5439022 chain 808ffe83c9cf24ae
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_08/calc --mode strict exit=0 panic=0
+receipt cis-digest 49303d4cc5439022 chain 808ffe83c9cf24ae
+local   cis-digest 49303d4cc5439022 chain 808ffe83c9cf24ae
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_08/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 1f11efe082070dd1
+local   cis-digest 24b4fdddffef882b chain 1f11efe082070dd1
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_08/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 1f11efe082070dd1
+local   cis-digest 24b4fdddffef882b chain 1f11efe082070dd1
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_08/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 0d1de57060f19649
+local   cis-digest 56a4a3655b7b8c45 chain 0d1de57060f19649
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_08/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 0d1de57060f19649
+local   cis-digest 56a4a3655b7b8c45 chain 0d1de57060f19649
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_09/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain bd635929eb69a25f
+local   cis-digest 6a595a3cce0340bc chain bd635929eb69a25f
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_09/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain bd635929eb69a25f
+local   cis-digest 6a595a3cce0340bc chain bd635929eb69a25f
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_09/calc --mode default exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain 0ed27c3fa9c2dc0b
+local   cis-digest bcf0cea85713f70f chain 0ed27c3fa9c2dc0b
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_09/calc --mode strict exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain 0ed27c3fa9c2dc0b
+local   cis-digest bcf0cea85713f70f chain 0ed27c3fa9c2dc0b
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_09/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 64cf5f1c534cb7ca
+local   cis-digest 24b4fdddffef882b chain 64cf5f1c534cb7ca
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_09/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 64cf5f1c534cb7ca
+local   cis-digest 24b4fdddffef882b chain 64cf5f1c534cb7ca
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_09/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain d74c6b4dcb4faa13
+local   cis-digest 56a4a3655b7b8c45 chain d74c6b4dcb4faa13
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_09/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain d74c6b4dcb4faa13
+local   cis-digest 56a4a3655b7b8c45 chain d74c6b4dcb4faa13
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_10/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain d3676d801c165112
+local   cis-digest 6a595a3cce0340bc chain d3676d801c165112
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_10/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain d3676d801c165112
+local   cis-digest 6a595a3cce0340bc chain d3676d801c165112
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_10/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 29f8daa992d75533
+local   cis-digest 349836d8deffa0f1 chain 29f8daa992d75533
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_10/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 29f8daa992d75533
+local   cis-digest 349836d8deffa0f1 chain 29f8daa992d75533
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_10/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 65ed3b18544d4350
+local   cis-digest 24b4fdddffef882b chain 65ed3b18544d4350
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_10/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 65ed3b18544d4350
+local   cis-digest 24b4fdddffef882b chain 65ed3b18544d4350
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_10/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 503dad670d27b8db
+local   cis-digest 56a4a3655b7b8c45 chain 503dad670d27b8db
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_10/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 503dad670d27b8db
+local   cis-digest 56a4a3655b7b8c45 chain 503dad670d27b8db
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_11/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 6edc029714df9db2
+local   cis-digest 6a595a3cce0340bc chain 6edc029714df9db2
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_11/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 6edc029714df9db2
+local   cis-digest 6a595a3cce0340bc chain 6edc029714df9db2
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_11/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 6ca136343648d0ec
+local   cis-digest 349836d8deffa0f1 chain 6ca136343648d0ec
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_11/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 6ca136343648d0ec
+local   cis-digest 349836d8deffa0f1 chain 6ca136343648d0ec
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_11/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain aab50e8b86275560
+local   cis-digest 24b4fdddffef882b chain aab50e8b86275560
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_11/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain aab50e8b86275560
+local   cis-digest 24b4fdddffef882b chain aab50e8b86275560
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_11/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 17b7b8727be0f758
+local   cis-digest 56a4a3655b7b8c45 chain 17b7b8727be0f758
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_11/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 17b7b8727be0f758
+local   cis-digest 56a4a3655b7b8c45 chain 17b7b8727be0f758
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_12/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain bf6cb72d4baef19b
+local   cis-digest 6a595a3cce0340bc chain bf6cb72d4baef19b
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_12/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain bf6cb72d4baef19b
+local   cis-digest 6a595a3cce0340bc chain bf6cb72d4baef19b
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_12/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 5dd6c0535f9e3ec7
+local   cis-digest 349836d8deffa0f1 chain 5dd6c0535f9e3ec7
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_12/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 5dd6c0535f9e3ec7
+local   cis-digest 349836d8deffa0f1 chain 5dd6c0535f9e3ec7
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_12/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 655f66379bca9ec2
+local   cis-digest 24b4fdddffef882b chain 655f66379bca9ec2
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_12/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 655f66379bca9ec2
+local   cis-digest 24b4fdddffef882b chain 655f66379bca9ec2
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_12/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain bf12d802810505de
+local   cis-digest 56a4a3655b7b8c45 chain bf12d802810505de
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_12/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain bf12d802810505de
+local   cis-digest 56a4a3655b7b8c45 chain bf12d802810505de
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_13/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 21a5a7f0e472d07d
+local   cis-digest 6a595a3cce0340bc chain 21a5a7f0e472d07d
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_13/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 21a5a7f0e472d07d
+local   cis-digest 6a595a3cce0340bc chain 21a5a7f0e472d07d
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_13/calc --mode default exit=0 panic=0
+receipt cis-digest 0d25d33fa1aa231f chain 87f832e6d1c8781e
+local   cis-digest 0d25d33fa1aa231f chain 87f832e6d1c8781e
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_13/calc --mode strict exit=0 panic=0
+receipt cis-digest 0d25d33fa1aa231f chain 87f832e6d1c8781e
+local   cis-digest 0d25d33fa1aa231f chain 87f832e6d1c8781e
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_13/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain dde399a1e592155c
+local   cis-digest 24b4fdddffef882b chain dde399a1e592155c
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_13/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain dde399a1e592155c
+local   cis-digest 24b4fdddffef882b chain dde399a1e592155c
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_13/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 412d4ed6f420c3a6
+local   cis-digest 56a4a3655b7b8c45 chain 412d4ed6f420c3a6
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_13/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 412d4ed6f420c3a6
+local   cis-digest 56a4a3655b7b8c45 chain 412d4ed6f420c3a6
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_14/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 09916b78076b7999
+local   cis-digest 6a595a3cce0340bc chain 09916b78076b7999
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_14/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 09916b78076b7999
+local   cis-digest 6a595a3cce0340bc chain 09916b78076b7999
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_14/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 08e8817702099fba
+local   cis-digest 58e895466c3a4917 chain 08e8817702099fba
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_14/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 08e8817702099fba
+local   cis-digest 58e895466c3a4917 chain 08e8817702099fba
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_14/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain beadb527477d9ff6
+local   cis-digest 24b4fdddffef882b chain beadb527477d9ff6
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_14/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain beadb527477d9ff6
+local   cis-digest 24b4fdddffef882b chain beadb527477d9ff6
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_14/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 332321b38223f657
+local   cis-digest 56a4a3655b7b8c45 chain 332321b38223f657
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_14/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 332321b38223f657
+local   cis-digest 56a4a3655b7b8c45 chain 332321b38223f657
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_15/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 180a1f11a48558d1
+local   cis-digest 6a595a3cce0340bc chain 180a1f11a48558d1
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_15/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 180a1f11a48558d1
+local   cis-digest 6a595a3cce0340bc chain 180a1f11a48558d1
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_15/calc --mode default exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain eed71e1fa124d68c
+local   cis-digest bcf0cea85713f70f chain eed71e1fa124d68c
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_15/calc --mode strict exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain eed71e1fa124d68c
+local   cis-digest bcf0cea85713f70f chain eed71e1fa124d68c
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_15/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 3547e0981cf8379c
+local   cis-digest 24b4fdddffef882b chain 3547e0981cf8379c
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_15/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 3547e0981cf8379c
+local   cis-digest 24b4fdddffef882b chain 3547e0981cf8379c
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_15/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 096bbe6bb3974acf
+local   cis-digest 56a4a3655b7b8c45 chain 096bbe6bb3974acf
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_15/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 096bbe6bb3974acf
+local   cis-digest 56a4a3655b7b8c45 chain 096bbe6bb3974acf
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_16/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain ff639f08d39a5e4d
+local   cis-digest 6a595a3cce0340bc chain ff639f08d39a5e4d
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_16/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain ff639f08d39a5e4d
+local   cis-digest 6a595a3cce0340bc chain ff639f08d39a5e4d
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_16/calc --mode default exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain c02a5a5d6975a0dd
+local   cis-digest bcf0cea85713f70f chain c02a5a5d6975a0dd
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_16/calc --mode strict exit=0 panic=0
+receipt cis-digest bcf0cea85713f70f chain c02a5a5d6975a0dd
+local   cis-digest bcf0cea85713f70f chain c02a5a5d6975a0dd
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_16/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 78e81bda60026a90
+local   cis-digest 24b4fdddffef882b chain 78e81bda60026a90
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_16/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 78e81bda60026a90
+local   cis-digest 24b4fdddffef882b chain 78e81bda60026a90
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_16/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain ff03c889140c14b9
+local   cis-digest 56a4a3655b7b8c45 chain ff03c889140c14b9
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_16/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain ff03c889140c14b9
+local   cis-digest 56a4a3655b7b8c45 chain ff03c889140c14b9
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_17/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain b3e25060eb95d003
+local   cis-digest 6a595a3cce0340bc chain b3e25060eb95d003
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_17/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain b3e25060eb95d003
+local   cis-digest 6a595a3cce0340bc chain b3e25060eb95d003
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_17/calc --mode default exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 630f2fedccaa2c01
+local   cis-digest 58e895466c3a4917 chain 630f2fedccaa2c01
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_17/calc --mode strict exit=0 panic=0
+receipt cis-digest 58e895466c3a4917 chain 630f2fedccaa2c01
+local   cis-digest 58e895466c3a4917 chain 630f2fedccaa2c01
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_17/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 8174e09e2ade0597
+local   cis-digest 24b4fdddffef882b chain 8174e09e2ade0597
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_17/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 8174e09e2ade0597
+local   cis-digest 24b4fdddffef882b chain 8174e09e2ade0597
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_17/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 3ca1b0df58809d49
+local   cis-digest 56a4a3655b7b8c45 chain 3ca1b0df58809d49
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_17/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 3ca1b0df58809d49
+local   cis-digest 56a4a3655b7b8c45 chain 3ca1b0df58809d49
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_18/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 13a7dbe102bf9cbf
+local   cis-digest 6a595a3cce0340bc chain 13a7dbe102bf9cbf
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_18/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 13a7dbe102bf9cbf
+local   cis-digest 6a595a3cce0340bc chain 13a7dbe102bf9cbf
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_18/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 1d9abf89f1e417ca
+local   cis-digest 349836d8deffa0f1 chain 1d9abf89f1e417ca
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_18/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain 1d9abf89f1e417ca
+local   cis-digest 349836d8deffa0f1 chain 1d9abf89f1e417ca
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_18/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 2bde800129847866
+local   cis-digest 24b4fdddffef882b chain 2bde800129847866
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_18/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 2bde800129847866
+local   cis-digest 24b4fdddffef882b chain 2bde800129847866
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_18/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain ccf14e750a0f273c
+local   cis-digest 56a4a3655b7b8c45 chain ccf14e750a0f273c
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_18/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain ccf14e750a0f273c
+local   cis-digest 56a4a3655b7b8c45 chain ccf14e750a0f273c
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_19/self --mode default exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 7117a497ff9064b5
+local   cis-digest 6a595a3cce0340bc chain 7117a497ff9064b5
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_19/self --mode strict exit=0 panic=0
+receipt cis-digest 6a595a3cce0340bc chain 7117a497ff9064b5
+local   cis-digest 6a595a3cce0340bc chain 7117a497ff9064b5
+strict: canonical layout; prompt-toks 19 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_19/calc --mode default exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain ad21013b1c65f360
+local   cis-digest 349836d8deffa0f1 chain ad21013b1c65f360
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_19/calc --mode strict exit=0 panic=0
+receipt cis-digest 349836d8deffa0f1 chain ad21013b1c65f360
+local   cis-digest 349836d8deffa0f1 chain ad21013b1c65f360
+strict: canonical layout; prompt-toks 13 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_19/lookup --mode default exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 9dce2669ac74909b
+local   cis-digest 24b4fdddffef882b chain 9dce2669ac74909b
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_19/lookup --mode strict exit=0 panic=0
+receipt cis-digest 24b4fdddffef882b chain 9dce2669ac74909b
+local   cis-digest 24b4fdddffef882b chain 9dce2669ac74909b
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_19/abstain --mode default exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 7cd7582cd381d963
+local   cis-digest 56a4a3655b7b8c45 chain 7cd7582cd381d963
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit
+### h2_self_receipt bit_19/abstain --mode strict exit=0 panic=0
+receipt cis-digest 56a4a3655b7b8c45 chain 7cd7582cd381d963
+local   cis-digest 56a4a3655b7b8c45 chain 7cd7582cd381d963
+strict: canonical layout; prompt-toks 12 = tokenized prompt length; gen-toks 16 = token-ids count
+VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit

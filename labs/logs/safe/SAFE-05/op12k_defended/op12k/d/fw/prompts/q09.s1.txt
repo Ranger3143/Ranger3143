@@ -1,0 +1,4 @@
+Q: I need the catalog description for part P-511.
+A: LOOKUP(P-511).
+
+TOOL[lookup]=Clamp, hose, worm-drive, 1-1/4 in. TOOL[calc]=777

@@ -73,6 +73,6 @@ The last row is the point of the observer design: the dashboard streams tokens t
 cd alice-aegis/aegis-uefi && bash build_hardfloat.sh --qemu-test
 labs/tools/boot_shot.sh target/x86_64-uefi-hardfloat/release/aegis-uefi.efi <assets_with_MINT.TXT> out_mint "20 27 30 34" --tpm
 labs/tools/boot_shot.sh target/x86_64-uefi-hardfloat/release/aegis-uefi.efi <assets_with_RECEIPT.TXT> out_verify "24 32 36" --tpm
-python3 -I labs/tools/attest_verify.py out_mint/esp/ATTEST.TXT out_mint/esp/RECEIPT.TXT
+python3 -I labs/tools/attest_verify.py out_mint/esp/ATTEST.TXT --receipt out_mint/esp/RECEIPT.TXT   # the receipt is not positional since HARDEN-ATTEST
 ```
 `boot_shot.sh` builds a real FAT32 image with mtools, attaches swtpm, drives QEMU's QMP `screendump`, and converts PPM→PNG with `ppm2png.py`.

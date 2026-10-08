@@ -1,0 +1,25 @@
+golden fixtures in tests/golden (git HEAD unchanged vs 3e3f465 checked separately):
+  witness_v1_bitnet2b_once64.receipt               sha256 b87ad72710556ef7 own-strict-grammar=True
+  witness_v1_e16_qat_once64.receipt                sha256 466b3ea4922fadc9 own-strict-grammar=True
+  witness_v1_e16_qat_pruned_once64.receipt         sha256 8deecabc5943a0a1 own-strict-grammar=True
+  witness_v1_falcon_e_1b_once64.receipt            sha256 4386b8fa0640456c own-strict-grammar=True
+  witness_v1_m7_once64.receipt                     sha256 528e205e04882437 own-strict-grammar=True
+  m7 default: exit=0 verdict=ACCEPT last="VERIFY PASS — replay reproduced 64 tokens, the token digest, and the full logit chain bit-for-bit"
+  m7 strict: exit=0 verdict=ACCEPT last="VERIFY PASS — replay reproduced 64 tokens, the token digest, and the full logit chain bit-for-bit"
+  m7 OLD binary default: exit=0 verdict=ACCEPT last="VERIFY PASS — replay reproduced 64 tokens, the token digest, and the full logit chain bit-for-bit"
+
+wanted artifact hashes (model/embed/vocab prefixes):
+   witness_v1_bitnet2b_once64.receipt {'model': 'facb35976656', 'embed': 'e32b99a25e34', 'vocab': '5bde1b0355ef'}
+   witness_v1_e16_qat_once64.receipt {'model': '2b55924cd88d', 'embed': 'd9a6bf7174ce', 'vocab': 'c4c0957c8f03'}
+   witness_v1_e16_qat_pruned_once64.receipt {'model': 'c5075aa121d6', 'embed': '4f9f78aa4155', 'vocab': '5bde1b0355ef'}
+   witness_v1_falcon_e_1b_once64.receipt {'model': '6ebdb9e0b2a0', 'embed': '8951f5725b70', 'vocab': 'e8f860844bc1'}
+   witness_v1_m7_once64.receipt {'model': '23cfad0a3c7d', 'embed': '3752cd5ca2e3', 'vocab': '5a1d79caf517'}
+
+MODEL.SAF/EMBED.BIN/VOCAB.BIN/*.safetensors candidates found: 391
+candidate files whose sha256 equals a golden receipt hash:
+   3752cd5ca2e39593 -> ['witness_v1_m7_once64.receipt'] | /home/user/aefinity-ai/alice-aegis/model-lab/tinybit/m7_final_gate_work/artifacts/EMBED.BIN
+   23cfad0a3c7de2b6 -> ['witness_v1_m7_once64.receipt'] | /home/user/aefinity-ai/alice-aegis/model-lab/tinybit/m7_final_gate_work/artifacts/MODEL.SAF
+   5a1d79caf517084a -> ['witness_v1_m7_once64.receipt'] | /home/user/aefinity-ai/alice-aegis/model-lab/tinybit/m7_final_gate_work/artifacts/VOCAB.BIN
+   e32b99a25e345c65 -> ['witness_v1_bitnet2b_once64.receipt'] | /tmp/claude-0/-home-user-Ranger3143/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/artifacts/bitnet2b/EMBED.BIN
+   5bde1b0355ef99c6 -> ['witness_v1_bitnet2b_once64.receipt', 'witness_v1_e16_qat_pruned_once64.receipt'] | /tmp/claude-0/-home-user-Ranger3143/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/artifacts/bitnet2b/VOCAB.BIN
+golden receipts with at least one artifact hash NOT found on this host: {'witness_v1_bitnet2b_once64.receipt': ['model'], 'witness_v1_e16_qat_once64.receipt': ['model', 'embed', 'vocab'], 'witness_v1_e16_qat_pruned_once64.receipt': ['model', 'embed'], 'witness_v1_falcon_e_1b_once64.receipt': ['model', 'embed', 'vocab']}

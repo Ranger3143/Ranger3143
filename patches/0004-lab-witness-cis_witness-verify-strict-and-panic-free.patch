@@ -1,0 +1,1197 @@
+From 1799ea3c9814d9d85a3606aeed2697fedb152e08 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 8 Oct 2026 18:34:07 +0000
+Subject: [PATCH 4/4] lab(witness): cis_witness verify --strict and panic-free
+ receipt parsing (LAB-09 HARDEN-WITNESS)
+
+The tamper sweep of LAB-09 SAFE-01 found that `cis_witness verify` binds the
+right fields but reads the receipt leniently: line order, the prompt-toks and
+gen-toks values, the header line, unknown lines, duplicate keys, `+25` / `025`
+/ upper-case hex and CRLF / trailing blanks were all accepted, and malformed
+input made the reader panic instead of failing.
+
+- `verify --strict` (new): accepts only the canonical bytes the writers emit.
+  Printable ASCII and LF only; exactly eleven lines in the order of `gen`'s
+  println! sequence and aegis-uefi verifier.rs render_receipt (header, model,
+  embed, vocab, maxtok, prompt-hex, prompt-toks, gen-toks, token-ids,
+  cis-digest, chain), so no unknown, duplicate, missing or reordered line;
+  lower-case hex of exact length; canonical decimals (no sign, no leading
+  zero); one trailing newline; gen-toks equal to the token-ids count;
+  prompt-toks equal to the tokenized prompt length (checked after replay).
+  `token-ids ` with an empty value is accepted only for gen-toks 0, which is
+  what both writers print. Failures name the line.
+- Default `verify` keeps its lenient reader and its output for every input
+  that did not panic. Input that used to panic (non-UTF-8 file, unparsable
+  maxtok or token id, prompt-hex pair splitting a multi-byte character, empty
+  prompt, over-long budget with a checked add instead of a wrapping one,
+  multi-byte character in a hash line, missing receipt argument) now ends in
+  `VERIFY FAIL - <reason>` and exit 1; unreadable or unusable files exit 2.
+- `gen` prints through render_receipt(); its output is byte-identical to the
+  previous binary (checked on 7 prompts including max_new 0).
+- Cargo.toml: test = true for the cis_witness example, so its 9 unit tests
+  (golden fixtures, writer/reader key order, every leniency class, truncation
+  at every byte) run under `cargo test`.
+
+Validation (Ranger3143 labs/logs/safe/HARDEN-WITNESS/RESULT.md): the 6381
+SAFE-01 mutant rows re-run through both modes: 0 panics in either mode (the
+previous binary crashed on 222); default verdicts unchanged except those 222
+crash-rejects, now clean rejections; of the 838 mutants in C08 and U1-U6 that
+the previous default accepted, --strict accepts 0; the 11 QEMU-minted
+receipts, the m7 golden fixture (replayed with its artifacts) and 164 gen-minted
+receipts pass under --strict; 2400 seeded malformed inputs: 0 panics in both
+modes. aegis-core tests unchanged (159 passed). No performance claims (Rule A).
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_015rZAekjhNTVJRRHVmzz2ae
+---
+ aegis-linux/Cargo.toml              |    7 +
+ aegis-linux/examples/cis_witness.rs | 1006 ++++++++++++++++++++++++---
+ 2 files changed, 923 insertions(+), 90 deletions(-)
+
+diff --git a/aegis-linux/Cargo.toml b/aegis-linux/Cargo.toml
+index 5c7ec84..6012d07 100644
+--- a/aegis-linux/Cargo.toml
++++ b/aegis-linux/Cargo.toml
+@@ -42,3 +42,10 @@ test = true
+ [[example]]
+ name = "reasoning_trace"
+ test = true
++
++# cis_witness carries its own #[cfg(test)] suite (strict-receipt grammar,
++# lenient-reader no-panic pins, writer/reader key-order pin). Same test = true
++# rationale as agent_trace above.
++[[example]]
++name = "cis_witness"
++test = true
+diff --git a/aegis-linux/examples/cis_witness.rs b/aegis-linux/examples/cis_witness.rs
+index 0c07ebb..1325346 100644
+--- a/aegis-linux/examples/cis_witness.rs
++++ b/aegis-linux/examples/cis_witness.rs
+@@ -15,25 +15,301 @@
+ //! Identity/correctness artifact ONLY (Rule A): prints no timing, ever.
+ //!
+ //!   cis_witness gen    <MODEL.SAF> <EMBED.BIN> <VOCAB.BIN> <max_new> ["prompt"] > receipt
+-//!   cis_witness verify <MODEL.SAF> <EMBED.BIN> <VOCAB.BIN> <receipt-file>
++//!   cis_witness verify [--strict] <MODEL.SAF> <EMBED.BIN> <VOCAB.BIN> <receipt-file>
++//!
++//! Two receipt readers (HARDEN-WITNESS):
++//!
++//! * default `verify` — the original, lenient reader, kept so every receipt
++//!   that verified before still verifies with the same output: lines are read
++//!   by key in any order, unknown keys and a missing or edited header are
++//!   ignored, the last duplicate wins, `prompt-toks` / `gen-toks` are not
++//!   read, `+25` / `025` / upper-case hex are accepted, CR, trailing blanks
++//!   and a missing final newline are tolerated. The one change: input it used
++//!   to crash on (non-UTF-8 or truncated files, an unparsable number or
++//!   token id, a prompt that tokenizes to nothing, an over-long budget, a
++//!   multi-byte character in a hash) now ends with a clean `VERIFY FAIL`
++//!   line and exit code 1 instead of a panic.
++//! * `verify --strict` — accepts only the canonical byte sequence that
++//!   `cis_witness gen` and the UEFI mint path (`aegis-uefi/src/verifier.rs`
++//!   `render_receipt`) emit: printable ASCII with LF line endings; exactly
++//!   eleven lines in the order `AEGIS-WITNESS v1-CIS`, model, embed, vocab,
++//!   maxtok, prompt-hex, prompt-toks, gen-toks, token-ids, cis-digest, chain
++//!   (so no unknown, duplicate, missing or reordered line); lower-case hex of
++//!   the exact length; decimal integers with no sign and no leading zeros;
++//!   no trailing whitespace; exactly one trailing newline. On top of the
++//!   replay checks it requires `gen-toks` == the `token-ids` count and
++//!   `prompt-toks` == the length of the tokenized prompt.
++//!
++//! Exit codes: 0 verified; 1 not verified (artifact mismatch, divergence,
++//! malformed receipt, receipt inputs the engine cannot replay); 2 usage or
++//! unreadable/unusable input files.
+ 
+ use aegis_core::cis_infer::{CisEngine, CisMode, CisModel, argmax_i64, fnv1a64};
+ use aegis_core::model::{FullBitNetPipeline, ModelConfig, SafeTensors};
+ use aegis_core::tokenizer::AegisTokenizer;
+ use aegis_core::witness::{WitnessChain, WitnessHeader, hex_lower, sha256};
+ 
++/// First line of every v1-CIS receipt (`WITNESS_DOMAIN_V1` minus its `\n`).
++const MAGIC: &str = "AEGIS-WITNESS v1-CIS";
++
++/// Canonical key order after the header. Derived from the writers, which agree
++/// line for line: `render_receipt` below (what `gen` prints) and
++/// `aegis-uefi/src/verifier.rs::render_receipt` (the UEFI mint path).
++const KEY_ORDER: [&str; 10] = [
++    "model",
++    "embed",
++    "vocab",
++    "maxtok",
++    "prompt-hex",
++    "prompt-toks",
++    "gen-toks",
++    "token-ids",
++    "cis-digest",
++    "chain",
++];
++
+ fn hex(b: &[u8]) -> String {
+     let mut out = vec![0u8; b.len() * 2];
+     let n = hex_lower(b, &mut out);
+     String::from_utf8(out[..n].to_vec()).unwrap()
+ }
+ 
+-fn unhex(s: &str) -> Vec<u8> {
+-    (0..s.len() / 2)
+-        .map(|i| u8::from_str_radix(&s[2 * i..2 * i + 2], 16).unwrap_or(0))
++/// The original lenient hex decoder, semantics unchanged: an odd trailing
++/// character is dropped, a pair that is not hex (including a stray non-hex
++/// character) decodes to 0, and `+a` decodes to 0x0a. The original sliced the
++/// string by byte offsets and panicked when a pair split a multi-byte
++/// character; that case is now an error. Kept so the default `verify` verdicts
++/// do not move; `--strict` uses `strict_hex` instead.
++fn unhex_lenient(s: &str) -> Result<Vec<u8>, String> {
++    let mut out = Vec::with_capacity(s.len() / 2);
++    for i in 0..s.len() / 2 {
++        let pair = s
++            .get(2 * i..2 * i + 2)
++            .ok_or_else(|| format!("prompt-hex: byte pair {i} splits a multi-byte character"))?;
++        out.push(u8::from_str_radix(pair, 16).unwrap_or(0));
++    }
++    Ok(out)
++}
++
++/// At most the first 16 bytes of `s`, cut on a character boundary (the
++/// original `&s[..16.min(len)]` panicked inside a multi-byte character; for
++/// ASCII, which every genuine value is, the result is identical).
++fn prefix16(s: &str) -> &str {
++    let mut n = 16.min(s.len());
++    while !s.is_char_boundary(n) {
++        n -= 1;
++    }
++    &s[..n]
++}
++
++/// What `verify` reads from a receipt.
++#[derive(Default, Debug, PartialEq)]
++struct Receipt {
++    model: String,
++    embed: String,
++    vocab: String,
++    maxtok: usize,
++    prompt: String,
++    /// Claimed prompt token count. The lenient reader leaves it 0 (never read).
++    prompt_toks: usize,
++    /// Claimed generated token count. The lenient reader leaves it 0.
++    gen_toks: usize,
++    ids: Vec<u32>,
++    cis_digest: String,
++    chain: String,
++}
++
++/// The original reader: split each line on the first space, dispatch on the
++/// key, ignore what it does not know, last duplicate wins. Same acceptance as
++/// before; failures that used to panic are `Err`.
++fn parse_lenient(text: &str) -> Result<Receipt, String> {
++    let mut r = Receipt::default();
++    for line in text.lines() {
++        let mut it = line.splitn(2, ' ');
++        let (k, v) = (it.next().unwrap_or(""), it.next().unwrap_or(""));
++        match k {
++            "model" => r.model = v.into(),
++            "embed" => r.embed = v.into(),
++            "vocab" => r.vocab = v.into(),
++            "maxtok" => {
++                r.maxtok = v
++                    .parse()
++                    .map_err(|_| "maxtok is not an unsigned integer".to_string())?;
++            }
++            "prompt-hex" => {
++                r.prompt = String::from_utf8(unhex_lenient(v)?)
++                    .map_err(|_| "prompt-hex does not decode to UTF-8 text".to_string())?;
++            }
++            "token-ids" => {
++                r.ids = v
++                    .split(',')
++                    .filter(|s| !s.is_empty())
++                    .map(|s| {
++                        s.parse().map_err(|_| {
++                            format!("token id {s:?} is not an unsigned 32-bit integer")
++                        })
++                    })
++                    .collect::<Result<_, _>>()?;
++            }
++            "cis-digest" => r.cis_digest = v.into(),
++            "chain" => r.chain = v.into(),
++            _ => {}
++        }
++    }
++    Ok(r)
++}
++
++/// Canonical unsigned decimal: ASCII digits only, no sign, no leading zero
++/// (except the single digit `0`), and it must fit a `u64`.
++fn strict_dec(s: &str) -> Option<u64> {
++    let b = s.as_bytes();
++    if b.is_empty() || !b.iter().all(u8::is_ascii_digit) || (b.len() > 1 && b[0] == b'0') {
++        return None;
++    }
++    s.parse().ok()
++}
++
++/// Lower-case hex only (`0-9a-f`), even length. `want_bytes` pins the decoded
++/// length when given.
++fn strict_hex(s: &str, want_bytes: Option<usize>) -> Option<Vec<u8>> {
++    let b = s.as_bytes();
++    if b.is_empty() || !b.len().is_multiple_of(2) || want_bytes.is_some_and(|n| b.len() != 2 * n) {
++        return None;
++    }
++    let nib = |c: u8| match c {
++        b'0'..=b'9' => Some(c - b'0'),
++        b'a'..=b'f' => Some(c - b'a' + 10),
++        _ => None,
++    };
++    b.chunks_exact(2)
++        .map(|p| Some(nib(p[0])? << 4 | nib(p[1])?))
+         .collect()
+ }
+ 
++/// The `--strict` reader: accepts exactly the byte sequences the writers emit,
++/// and nothing else. Never panics; every failure names the offending line.
++fn parse_strict(bytes: &[u8]) -> Result<Receipt, String> {
++    // Byte alphabet: printable ASCII and LF. No CR, tab, NUL, other control or
++    // non-ASCII byte can appear anywhere (so no CRLF and no hidden blanks).
++    for (off, &b) in bytes.iter().enumerate() {
++        if b == b'\r' {
++            return Err(format!(
++                "byte {off}: carriage return (CRLF line endings are not canonical)"
++            ));
++        }
++        if b != b'\n' && !(0x20..=0x7e).contains(&b) {
++            return Err(format!(
++                "byte {off}: 0x{b:02x} is not printable ASCII or LF"
++            ));
++        }
++    }
++    if bytes.is_empty() {
++        return Err("empty file".into());
++    }
++    if bytes.last() != Some(&b'\n') {
++        return Err("no newline after the last line (exactly one is required)".into());
++    }
++    if bytes.ends_with(b"\n\n") {
++        return Err("blank line at the end (exactly one trailing newline is required)".into());
++    }
++    // ASCII-only was established above, so this cannot fail.
++    let text = std::str::from_utf8(&bytes[..bytes.len() - 1]).map_err(|e| e.to_string())?;
++    let lines: Vec<&str> = text.split('\n').collect();
++
++    if lines[0] != MAGIC {
++        return Err(format!("line 1: header must be exactly {MAGIC:?}"));
++    }
++    let mut r = Receipt::default();
++    for (i, &want) in KEY_ORDER.iter().enumerate() {
++        let n = i + 2; // 1-based line number; the header is line 1
++        let line = lines
++            .get(i + 1)
++            .ok_or_else(|| format!("truncated: line {n} ({want}) is missing"))?;
++        let (key, val) = line
++            .split_once(' ')
++            .ok_or_else(|| format!("line {n}: expected \"{want} <value>\""))?;
++        if key != want {
++            let why = if KEY_ORDER[..i].contains(&key) {
++                "duplicate key"
++            } else if KEY_ORDER.contains(&key) {
++                "key out of order"
++            } else {
++                "unknown key"
++            };
++            return Err(format!(
++                "line {n}: {why} {key:?}, canonical order expects {want:?}"
++            ));
++        }
++        let bad = |what: &str| format!("line {n} ({want}): {what}");
++        match want {
++            "model" | "embed" | "vocab" | "chain" => {
++                strict_hex(val, Some(32))
++                    .ok_or_else(|| bad("expected 64 lower-case hex digits"))?;
++                match want {
++                    "model" => r.model = val.into(),
++                    "embed" => r.embed = val.into(),
++                    "vocab" => r.vocab = val.into(),
++                    _ => r.chain = val.into(),
++                }
++            }
++            "cis-digest" => {
++                strict_hex(val, Some(8)).ok_or_else(|| bad("expected 16 lower-case hex digits"))?;
++                r.cis_digest = val.into();
++            }
++            "maxtok" | "prompt-toks" | "gen-toks" => {
++                let v = strict_dec(val)
++                    .and_then(|v| usize::try_from(v).ok())
++                    .ok_or_else(|| {
++                        bad("expected a decimal integer without sign or leading zeros")
++                    })?;
++                match want {
++                    "maxtok" => r.maxtok = v,
++                    "prompt-toks" => r.prompt_toks = v,
++                    _ => r.gen_toks = v,
++                }
++            }
++            "prompt-hex" => {
++                let raw = strict_hex(val, None)
++                    .ok_or_else(|| bad("expected non-empty lower-case hex of even length"))?;
++                r.prompt =
++                    String::from_utf8(raw).map_err(|_| bad("does not decode to UTF-8 text"))?;
++            }
++            "token-ids" => {
++                // `token-ids ` with an empty value is what the writers print for
++                // a receipt with zero generated tokens (the one place a line
++                // ends in a space); gen-toks must then be 0, checked below.
++                if !val.is_empty() {
++                    for part in val.split(',') {
++                        let id = strict_dec(part)
++                            .and_then(|v| u32::try_from(v).ok())
++                            .ok_or_else(|| {
++                                bad("expected comma-separated canonical decimal u32 ids")
++                            })?;
++                        r.ids.push(id);
++                    }
++                }
++            }
++            _ => unreachable!("KEY_ORDER is exhaustive"),
++        }
++    }
++    if let Some(extra) = lines.get(KEY_ORDER.len() + 1) {
++        let k = extra.split(' ').next().unwrap_or("");
++        return Err(format!(
++            "line {}: unexpected extra line {k:?} (a receipt has exactly {} lines)",
++            KEY_ORDER.len() + 2,
++            KEY_ORDER.len() + 1
++        ));
++    }
++    if r.gen_toks != r.ids.len() {
++        return Err(format!(
++            "gen-toks {} does not equal the token-ids count {}",
++            r.gen_toks,
++            r.ids.len()
++        ));
++    }
++    Ok(r)
++}
++
+ struct Replay {
+     prompt_toks: usize,
+     generated: Vec<u32>,
+@@ -41,6 +317,40 @@ struct Replay {
+     chain: [u8; 32],
+ }
+ 
++/// Why a replay could not run.
++enum ReplayError {
++    /// The artifacts themselves are unusable (not a receipt problem).
++    Artifact(String),
++    /// The inputs a receipt supplies (prompt, budget) cannot be replayed.
++    Input(String),
++}
++
++/// The canonical receipt text, exactly as `cis_witness gen` prints it (and as
++/// the UEFI mint path renders it): LF line endings, `KEY_ORDER`, one trailing
++/// newline. `token-ids ` ends in a space when nothing was generated.
++fn render_receipt(
++    shas: (&[u8; 32], &[u8; 32], &[u8; 32]),
++    max_new: usize,
++    prompt: &str,
++    r: &Replay,
++) -> String {
++    let ids: Vec<String> = r.generated.iter().map(|t| t.to_string()).collect();
++    let mut s = String::new();
++    s.push_str(MAGIC);
++    s.push('\n');
++    s.push_str(&format!("model {}\n", hex(shas.0)));
++    s.push_str(&format!("embed {}\n", hex(shas.1)));
++    s.push_str(&format!("vocab {}\n", hex(shas.2)));
++    s.push_str(&format!("maxtok {max_new}\n"));
++    s.push_str(&format!("prompt-hex {}\n", hex(prompt.as_bytes())));
++    s.push_str(&format!("prompt-toks {}\n", r.prompt_toks));
++    s.push_str(&format!("gen-toks {}\n", r.generated.len()));
++    s.push_str(&format!("token-ids {}\n", ids.join(",")));
++    s.push_str(&format!("cis-digest {:016x}\n", r.fnv_digest));
++    s.push_str(&format!("chain {}\n", hex(&r.chain)));
++    s
++}
++
+ /// The deterministic decode both modes share. Step order and digest fold are
+ /// EXACTLY `cis_decode`'s (prompt ids then each generated id, LE bytes), so
+ /// for the same inputs the `cis-digest` line reproduces the CI-pinned
+@@ -52,27 +362,43 @@ fn replay(
+     prompt: &str,
+     max_new: usize,
+     header: &WitnessHeader<'_>,
+-) -> Replay {
+-    let tensors = SafeTensors::deserialize(model_bytes).expect("parse MODEL.SAF");
++) -> Result<Replay, ReplayError> {
++    use ReplayError::{Artifact, Input};
++    let tensors = SafeTensors::deserialize(model_bytes)
++        .map_err(|e| Artifact(format!("parse MODEL.SAF: {e:?}")))?;
+     let cfg_json = tensors
+         .metadata_field("aegis_config")
+-        .expect("read __metadata__")
+-        .expect("MODEL.SAF carries no aegis_config — repack in the forge");
+-    let config = ModelConfig::from_json(&cfg_json).expect("parse aegis_config");
+-    let pipeline = FullBitNetPipeline::new(&tensors, embed_bytes, &config).expect("build pipeline");
+-    let cis_model = CisModel::new(&pipeline, &config).expect("CIS model conversion");
++        .map_err(|e| Artifact(format!("read __metadata__: {e:?}")))?
++        .ok_or_else(|| {
++            Artifact("MODEL.SAF carries no aegis_config — repack in the forge".to_string())
++        })?;
++    let config = ModelConfig::from_json(&cfg_json)
++        .map_err(|e| Artifact(format!("parse aegis_config: {e:?}")))?;
++    let pipeline = FullBitNetPipeline::new(&tensors, embed_bytes, &config)
++        .map_err(|e| Artifact(format!("build pipeline: {e:?}")))?;
++    let cis_model = CisModel::new(&pipeline, &config)
++        .map_err(|e| Artifact(format!("CIS model conversion: {e:?}")))?;
+     let mut engine = CisEngine::new_with_mode(&cis_model, CisMode::FullInt);
+ 
+-    let tokenizer = AegisTokenizer::new(vocab_bytes).expect("parse VOCAB.BIN");
++    let tokenizer = AegisTokenizer::new(vocab_bytes)
++        .map_err(|e| Artifact(format!("parse VOCAB.BIN: {e:?}")))?;
+     let prompt_ids = tokenizer.encode(prompt);
+-    assert!(!prompt_ids.is_empty(), "prompt tokenized to nothing");
+-    assert!(
+-        prompt_ids.len() + max_new <= config.max_position_embeddings,
+-        "prompt ({}) + max_new ({}) exceeds max_position_embeddings ({})",
+-        prompt_ids.len(),
+-        max_new,
+-        config.max_position_embeddings
+-    );
++    if prompt_ids.is_empty() {
++        return Err(Input("prompt tokenized to nothing".to_string()));
++    }
++    // checked: a hostile budget must not wrap around the context check.
++    if prompt_ids
++        .len()
++        .checked_add(max_new)
++        .is_none_or(|t| t > config.max_position_embeddings)
++    {
++        return Err(Input(format!(
++            "prompt ({}) + max_new ({}) exceeds max_position_embeddings ({})",
++            prompt_ids.len(),
++            max_new,
++            config.max_position_embeddings
++        )));
++    }
+ 
+     let mut fnv: u64 = 0xcbf2_9ce4_8422_2325;
+     let mut chain = WitnessChain::from_header(header);
+@@ -98,27 +424,54 @@ fn replay(
+         pos += 1;
+     }
+ 
+-    Replay {
++    Ok(Replay {
+         prompt_toks: prompt_ids.len(),
+         generated,
+         fnv_digest: fnv,
+         chain: chain.digest(),
+-    }
++    })
++}
++
++fn read_or_exit(path: &str, what: &str) -> Vec<u8> {
++    std::fs::read(path).unwrap_or_else(|e| {
++        eprintln!("cis_witness: cannot read {what} ({path}): {e}");
++        std::process::exit(2);
++    })
+ }
+ 
+ fn main() {
+-    let args: Vec<String> = std::env::args().collect();
+-    if args.len() < 5 {
++    let mut args: Vec<String> = std::env::args().collect();
++    // `--strict` is a flag of `verify` only (in `gen` every argument is
++    // positional, so a prompt may be any text).
++    let mut strict = false;
++    if args.get(1).map(String::as_str) == Some("verify") {
++        let before = args.len();
++        let mut i = 0;
++        args.retain(|a| {
++            i += 1;
++            i <= 2 || a != "--strict"
++        });
++        strict = args.len() != before;
++    }
++    let usage = |code: i32| -> ! {
+         eprintln!(
+             "usage: cis_witness gen    <MODEL.SAF> <EMBED.BIN> <VOCAB.BIN> <max_new> [prompt]"
+         );
+-        eprintln!("       cis_witness verify <MODEL.SAF> <EMBED.BIN> <VOCAB.BIN> <receipt-file>");
+-        std::process::exit(2);
++        eprintln!(
++            "       cis_witness verify [--strict] <MODEL.SAF> <EMBED.BIN> <VOCAB.BIN> <receipt-file>"
++        );
++        std::process::exit(code);
++    };
++    if args.len() < 5 {
++        usage(2);
+     }
+     let mode = args[1].as_str();
+-    let model_bytes = std::fs::read(&args[2]).expect("read MODEL.SAF");
+-    let embed_bytes = std::fs::read(&args[3]).expect("read EMBED.BIN");
+-    let vocab_bytes = std::fs::read(&args[4]).expect("read VOCAB.BIN");
++    if mode == "verify" && args.len() < 6 {
++        usage(2);
++    }
++    let model_bytes = read_or_exit(&args[2], "MODEL.SAF");
++    let embed_bytes = read_or_exit(&args[3], "EMBED.BIN");
++    let vocab_bytes = read_or_exit(&args[4], "VOCAB.BIN");
+     let model_sha = sha256(&model_bytes);
+     let embed_sha = sha256(&embed_bytes);
+     let vocab_sha = sha256(&vocab_bytes);
+@@ -137,71 +490,52 @@ fn main() {
+                 max_new: max_new as u64,
+                 prompt: prompt.as_bytes(),
+             };
+-            let r = replay(
++            let r = match replay(
+                 &model_bytes,
+                 &embed_bytes,
+                 &vocab_bytes,
+                 prompt,
+                 max_new,
+                 &header,
++            ) {
++                Ok(r) => r,
++                Err(ReplayError::Artifact(e) | ReplayError::Input(e)) => {
++                    eprintln!("cis_witness gen: {e}");
++                    std::process::exit(2);
++                }
++            };
++            print!(
++                "{}",
++                render_receipt((&model_sha, &embed_sha, &vocab_sha), max_new, prompt, &r)
+             );
+-            let ids: Vec<String> = r.generated.iter().map(|t| t.to_string()).collect();
+-            println!("AEGIS-WITNESS v1-CIS");
+-            println!("model {}", hex(&model_sha));
+-            println!("embed {}", hex(&embed_sha));
+-            println!("vocab {}", hex(&vocab_sha));
+-            println!("maxtok {max_new}");
+-            println!("prompt-hex {}", hex(prompt.as_bytes()));
+-            println!("prompt-toks {}", r.prompt_toks);
+-            println!("gen-toks {}", r.generated.len());
+-            println!("token-ids {}", ids.join(","));
+-            println!("cis-digest {:016x}", r.fnv_digest);
+-            println!("chain {}", hex(&r.chain));
+         }
+         "verify" => {
+-            let wtext = std::fs::read_to_string(&args[5]).expect("read receipt");
+-            let mut w_model = String::new();
+-            let mut w_embed = String::new();
+-            let mut w_vocab = String::new();
+-            let mut w_maxtok = 0usize;
+-            let mut w_prompt = String::new();
+-            let mut w_ids: Vec<u32> = Vec::new();
+-            let mut w_fnv = String::new();
+-            let mut w_chain = String::new();
+-            for line in wtext.lines() {
+-                let mut it = line.splitn(2, ' ');
+-                let (k, v) = (it.next().unwrap_or(""), it.next().unwrap_or(""));
+-                match k {
+-                    "model" => w_model = v.into(),
+-                    "embed" => w_embed = v.into(),
+-                    "vocab" => w_vocab = v.into(),
+-                    "maxtok" => w_maxtok = v.parse().expect("maxtok"),
+-                    "prompt-hex" => {
+-                        w_prompt = String::from_utf8(unhex(v)).expect("prompt utf8");
+-                    }
+-                    "token-ids" => {
+-                        w_ids = v
+-                            .split(',')
+-                            .filter(|s| !s.is_empty())
+-                            .map(|s| s.parse().expect("token id"))
+-                            .collect();
+-                    }
+-                    "cis-digest" => w_fnv = v.into(),
+-                    "chain" => w_chain = v.into(),
+-                    _ => {}
++            let rbytes = read_or_exit(&args[5], "receipt");
++            let parsed = if strict {
++                parse_strict(&rbytes).map_err(|e| format!("strict: {e}"))
++            } else {
++                std::str::from_utf8(&rbytes)
++                    .map_err(|_| "malformed receipt: not valid UTF-8".to_string())
++                    .and_then(|t| parse_lenient(t).map_err(|e| format!("malformed receipt: {e}")))
++            };
++            let w = match parsed {
++                Ok(w) => w,
++                Err(e) => {
++                    println!("VERIFY FAIL — {e}");
++                    std::process::exit(1);
+                 }
+-            }
++            };
+ 
+             let mut fail = false;
+             for (name, local, claimed) in [
+-                ("MODEL", hex(&model_sha), &w_model),
+-                ("EMBED", hex(&embed_sha), &w_embed),
+-                ("VOCAB", hex(&vocab_sha), &w_vocab),
++                ("MODEL", hex(&model_sha), &w.model),
++                ("EMBED", hex(&embed_sha), &w.embed),
++                ("VOCAB", hex(&vocab_sha), &w.vocab),
+             ] {
+                 if &local != claimed {
+                     println!(
+                         "FAIL artifact: {name} hash mismatch (receipt {} vs local {})",
+-                        &claimed[..16.min(claimed.len())],
++                        prefix16(claimed),
+                         &local[..16]
+                     );
+                     fail = true;
+@@ -215,43 +549,78 @@ fn main() {
+                 model_sha: &model_sha,
+                 embed_sha: &embed_sha,
+                 vocab_sha: &vocab_sha,
+-                max_new: w_maxtok as u64,
+-                prompt: w_prompt.as_bytes(),
++                max_new: w.maxtok as u64,
++                prompt: w.prompt.as_bytes(),
+             };
+-            let r = replay(
++            let r = match replay(
+                 &model_bytes,
+                 &embed_bytes,
+                 &vocab_bytes,
+-                &w_prompt,
+-                w_maxtok,
++                &w.prompt,
++                w.maxtok,
+                 &header,
+-            );
++            ) {
++                Ok(r) => r,
++                Err(ReplayError::Input(e)) => {
++                    println!("VERIFY FAIL — receipt inputs cannot be replayed: {e}");
++                    std::process::exit(1);
++                }
++                Err(ReplayError::Artifact(e)) => {
++                    eprintln!("cis_witness verify: unusable artifacts: {e}");
++                    std::process::exit(2);
++                }
++            };
+             let local_fnv = format!("{:016x}", r.fnv_digest);
+             let local_chain = hex(&r.chain);
+             println!(
+-                "receipt cis-digest {w_fnv} chain {}",
+-                &w_chain[..16.min(w_chain.len())]
++                "receipt cis-digest {} chain {}",
++                w.cis_digest,
++                prefix16(&w.chain)
+             );
+             println!(
+                 "local   cis-digest {local_fnv} chain {}",
+                 &local_chain[..16]
+             );
+-            if local_fnv == w_fnv && local_chain == w_chain && r.generated == w_ids {
++            let replay_ok =
++                local_fnv == w.cis_digest && local_chain == w.chain && r.generated == w.ids;
++            // --strict only: the claimed counts must be the replayed ones
++            // (gen-toks == token-ids count was already enforced by the parser).
++            let strict_err = (strict && r.prompt_toks != w.prompt_toks).then(|| {
++                format!(
++                    "prompt-toks {} does not equal the tokenized prompt length {}",
++                    w.prompt_toks, r.prompt_toks
++                )
++            });
++            if replay_ok && strict_err.is_none() {
++                if strict {
++                    println!(
++                        "strict: canonical layout; prompt-toks {} = tokenized prompt length; gen-toks {} = token-ids count",
++                        r.prompt_toks,
++                        r.generated.len()
++                    );
++                }
+                 println!(
+                     "VERIFY PASS — replay reproduced {} tokens, the token digest, and the full logit chain bit-for-bit",
+                     r.generated.len()
+                 );
+             } else {
+-                if r.generated != w_ids {
+-                    let first = r.generated.iter().zip(&w_ids).position(|(a, b)| a != b);
++                if r.generated != w.ids {
++                    let first = r.generated.iter().zip(&w.ids).position(|(a, b)| a != b);
+                     println!(
+                         "token divergence at generated index {:?} (local len {}, receipt len {})",
+                         first,
+                         r.generated.len(),
+-                        w_ids.len()
++                        w.ids.len()
+                     );
+                 }
+-                println!("VERIFY FAIL — replay diverged from the receipt");
++                if let Some(e) = strict_err {
++                    println!("strict: {e}");
++                }
++                if replay_ok {
++                    println!("VERIFY FAIL — strict receipt checks failed");
++                } else {
++                    println!("VERIFY FAIL — replay diverged from the receipt");
++                }
+                 std::process::exit(1);
+             }
+         }
+@@ -261,3 +630,460 @@ fn main() {
+         }
+     }
+ }
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    /// The five committed golden receipts (read-only fixtures, minted by this
++    /// tool's `gen`). Format-level checks only: replaying them needs model
++    /// artifacts that the unit tests do not have.
++    const GOLDENS: [(&str, &str); 5] = [
++        (
++            "m7",
++            include_str!("../../tests/golden/witness_v1_m7_once64.receipt"),
++        ),
++        (
++            "bitnet2b",
++            include_str!("../../tests/golden/witness_v1_bitnet2b_once64.receipt"),
++        ),
++        (
++            "e16_qat",
++            include_str!("../../tests/golden/witness_v1_e16_qat_once64.receipt"),
++        ),
++        (
++            "e16_qat_pruned",
++            include_str!("../../tests/golden/witness_v1_e16_qat_pruned_once64.receipt"),
++        ),
++        (
++            "falcon_e_1b",
++            include_str!("../../tests/golden/witness_v1_falcon_e_1b_once64.receipt"),
++        ),
++    ];
++
++    fn m7() -> &'static str {
++        GOLDENS[0].1
++    }
++
++    fn lines(s: &str) -> Vec<String> {
++        s.strip_suffix('\n')
++            .unwrap()
++            .split('\n')
++            .map(String::from)
++            .collect()
++    }
++
++    fn join(l: &[String]) -> String {
++        l.join("\n") + "\n"
++    }
++
++    fn strict(s: &str) -> Result<Receipt, String> {
++        parse_strict(s.as_bytes())
++    }
++
++    #[test]
++    fn strict_accepts_every_golden_and_matches_the_lenient_reader() {
++        for (name, text) in GOLDENS {
++            let s = strict(text).unwrap_or_else(|e| panic!("{name}: {e}"));
++            let l = parse_lenient(text).unwrap();
++            assert_eq!(s.model, l.model, "{name}");
++            assert_eq!(s.embed, l.embed, "{name}");
++            assert_eq!(s.vocab, l.vocab, "{name}");
++            assert_eq!(s.maxtok, l.maxtok, "{name}");
++            assert_eq!(s.prompt, l.prompt, "{name}");
++            assert_eq!(s.ids, l.ids, "{name}");
++            assert_eq!(s.cis_digest, l.cis_digest, "{name}");
++            assert_eq!(s.chain, l.chain, "{name}");
++            assert_eq!(s.gen_toks, s.ids.len(), "{name}");
++            assert_eq!(s.prompt_toks, 4, "{name}");
++        }
++    }
++
++    /// Every way the SAFE-01 H1 sweep found the old reader too forgiving.
++    #[test]
++    fn strict_rejects_every_leniency_the_h1_sweep_found() {
++        let base = lines(m7());
++        let mut cases: Vec<(String, String)> = Vec::new();
++        let mut add = |name: &str, text: String| cases.push((name.to_string(), text));
++
++        // C08: line reorder (every adjacent swap, and a rotation).
++        for i in 0..base.len() - 1 {
++            let mut l = base.clone();
++            l.swap(i, i + 1);
++            add(&format!("swap {i}/{}", i + 1), join(&l));
++        }
++        let mut l = base.clone();
++        l.rotate_left(3);
++        add("rotate", join(&l));
++        // U1/U2: prompt-toks / gen-toks changed or deleted.
++        for key in ["prompt-toks", "gen-toks"] {
++            let idx = base.iter().position(|x| x.starts_with(key)).unwrap();
++            let mut l = base.clone();
++            l.remove(idx);
++            add(&format!("delete {key}"), join(&l));
++            // prompt-toks is compared with the tokenizer's count at replay time
++            // (needs the artifacts), so a canonical-but-wrong prompt-toks is
++            // out of reach of the parser; gen-toks is checked against the ids.
++            let values: &[&str] = if key == "gen-toks" {
++                &["3", "5", "63", "65", "363", "064", "+64", "64 "]
++            } else {
++                &["04", "+4", "4 "]
++            };
++            for v in values {
++                let mut l = base.clone();
++                l[idx] = format!("{key} {v}");
++                add(&format!("{key} -> {v:?}"), join(&l));
++            }
++        }
++        assert_eq!(
++            strict(&m7().replace("prompt-toks 4", "prompt-toks 3"))
++                .unwrap()
++                .prompt_toks,
++            3,
++            "a canonical wrong prompt-toks passes the parser and is caught at replay"
++        );
++        // U3: header edited or deleted.
++        let mut l = base.clone();
++        l.remove(0);
++        add("delete header", join(&l));
++        for bad in [
++            "AEGIS-WITNESS v1-CIS ",
++            "AEGIS-WITNESS v1-CIs",
++            "#EGIS-WITNESS v1-CIS",
++            "AEGIS-WITNESS v2-CIS",
++            "",
++        ] {
++            let mut l = base.clone();
++            l[0] = bad.to_string();
++            add(&format!("header {bad:?}"), join(&l));
++        }
++        // U4: unknown lines (appended, inserted, blank).
++        let mut l = base.clone();
++        l.push("x-note hello".into());
++        add("unknown line appended", join(&l));
++        let mut l = base.clone();
++        l.insert(3, "x-note hello".into());
++        add("unknown line inserted", join(&l));
++        let mut l = base.clone();
++        l.insert(5, String::new());
++        add("blank line inserted", join(&l));
++        // U5: duplicate keys, bogus line first or last.
++        for (i, line) in base.iter().enumerate().skip(1) {
++            let mut l = base.clone();
++            l.insert(i, line.replace(|c: char| c.is_ascii_digit(), "1"));
++            add(&format!("duplicate (bogus first) line {i}"), join(&l));
++            let mut l = base.clone();
++            l.push(line.clone());
++            add(&format!("duplicate (copy last) line {i}"), join(&l));
++        }
++        // U6: non-canonical encodings.
++        let swap_in = |key: &str, f: &dyn Fn(&str) -> String| -> String {
++            let mut l = base.clone();
++            let idx = l.iter().position(|x| x.starts_with(key)).unwrap();
++            let v = l[idx][key.len() + 1..].to_string();
++            l[idx] = format!("{key} {}", f(&v));
++            join(&l)
++        };
++        add(
++            "upper prompt-hex",
++            swap_in("prompt-hex", &|v| v.to_uppercase()),
++        );
++        add("upper chain", swap_in("chain", &|v| v.to_uppercase()));
++        add("upper model", swap_in("model", &|v| v.to_uppercase()));
++        add(
++            "upper cis-digest",
++            swap_in("cis-digest", &|v| v.to_uppercase()),
++        );
++        add("+maxtok", swap_in("maxtok", &|v| format!("+{v}")));
++        add("0maxtok", swap_in("maxtok", &|v| format!("0{v}")));
++        add("+token id", swap_in("token-ids", &|v| format!("+{v}")));
++        add("0token id", swap_in("token-ids", &|v| format!("0{v}")));
++        add(
++            "+a in prompt-hex",
++            swap_in("prompt-hex", &|v| format!("{}+a{}", &v[..2], &v[4..])),
++        );
++        add("trailing comma", swap_in("token-ids", &|v| format!("{v},")));
++        add(
++            "empty id",
++            swap_in("token-ids", &|v| v.replacen(',', ",,", 1)),
++        );
++        add(
++            "u32 overflow id",
++            swap_in("token-ids", &|v| format!("{v},4294967296")),
++        );
++        add(
++            "odd-length prompt-hex",
++            swap_in("prompt-hex", &|v| format!("{v}0")),
++        );
++        add("short chain", swap_in("chain", &|v| v[..62].to_string()));
++        add("long model", swap_in("model", &|v| format!("{v}00")));
++        add(
++            "non-hex model",
++            swap_in("model", &|v| format!("g{}", &v[1..])),
++        );
++        add(
++            "maxtok overflow u64",
++            swap_in("maxtok", &|_| "18446744073709551616".into()),
++        );
++        add(
++            "prompt-hex not utf-8",
++            swap_in("prompt-hex", &|_| "ff".into()),
++        );
++        add(
++            "empty prompt-hex",
++            swap_in("prompt-hex", &|_| String::new()),
++        );
++        add("gen-toks 63", swap_in("gen-toks", &|_| "63".into()));
++        // C11: cosmetic.
++        let text = m7().to_string();
++        add("no final newline", text[..text.len() - 1].to_string());
++        add("blank line at end", text.clone() + "\n");
++        add("two blank lines at end", text.clone() + "\n\n");
++        add("crlf all", text.replace('\n', "\r\n"));
++        add(
++            "crlf last line only",
++            text[..text.len() - 1].to_string() + "\r\n",
++        );
++        add("bare CR at end", text[..text.len() - 1].to_string() + "\r");
++        add("leading space", format!(" {text}"));
++        add("leading newline", format!("\n{text}"));
++        add("empty file", String::new());
++        add("single newline", "\n".into());
++        for i in 0..base.len() {
++            for ws in [" ", "\t", "  ", "\u{a0}", "\u{0}"] {
++                let mut l = base.clone();
++                l[i].push_str(ws);
++                add(&format!("trailing {ws:?} on line {i}"), join(&l));
++            }
++            let mut l = base.clone();
++            l[i] = format!(" {}", l[i]);
++            add(&format!("leading space on line {i}"), join(&l));
++            let mut l = base.clone();
++            l[i] = l[i].replacen(' ', "  ", 1);
++            add(&format!("double space on line {i}"), join(&l));
++            let mut l = base.clone();
++            l[i] = l[i].replacen(' ', "\t", 1);
++            add(&format!("tab separator on line {i}"), join(&l));
++        }
++        // C07: truncation at every line boundary and every byte.
++        for k in 0..base.len() {
++            add(&format!("first {k} lines"), join(&base[..k]));
++        }
++        for cut in 0..text.len() {
++            add(&format!("byte cut {cut}"), text[..cut].to_string());
++        }
++        // Non-ASCII anywhere.
++        add("non-ascii value", swap_in("maxtok", &|_| "６４".into()));
++        add(
++            "multibyte in model",
++            swap_in("model", &|v| format!("é{}", &v[2..])),
++        );
++
++        assert!(cases.len() > 800, "{} cases", cases.len());
++        for (name, text) in &cases {
++            if let Ok(r) = strict(text) {
++                panic!("strict reader accepted {name}: {r:?}");
++            }
++        }
++    }
++
++    /// The only accepted spelling of the golden is the golden itself: take any
++    /// strict-accepted text, and it round-trips through the writer.
++    #[test]
++    fn strict_accepts_exactly_what_the_writer_emits() {
++        for (name, text) in GOLDENS {
++            let r = strict(text).unwrap();
++            let shas =
++                |h: &str| -> [u8; 32] { strict_hex(h, Some(32)).unwrap().try_into().unwrap() };
++            let rp = Replay {
++                prompt_toks: r.prompt_toks,
++                generated: r.ids.clone(),
++                fnv_digest: u64::from_str_radix(&r.cis_digest, 16).unwrap(),
++                chain: shas(&r.chain),
++            };
++            let out = render_receipt(
++                (&shas(&r.model), &shas(&r.embed), &shas(&r.vocab)),
++                r.maxtok,
++                &r.prompt,
++                &rp,
++            );
++            assert_eq!(out, text, "{name}: writer output differs from the golden");
++        }
++        // Zero generated tokens: the writers print "token-ids " (trailing
++        // space) and the strict reader takes exactly that, with gen-toks 0.
++        let rp = Replay {
++            prompt_toks: 4,
++            generated: vec![],
++            fnv_digest: 0x0123_4567_89ab_cdef,
++            chain: [0xab; 32],
++        };
++        let z = [7u8; 32];
++        let out = render_receipt((&z, &z, &z), 0, "Once upon a time", &rp);
++        assert!(out.contains("\ntoken-ids \n"), "{out:?}");
++        let r = strict(&out).unwrap();
++        assert_eq!((r.maxtok, r.gen_toks, r.ids.len()), (0, 0, 0));
++        // ...but not the same line without the space, nor with gen-toks != 0.
++        assert!(strict(&out.replace("\ntoken-ids \n", "\ntoken-ids\n")).is_err());
++        assert!(strict(&out.replace("gen-toks 0", "gen-toks 1")).is_err());
++    }
++
++    /// The reader's key order is the writer's key order.
++    #[test]
++    fn reader_key_order_is_the_writer_key_order() {
++        let rp = Replay {
++            prompt_toks: 2,
++            generated: vec![5, 6],
++            fnv_digest: 1,
++            chain: [1; 32],
++        };
++        let z = [3u8; 32];
++        let out = render_receipt((&z, &z, &z), 2, "hi", &rp);
++        let keys: Vec<&str> = out
++            .lines()
++            .skip(1)
++            .map(|l| l.split(' ').next().unwrap())
++            .collect();
++        assert_eq!(keys, KEY_ORDER);
++        assert_eq!(out.lines().next().unwrap(), MAGIC);
++        assert_eq!(
++            [MAGIC, "\n"].concat().as_bytes(),
++            aegis_core::witness::WITNESS_DOMAIN_V1
++        );
++    }
++
++    /// The default reader keeps the leniency it always had.
++    #[test]
++    fn lenient_reader_keeps_legacy_leniency() {
++        let want = parse_lenient(m7()).unwrap();
++        let base = lines(m7());
++        let reordered = {
++            let mut l = base.clone();
++            l.reverse();
++            join(&l)
++        };
++        assert_eq!(parse_lenient(&reordered).unwrap(), want);
++        let mut l = base.clone();
++        l.remove(0);
++        l.push("x-note hello".into());
++        assert_eq!(parse_lenient(&join(&l)).unwrap(), want);
++        assert_eq!(parse_lenient(&m7().replace('\n', "\r\n")).unwrap(), want);
++        let nofinal = &m7()[..m7().len() - 1];
++        assert_eq!(parse_lenient(nofinal).unwrap(), want);
++        let plus = m7().replace("maxtok 64", "maxtok +64");
++        assert_eq!(parse_lenient(&plus).unwrap(), want);
++        let zero = m7().replace("maxtok 64", "maxtok 064");
++        assert_eq!(parse_lenient(&zero).unwrap(), want);
++        // prompt-toks / gen-toks are never read by the default reader.
++        let counts = m7()
++            .replace("prompt-toks 4", "prompt-toks 99")
++            .replace("gen-toks 64", "gen-toks 1");
++        assert_eq!(parse_lenient(&counts).unwrap(), want);
++        // upper-case prompt-hex decodes to the same prompt.
++        let up = base
++            .iter()
++            .map(|x| match x.strip_prefix("prompt-hex ") {
++                Some(v) => format!("prompt-hex {}", v.to_uppercase()),
++                None => x.clone(),
++            })
++            .collect::<Vec<_>>();
++        assert_eq!(parse_lenient(&join(&up)).unwrap(), want);
++        // Last duplicate wins.
++        let dup = format!("chain 00\n{}", m7());
++        assert_eq!(parse_lenient(&dup).unwrap(), want);
++    }
++
++    /// What used to panic is now an error, and nothing panics on any prefix of
++    /// a receipt or on odd bytes.
++    #[test]
++    fn readers_return_errors_instead_of_panicking() {
++        for bad in [
++            "maxtok x\n",
++            "maxtok -1\n",
++            "maxtok \n",
++            "maxtok 99999999999999999999999999\n",
++            "token-ids 1,x\n",
++            "token-ids 1,-2\n",
++            "token-ids 4294967296\n",
++            "prompt-hex ff\n",
++            "prompt-hex c3\n",
++            "prompt-hex aé\n",
++            "prompt-hex aéé\n",
++        ] {
++            assert!(parse_lenient(bad).is_err(), "{bad:?}");
++        }
++        // Not a panic and not an error: legacy leniency (a non-hex pair, even a
++        // whole multi-byte character, decodes to 0).
++        assert_eq!(parse_lenient("prompt-hex zz4f\n").unwrap().prompt, "\0O");
++        assert_eq!(parse_lenient("prompt-hex ééé\n").unwrap().prompt, "\0\0\0");
++        for (_, text) in GOLDENS {
++            for cut in 0..=text.len() {
++                if let Some(t) = text.get(..cut) {
++                    let _ = parse_lenient(t);
++                }
++                let _ = parse_strict(&text.as_bytes()[..cut]);
++            }
++        }
++        let junk: [&[u8]; 6] = [
++            b"",
++            b"\n",
++            b"\xff\xfe",
++            b"\0\0\0",
++            b"a b c\n\n\n",
++            b"\r\r\n\n",
++        ];
++        for j in junk {
++            let _ = parse_strict(j);
++            if let Ok(t) = std::str::from_utf8(j) {
++                let _ = parse_lenient(t);
++            }
++        }
++    }
++
++    #[test]
++    fn unhex_lenient_keeps_its_semantics() {
++        assert_eq!(unhex_lenient("4f6e").unwrap(), b"On");
++        assert_eq!(unhex_lenient("4F6E").unwrap(), b"On");
++        assert_eq!(unhex_lenient("4f6").unwrap(), b"O"); // odd tail dropped
++        assert_eq!(unhex_lenient("+a").unwrap(), [10]);
++        assert_eq!(unhex_lenient("zz").unwrap(), [0]);
++        assert_eq!(unhex_lenient("").unwrap(), b"");
++        assert_eq!(unhex_lenient("é").unwrap(), [0]); // a whole character is one non-hex pair
++        assert!(unhex_lenient("aé").is_err()); // a pair that splits a character
++    }
++
++    #[test]
++    fn prefix16_cuts_on_a_character_boundary() {
++        assert_eq!(prefix16("abc"), "abc");
++        assert_eq!(prefix16("0123456789abcdefXYZ"), "0123456789abcdef");
++        let s = "0123456789abcde\u{e9}tail"; // byte 16 is inside the 2-byte e-acute
++        assert_eq!(prefix16(s), "0123456789abcde");
++        assert_eq!(prefix16(""), "");
++    }
++
++    #[test]
++    fn strict_helpers_are_canonical_only() {
++        for ok in ["0", "7", "10", "4294967295", "18446744073709551615"] {
++            assert!(strict_dec(ok).is_some(), "{ok}");
++        }
++        for bad in [
++            "",
++            "00",
++            "01",
++            "+1",
++            "-1",
++            " 1",
++            "1 ",
++            "1_0",
++            "1.0",
++            "18446744073709551616",
++            "٣",
++        ] {
++            assert!(strict_dec(bad).is_none(), "{bad:?}");
++        }
++        assert!(strict_hex("00ff", Some(2)).is_some());
++        for bad in ["00FF", "0g", "+f", "00f", "", "00ff00"] {
++            assert!(strict_hex(bad, Some(2)).is_none(), "{bad:?}");
++        }
++        assert!(strict_hex("", None).is_none());
++    }
++}
+-- 
+2.43.0
+

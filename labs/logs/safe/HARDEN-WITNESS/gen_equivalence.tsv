@@ -1,0 +1,8 @@
+name	max_new	old_exit	new_exit	old_new_stdout_identical	default_verdict	strict_verdict	strict_stdout_last	receipt_bytes
+canary_self	16	0	0	1	ACCEPT	ACCEPT	VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit	538
+canary_calc	16	0	0	1	ACCEPT	ACCEPT	VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit	506
+canary_lookup	16	0	0	1	ACCEPT	ACCEPT	VERIFY PASS — replay reproduced 16 tokens, the token digest, and the full logit chain bit-for-bit	505
+default_prompt	12	0	0	1	ACCEPT	ACCEPT	VERIFY PASS — replay reproduced 12 tokens, the token digest, and the full logit chain bit-for-bit	475
+empty_budget	0	0	0	1	ACCEPT	ACCEPT	VERIFY PASS — replay reproduced 0 tokens, the token digest, and the full logit chain bit-for-bit	431
+one_token	1	0	0	1	ACCEPT	ACCEPT	VERIFY PASS — replay reproduced 1 tokens, the token digest, and the full logit chain bit-for-bit	434
+multibyte_prompt	6	0	0	1	ACCEPT	ACCEPT	VERIFY PASS — replay reproduced 6 tokens, the token digest, and the full logit chain bit-for-bit	480

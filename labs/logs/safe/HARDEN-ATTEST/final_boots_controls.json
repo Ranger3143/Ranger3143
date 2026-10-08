@@ -1,0 +1,92 @@
+{
+ "T finalize form": [
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT"
+ ],
+ "D default flags": [
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT"
+ ],
+ "L T + --reject-high-s": [
+  "REJECT",
+  "ACCEPT",
+  "REJECT",
+  "ACCEPT",
+  "ACCEPT",
+  "REJECT",
+  "ACCEPT",
+  "REJECT"
+ ],
+ "P old positional form": [
+  "REJECT_USAGE",
+  "REJECT_USAGE",
+  "REJECT_USAGE",
+  "REJECT_USAGE",
+  "REJECT_USAGE",
+  "REJECT_USAGE",
+  "REJECT_USAGE",
+  "REJECT_USAGE"
+ ],
+ "A default + --artifacts (op12k trio)": [
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT",
+  "ACCEPT"
+ ],
+ "X1 control: pin of the next boot": [
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT"
+ ],
+ "X2 control: receipt of the next boot": [
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT"
+ ],
+ "X3 control: wrong EFI (dashboard image)": [
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT"
+ ],
+ "X4 control: --strict without --receipt": [
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT",
+  "REJECT"
+ ]
+}

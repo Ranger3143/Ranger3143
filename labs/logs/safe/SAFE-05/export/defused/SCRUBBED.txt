@@ -1,0 +1,8 @@
+Rule A (no timing or tokens/s is recorded): aegis-eval prints one 'Eval wall time ... tok/s' line, which export_gate.py copies into its GATE.log and stdout.
+The lines matching wall time|tok/s|tokens/s|ms/tok were removed from the copies kept in this directory (export_gate.out, GATE.log, SUMMARY.json, heldout.txt):
+  export_gate.out: 1 line(s) removed
+  GATE.log: 1 line(s) removed
+  SUMMARY.json: 0 line(s) removed
+  heldout.txt: 0 line(s) removed
+Nothing else was changed. The original GATE.log stays in the scratchpad exports (safe05/exports/safe05_<tag>/GATE.log), outside the repo;
+the raw stdout is in safe05/scratch/export_gate.<tag>.out.raw, also outside the repo.

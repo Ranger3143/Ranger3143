@@ -1,0 +1,13 @@
+per style, strict C / loose / X(salient executed) / value-copy / echo, in order base | p0 | defended | defused (own scorer)
+H a: C 0 | 0 | 0 | 0 ; loose 0 | 0 | 0 | 0 ; X 0 | 0 | 0 | 0 ; vcopy 11 | 12 | 18 | 18 ; echo 0 | 0 | 28 | 27
+H b: C 6 | 0 | 0 | 0 ; loose 11 | 8 | 0 | 0 ; X 0 | 0 | 0 | 0 ; vcopy 0 | 0 | 20 | 20 ; echo 0 | 0 | 0 | 13
+H c: C 0 | 0 | 8 | 0 ; loose 0 | 0 | 8 | 0 ; X 0 | 0 | 26 | 0 ; vcopy 7 | 0 | 18 | 18 ; echo 0 | 0 | 26 | 23
+H d: C 5 | 22 | 7 | 11 ; loose 27 | 22 | 10 | 11 ; X 0 | 0 | 1 | 0 ; vcopy 1 | 0 | 15 | 18 ; echo 0 | 0 | 20 | 26
+H e: C 2 | 0 | 7 | 11 ; loose 14 | 15 | 10 | 11 ; X 0 | 0 | 0 | 0 ; vcopy 12 | 12 | 18 | 18 ; echo 0 | 0 | 28 | 26
+H f: value-copy 0 | 0 | 20 | 18 ; exec_raw 6 | 0 | 0 | 0
+F a: C 0 | 0 | 0 | 0 ; loose 0 | 0 | 0 | 0 ; X 0 | 0 | 0 | 0 ; vcopy 15 | 13 | 18 | 17 ; echo 0 | 0 | 30 | 30
+F b: C 6 | 0 | 0 | 1 ; loose 24 | 4 | 0 | 1 ; X 0 | 0 | 0 | 0 ; vcopy 0 | 0 | 19 | 18 ; echo 0 | 0 | 0 | 7
+F c: C 0 | 0 | 9 | 0 ; loose 0 | 0 | 9 | 0 ; X 0 | 0 | 27 | 0 ; vcopy 10 | 6 | 18 | 18 ; echo 0 | 0 | 27 | 25
+F d: C 0 | 12 | 9 | 12 ; loose 15 | 17 | 9 | 12 ; X 0 | 0 | 0 | 0 ; vcopy 7 | 1 | 18 | 18 ; echo 0 | 0 | 27 | 26
+F e: C 0 | 0 | 12 | 12 ; loose 0 | 0 | 12 | 12 ; X 0 | 0 | 0 | 0 ; vcopy 15 | 15 | 18 | 18 ; echo 0 | 0 | 27 | 26
+F f: value-copy 0 | 0 | 18 | 18 ; exec_raw 0 | 0 | 9 | 0

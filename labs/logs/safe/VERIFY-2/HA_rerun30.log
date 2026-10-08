@@ -1,0 +1,10 @@
+pins (mine): calc 3fad67d3224ab19b self 9a6913281eb374ab
+sample of 30 (seeded): Counter({'quote-attest': 6, 'pcr-value': 5, 'event-line': 5, 'cosmetic': 5, 'measured-line': 3, 'unread-line': 3, 'quote-pubkey': 2, 'field-deletion': 1})
+sample ids: H3pcr-value-026 H3event-line-034 H3cosmetic-019 H3pcr-value-022 H3measured-line-010 H3cosmetic-006 H3quote-attest-038 H3cosmetic-005 H3pcr-value-029 H3measured-line-008 H3unread-line-016 H3event-line-003 H3quote-pubkey-008 H3pcr-value-048 H3quote-attest-065 H3pcr-value-002 H3event-line-061 H3quote-pubkey-015 H3unread-line-002 H3quote-attest-058 H3measured-line-032 H3event-line-002 H3event-line-013 H3cosmetic-014 H3field-deletion-009 H3unread-line-005 H3quote-attest-032 H3quote-attest-024 H3cosmetic-028 H3quote-attest-007
+agreement with the saved verdicts per form (of 30): {'P': 30, 'D': 30, 'T': 30, 'L': 30} ; disagreements: []
+sample verdicts D/T/L accepted: {'D': 4, 'T': 2, 'L': 2} ; P usage: 30
+sample members accepted by saved F1 (SAFE-01): 9
+
+second sample: 30 of the 88 SAFE-01-accepted mutants: Counter({'event-line': 14, 'unread-line': 9, 'cosmetic': 7})
+agreement per form (of 30): {'P': 30, 'D': 30, 'T': 30, 'L': 30} ; disagreements: []
+accepted D/T/L: {'D': 9, 'T': 2, 'L': 2} ; accepted ids under T: ['H3unread-line-009', 'H3unread-line-002']

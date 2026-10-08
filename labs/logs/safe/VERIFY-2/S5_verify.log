@@ -1,0 +1,6 @@
+suite sha256 d3a1da444a87262bb26a826bf5ab13e74b828ed45ae2eede077582c99895ad7f
+receipt items re-verified: 36 (54 receipt files); all files VERIFY PASS: 36 of 36
+by (model, mode): {('p0', 'F'): 5, ('defused', 'H'): 4, ('defended', 'H'): 9, ('defused', 'F'): 3, ('defended', 'F'): 9, ('p0', 'H'): 4, ('base', 'F'): 1, ('base', 'H'): 1}
+first lines: [(('p0', 'F', 'b', 'q10'), ['VERIFY PASS — replay reproduced 1 steps and the full trace chain bit-for-bit']), (('defused', 'H', 'e', 'q14'), ['VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit']), (('defused', 'H', 'c', 'q12'), ['VERIFY PASS — replay reproduced 2 steps and the full trace chain bit-for-bit'])]
+control: defended receipt vs BASE artifacts: exit 1 | ['FAIL artifact: MODEL hash mismatch (receipt ba39a4540d693c13 vs local a44e48965c641b81)', 'FAIL artifact: EMBED hash mismatch (receipt 22d044240324cd4a vs local 8cbcd6b69df03539)']
+control: defended style-c receipt vs the style-0 table: exit 1 | ['FAIL artifact: TABLE hash mismatch (receipt da9514db57f96c4f vs local 6b2f738491306145)']

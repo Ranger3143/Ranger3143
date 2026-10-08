@@ -1,0 +1,65 @@
+##### C02-0007 class C02 sub nibble: prompt-hex[68] 4->c
+mutant bytes (repr of the changed/shortened receipt, first 700 bytes): b'AEGIS-WITNESS v1-CIS\nmodel a44e48965c641b81994a670001c76a8bebd38857f9455cc5008acac8d2b2897a\nembed 8cbcd6b69df03539cd4638440fb903910325b7f6853349c5bb5778e413fafef0\nvocab a4cafc9649488987a8eb053476d389bd9a675405c51bfc42ebded546ae64eb17\nmaxtok 3\nprompt-hex 513a205768617420697320746865206361706974616c206f66204672616e63653f0ac13a\nprompt-toks 12\ngen-toks 3\ntoken-ids 4946,14,0\ncis-digest f5a7738385a31930\nchain a6d271d6e83c7f2d8c5670b3fd44cf8ba5f6c19cc2151e88a8bc8411f5ea4e6a\n'
+--- OLD  default: exit 101
+stdout: (empty)
+stderr: thread 'main' (1573) panicked at examples/cis_witness.rs:180:64:
+prompt utf8: FromUtf8Error { bytes: [81, 58, 32, 87, 104, 97, 116, 32, 105, 115, 32, 116, 104, 101, 32, 99, 97, 112, 105, 116, 97, 108, 32, 111, 102, 32, 70, 114, 97, 110, 99, 101, 63, 10, 193, 58], error: Utf8Error { valid_up_to: 34, 
+--- NEW  default: exit 1
+stdout: VERIFY FAIL — malformed receipt: prompt-hex does not decode to UTF-8 text
+stderr: (empty)
+--- NEW  --strict: exit 1
+stdout: VERIFY FAIL — strict: line 6 (prompt-hex): does not decode to UTF-8 text
+stderr: (empty)
+
+##### C07-0006 class C07 sub lines: drop last 6 line(s)
+mutant bytes (repr of the changed/shortened receipt, first 700 bytes): b'AEGIS-WITNESS v1-CIS\nmodel a44e48965c641b81994a670001c76a8bebd38857f9455cc5008acac8d2b2897a\nembed 8cbcd6b69df03539cd4638440fb903910325b7f6853349c5bb5778e413fafef0\nvocab a4cafc9649488987a8eb053476d389bd9a675405c51bfc42ebded546ae64eb17\nmaxtok 25\n'
+--- OLD  default: exit 101
+stdout: (empty)
+stderr: thread 'main' (1576) panicked at examples/cis_witness.rs:68:5:
+prompt tokenized to nothing
+stack backtrace:
+   0: __rustc::rust_begin_unwind
+   1: core::panicking::panic_fmt
+   2: cis_witness::replay
+   3: cis_witness::main
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose
+--- NEW  default: exit 1
+stdout: VERIFY FAIL — receipt inputs cannot be replayed: prompt tokenized to nothing
+stderr: (empty)
+--- NEW  --strict: exit 1
+stdout: VERIFY FAIL — strict: truncated: line 6 (prompt-hex) is missing
+stderr: (empty)
+
+##### C11-0013 class C11 sub trailing-space: trailing-space on line 4 (maxtok)
+mutant bytes (repr of the changed/shortened receipt, first 700 bytes): b'AEGIS-WITNESS v1-CIS\nmodel a44e48965c641b81994a670001c76a8bebd38857f9455cc5008acac8d2b2897a\nembed 8cbcd6b69df03539cd4638440fb903910325b7f6853349c5bb5778e413fafef0\nvocab a4cafc9649488987a8eb053476d389bd9a675405c51bfc42ebded546ae64eb17\nmaxtok 25 \nprompt-hex 513a20576861742069732074686520706f70756c6174696f6e206f6620537072696e676669656c643f0a413a\nprompt-toks 12\ngen-toks 25\ntoken-ids 309,833,503,617,375,12,283,309,1352,503,935,356,540,14,2018,276,675,283,309,487,1715,356,1319,14,0\ncis-digest 751473b3a5980606\nchain 36a4727928a9bf0536c1da38a2deb661837077cb13c6940ebb570c85c80a0dcc\n'
+--- OLD  default: exit 101
+stdout: (empty)
+stderr: thread 'main' (1579) panicked at examples/cis_witness.rs:178:54:
+maxtok: ParseIntError { kind: InvalidDigit }
+stack backtrace:
+   0: __rustc::rust_begin_unwind
+   1: core::panicking::panic_fmt
+   2: core::result::unwrap_failed
+   3: cis_witness::main
+note: Some details are omitted, run with `RUST_BA
+--- NEW  default: exit 1
+stdout: VERIFY FAIL — malformed receipt: maxtok is not an unsigned integer
+stderr: (empty)
+--- NEW  --strict: exit 1
+stdout: VERIFY FAIL — strict: line 5 (maxtok): expected a decimal integer without sign or leading zeros
+stderr: (empty)
+
+##### U5-0019 class U5 sub dup-bogus-first: duplicate prompt-hex: bogus line before the original
+mutant bytes (repr of the changed/shortened receipt, first 700 bytes): b'AEGIS-WITNESS v1-CIS\nmodel a44e48965c641b81994a670001c76a8bebd38857f9455cc5008acac8d2b2897a\nembed 8cbcd6b69df03539cd4638440fb903910325b7f6853349c5bb5778e413fafef0\nvocab a4cafc9649488987a8eb053476d389bd9a675405c51bfc42ebded546ae64eb17\nmaxtok 9\nprompt-hex a13a20576861742069732031323334202a20353637383f0a413a\nprompt-hex 513a20576861742069732031323334202a20353637383f0a413a\nprompt-toks 13\ngen-toks 9\ntoken-ids 473,8,17,9254,700,4787,1889,367,199\ncis-digest fddebefc84f1ad58\nchain 6e6b2ddf1a8528e59665e43ccb0445e182d3da53db2621786afd97e6023c45ea\n'
+--- OLD  default: exit 101
+stdout: (empty)
+stderr: thread 'main' (1582) panicked at examples/cis_witness.rs:180:64:
+prompt utf8: FromUtf8Error { bytes: [161, 58, 32, 87, 104, 97, 116, 32, 105, 115, 32, 49, 50, 51, 52, 32, 42, 32, 53, 54, 55, 56, 63, 10, 65, 58], error: Utf8Error { valid_up_to: 0, error_len: Some(1) } }
+stack backtrace:
+   0: __rustc
+--- NEW  default: exit 1
+stdout: VERIFY FAIL — malformed receipt: prompt-hex does not decode to UTF-8 text
+stderr: (empty)
+--- NEW  --strict: exit 1
+stdout: VERIFY FAIL — strict: line 6 (prompt-hex): does not decode to UTF-8 text
+stderr: (empty)

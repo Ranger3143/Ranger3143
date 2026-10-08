@@ -1,0 +1,2 @@
+rows 351 ; remeasured F1 == SAFE-01 F1: 351 ; F2: 351
+my re-run of attest_verify_before.py on 30 random mutants: F1 agrees with SAFE-01 30 /30 ; F2 agrees 30 /30

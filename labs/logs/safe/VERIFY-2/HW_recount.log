@@ -1,0 +1,52 @@
+h1_rerun rows: 6381
+SAFE-01 h1_results rows: 6161 ; h2_verify rows: 764 ; header ['artifact_set', 'receipt', 'kind', 'gen_exit', 'verify_exit', 'verdict', 'stdout_last', 'receipt_path']
+receipt rows with a SAFE-01 h1 verdict: 6161 ; old_verdict equals SAFE-01 verdict: 6161
+non-h1 (weight) rows: 220 ids sample: ['C10-h2-byte_00-qemu_abstain/RECEIPT.TXT', 'C10-h2-byte_00-qemu_calc/RECEIPT.TXT', 'C10-h2-byte_00-qemu_calc/RECEIPT2.TXT']
+
+class | n | old A/C/X | newdef A/C/X | strict A/C/X | panics old/def/strict
+C00     11 | 11/0/0 | 11/0/0 | 11/0/0 | ?/0/0
+C01    706 | 0/706/0 | 0/706/0 | 0/706/0 | ?/0/0
+C02    520 | 0/379/141 | 0/520/0 | 0/520/0 | ?/0/0
+C03    520 | 0/520/0 | 0/520/0 | 0/520/0 | ?/0/0
+C04    520 | 0/520/0 | 0/520/0 | 0/520/0 | ?/0/0
+C05    520 | 0/520/0 | 0/520/0 | 0/520/0 | ?/0/0
+C06    520 | 0/520/0 | 0/520/0 | 0/520/0 | ?/0/0
+C07    520 | 0/489/31 | 0/520/0 | 0/520/0 | ?/0/0
+C08    520 | 520/0/0 | 520/0/0 | 0/520/0 | ?/0/0
+C09    634 | 0/634/0 | 0/634/0 | 0/634/0 | ?/0/0
+C10    585 | 0/585/0 | 0/585/0 | 0/585/0 | ?/0/0
+C11    396 | 242/110/44 | 242/154/0 | 0/396/0 | ?/0/0
+U1      73 | 73/0/0 | 73/0/0 | 0/73/0 | ?/0/0
+U2      73 | 73/0/0 | 73/0/0 | 0/73/0 | ?/0/0
+U3      43 | 43/0/0 | 43/0/0 | 0/43/0 | ?/0/0
+U4      11 | 11/0/0 | 11/0/0 | 0/11/0 | ?/0/0
+U5     110 | 52/52/6 | 52/58/0 | 0/110/0 | ?/0/0
+U6      99 | 66/33/0 | 66/33/0 | 0/99/0 | ?/0/0
+
+C08+U1..U6 mutants: 929 ; old ACCEPT 838 ; new default ACCEPT 838 ; strict ACCEPT 0
+   C08: n=520 old ACCEPT=520 newdef ACCEPT=520 strict ACCEPT=0
+   U1: n=73 old ACCEPT=73 newdef ACCEPT=73 strict ACCEPT=0
+   U2: n=73 old ACCEPT=73 newdef ACCEPT=73 strict ACCEPT=0
+   U3: n=43 old ACCEPT=43 newdef ACCEPT=43 strict ACCEPT=0
+   U4: n=11 old ACCEPT=11 newdef ACCEPT=11 strict ACCEPT=0
+   U5: n=110 old ACCEPT=52 newdef ACCEPT=52 strict ACCEPT=0
+   U6: n=99 old ACCEPT=66 newdef ACCEPT=66 strict ACCEPT=0
+C11 cosmetic: n 396 old ACCEPT 242 newdef 242 strict 0
+
+old crash-rejects: 222 {'C02': 141, 'C07': 31, 'C11': 44, 'U5': 6} ; old exit codes of those: {'101': 222}
+new default exit codes over all rows: {'0': 1091, '1': 5290}
+new strict  exit codes over all rows: {'0': 11, '1': 6370}
+new default/strict exit 101 or other-than-0/1: 0 0
+stderr non-empty (default/strict): 0 0
+rows with a panic banner in the stderr first line: 0
+old->new default transitions: {('ACCEPT', 'ACCEPT'): 1091, ('REJECT_CLEAN', 'REJECT_CLEAN'): 5068, ('REJECT_CRASH', 'REJECT_CLEAN'): 222}
+non-crash rows: 6159 ; same exit code: 6159 ; same last stdout line: 6159
+strict ACCEPT rows: 11 ; classes: {'C00': 11} ; strict ACCEPT but default not: 0
+TIMEOUT rows: 0
+
+archive members: 6161 ; manifest rows: 6161 ; sha mismatches (mine): 0 ; h1_rerun mutant_sha256 equals manifest: 6161
+
+controls.tsv rows: 360 ; groups: {('qemu_receipt', 'default', 'ACCEPT'): 11, ('qemu_receipt', 'strict', 'ACCEPT'): 11, ('golden', 'default', 'ACCEPT'): 1, ('golden', 'strict', 'ACCEPT'): 1, ('golden_format_only', 'default', 'REJECT_CLEAN'): 4, ('golden_format_only', 'strict', 'REJECT_CLEAN'): 4, ('h2_self_receipt', 'default', 'ACCEPT'): 164, ('h2_self_receipt', 'strict', 'ACCEPT'): 164}
+fuzz rows: 2400 ; default verdicts: {'REJECT_CLEAN': 2135, 'ACCEPT': 265} ; strict verdicts: {'REJECT_CLEAN': 2400} ; panic flags: 0 0 ; exit codes def/strict: {'1': 2135, '0': 265} {'1': 2400}
+gen_equivalence rows: 7 ['name', 'max_new', 'old_exit', 'new_exit', 'old_new_stdout_identical', 'default_verdict', 'strict_verdict', 'strict_stdout_last', 'receipt_bytes']
+  identical: ['?', '?', '?', '?', '?', '?', '?']

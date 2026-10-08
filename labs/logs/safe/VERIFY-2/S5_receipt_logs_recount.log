@@ -1,0 +1,12 @@
+op12k_p0control: Mode H summary.tsv PASS 210/210; Mode F verify.log pass 420 fail 0; receipt files 420
+op12k_defended: Mode H summary.tsv PASS 210/210; Mode F verify.log pass 420 fail 0; receipt files 420
+op12k_defused: Mode H summary.tsv PASS 210/210; Mode F verify.log pass 420 fail 0; receipt files 420
+Mode H receipt files total (3 models): 630
+  base fw 0 ('60', '0')
+  base fw a ('60', '0')
+  base fw b ('60', '0')
+  base fw c ('60', '0')
+  base fw d ('60', '0')
+  base fw e ('60', '0')
+  base fw f ('60', '0')
+base Mode H PASS 210 / 210

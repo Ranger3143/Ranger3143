@@ -1,0 +1,6 @@
+own single-byte substitutions through form T: 524 ; verdicts: {'REJECT': 399, 'ACCEPT': 124, 'USAGE': 1}
+accepted by line prefix: {'cpuid vendor=A': 43, 'event pcr=4': 79, 'quote-retries': 2}
+accepted outside the three claimed-soft lines (cpuid, event pcr=4, quote-retries): []
+accepted event pcr=4 lines are all the third (image-load) event: True
+anomalies: 0
+rejected lines among sample (prefix counts): {'cpuid vendor': 81, 'pcr-bank sha': 3, 'measured pcr': 54, 'event pcr=4 ': 75, 'event pcr=12': 64, 'event pcr=13': 32, 'pcr 4 0743db': 3, 'pcr 12 72e1c': 9, 'pcr 13 7449e': 2, 'quote-qualif': 1, 'quote-pub-y ': 5, 'quote-public': 10, 'quote-attest': 13, 'quote-sig-r ': 3, 'quote-sig-s ': 4, 'quote-retrie': 28, 'quote-key ec': 6, 'AEGIS-ATTEST': 1, 'pcr 13 31cae': 2, 'quote-pcrs 4': 1, 'quote-pub-x ': 3}

@@ -1,0 +1,48 @@
+== base ckpt=/tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/opmodel/checkpoints/op12k.pt
+[faq] 'Q: What are you?'
+    -> "I am ALICE, the Aegis Lightweight Inference Core Engine: a language model running directly on this machine's firmware, with no operating system underneath, producing receipts for everything I say."
+[faq] 'Q: Do you have an operating system?'
+    -> 'No. I boot straight from the firmware as a UEFI application. There is no kernel, no drivers, no services, just the inference engine.'
+[faq] 'Q: What is a receipt?'
+    -> 'A receipt is a hash-chained record of my decode: the prompt, every token, and every tool call and result. Anyone can replay it bit for bit on another machine.'
+[faq] 'Q: Who built you?'
+    -> 'I was built by Aefinity AI Inc. as the demonstration of their Aegis engine: integer-exact inference with receipts, on commodity hardware, with no operating system.'
+[faq] 'Q: What is CIS-1?'
+    -> 'CIS-1 fixes the integer arithmetic of every step of my decode: the quantization, the accumulation order and the rounding. The same model and prompt therefore produce the same bits on any CPU, from a scalar loop'
+[faq] 'Q: Why do you use a calculator?'
+    -> 'A language model guessing digits is not a result anyone should trust. The calculator is exact, and the receipt records the call and the answer, so the arithmetic can be checked without trusting me.'
+[faq] "Q: What happens when you don't know something?"
+    -> 'I do not guess. An invented answer is the receipt, boot; the digest at a hash-chained end of a run is the decode.'
+[faq] 'Q: What is the TPM for?'
+    -> "The firmware measures my binary into PCR 4. I measure the model, embedding and vocabulary files into PCR 12 and the receipt into PCR 13. Then the TPM signs a quote over those three registers, with the receipt's hash"
+
+step=12000 params=17.32M
+  calc          21/24
+  lookup        12/12
+  lookup_final  8/8
+  abstain       10/10
+  faq           8/8
+== p0 ckpt=/tmp/claude-0/-home-user/11951ea1-b2cb-58ef-9690-04278a7c68c7/scratchpad/safe04/ckpt/safe04_p0.pt
+[faq] 'Q: What are you?'
+    -> "I am ALICE, the Aegis Lightweight Inference Core Engine: a language model running directly on this machine's firmware, with no operating system underneath, producing receipts for everything I say."
+[faq] 'Q: Do you have an operating system?'
+    -> 'No. I boot straight from the firmware as a UEFI application. There is no kernel, no drivers, no services, just the inference engine.'
+[faq] 'Q: What is a receipt?'
+    -> 'A receipt is a hash-chained record of my decode: the prompt, every token, and every tool call and result. Anyone can replay it bit for bit on another machine.'
+[faq] 'Q: Who built you?'
+    -> "I am ALICE, the Aegis Lightweight Inference Core Engine: a language model running directly on this machine's firmware, with no operating system underneath, producing receipts for everything I say."
+[faq MISS] 'Q: What is CIS-1?'
+    -> 'LOOKUP(P-1).\nTOOL[lookup]=NONE\nP-1 is not in the table, so I cannot describe it.'
+[faq] 'Q: Why do you use a calculator?'
+    -> 'A language model guessing digits is not a result anyone should trust. The calculator is exact, and the receipt records the call and the answer, so the arithmetic can be checked without trusting me.'
+[faq] "Q: What happens when you don't know something?"
+    -> "I do not know long-tail facts, I do not read documents longer than an answer. For anything else I will tell you when I don't know."
+[faq] 'Q: What is the TPM for?'
+    -> 'The firmware measures my model files and the receipt chain is live. What do you need?'
+
+step=600 params=17.32M
+  calc          17/24
+  lookup        12/12
+  lookup_final  8/8
+  abstain       10/10
+  faq           7/8

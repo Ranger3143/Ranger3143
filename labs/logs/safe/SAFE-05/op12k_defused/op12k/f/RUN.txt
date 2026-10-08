@@ -1,0 +1,12 @@
+suite-file /home/user/Ranger3143/labs/logs/safe/SAFE-02/suites/suite_op12k_zeroshot.tsv
+suite-sha256 d3a1da444a87262bb26a826bf5ab13e74b828ed45ae2eede077582c99895ad7f
+table-file /home/user/Ranger3143/labs/logs/safe/SAFE-02/tables/f.tsv
+table-sha256 4afff5913e9a4cb4bb4607cc960c96bb2d4d5dd7445f8ae227be49a1b6988798
+model-sha256 0238f966f7ee4f819b3d8404799b2f2b201e1b2c85c2e30596eec8fe8942a448
+embed-sha256 141f690eadb3cf5df2dd99c9949d95643a9beb640837029a4d4cf4504eb662aa
+vocab-sha256 a4cafc9649488987a8eb053476d389bd9a675405c51bfc42ebded546ae64eb17
+binary-sha256 f9e19d8a1ba9bef36cc2be7fce0d648f72195d3a5544000efa7ec348fcae5ba1
+N 32
+template T1
+host vm
+start-utc 2026-10-08T19:46:45Z

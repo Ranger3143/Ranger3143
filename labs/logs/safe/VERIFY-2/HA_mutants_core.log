@@ -1,0 +1,17 @@
+rows: 351
+cross-tab (my core_ok, saved T verdict): {(True, 'ACCEPT'): 12, (False, 'REJECT'): 287, (True, 'REJECT'): 48, (True, 'REJECT_USAGE'): 4}
+T accepted but my independent core says inconsistent (false accepts): []
+core consistent but T rejected, by (class, sub): {('event-line', 'pcr4/type'): 6, ('event-line', 'pcr12/type'): 7, ('event-line', 'pcr13/type'): 3, ('unread-line', 'pcr-bank'): 4, ('unread-line', 'quote-key'): 4, ('unread-line', 'header'): 4, ('cosmetic', 'crlf-all'): 2, ('cosmetic', 'no-final-newline'): 2, ('cosmetic', 'trailing-space'): 4, ('cosmetic', 'uppercase-hex'): 10, ('cosmetic', 'leading-zero-bytes'): 4, ('event-line', 'pcr4/data'): 1, ('unread-line', 'quote-retries'): 1}
+my-core failure reasons among mutants (a mutant can have several): {'pcrdigest_matches_pcr_lines': 92, 'pcr_replay_4_12_13': 126, 'attest_magic_type': 30, 'ecdsa_sig_valid': 128, 'extra_eq_qualifying_eq_sha_receipt': 44, 'sel_is_single_sha256_4_12_13': 32, 'quote_pcrs_line': 44, 'quote_public_contains_xy': 63, 'qualified_signer_matches_public': 52, 'event_digests_eq_sha_data': 77, 'measured_lines_eq_events': 103, 'receipt_chain_in_pcr13': 48, 'EXC': 44}
+
+residuals, my core:
+   H3event-line-010 pcr4/data core_ok True sig_s_low True failed []
+   H3unread-line-001 cpuid core_ok True sig_s_low True failed []
+   H3unread-line-002 cpuid core_ok True sig_s_low True failed []
+   H3unread-line-009 quote-retries core_ok True sig_s_low True failed []
+   H3unread-line-010 quote-retries core_ok True sig_s_low True failed []
+   H3sig-malleability-001 sig-s=n-s core_ok True sig_s_low False failed []
+   H3unread-line-015 cpuid core_ok True sig_s_low True failed []
+   H3unread-line-016 cpuid core_ok True sig_s_low True failed []
+   H3unread-line-024 quote-retries core_ok True sig_s_low True failed []
+   H3sig-malleability-002 sig-s=n-s core_ok True sig_s_low False failed []

@@ -1,0 +1,4 @@
+Q: What does the record say for part P-612?
+A: LOOKUP(P-612).
+
+TOOL[lookup]=Rivet, solid, 1/8 in. dia., aluminum TOOL[calc]=777

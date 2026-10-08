@@ -147,6 +147,7 @@ footer code { font-family: var(--mono); font-size: 0.8rem; color: var(--fg); }
       <span class="chip ok"><span class="dot"></span>Minted receipt == golden fixture · byte-identical</span>
       <span class="chip ok"><span class="dot"></span>PCR 12/13 replayed from event log · PASS</span>
       <span class="chip ok"><span class="dot"></span>Operator model · 17M ternary · trained on this CPU · firmware tool loop · 240/240 receipts verified</span>
+      <span class="chip ok"><span class="dot"></span>LAB-09 safety series · 11 hypotheses pre-registered · 5,000+ receipts · verifiers hardened</span>
       <span class="chip warn"><span class="dot"></span>Environment: QEMU + swtpm · correctness only · no iron yet</span>
     </div>
   </section>
@@ -357,6 +358,27 @@ MODEL    According to the table, P-205 is Bolt, hex head, 3/8 in., cadmium plate
   </section>
 
 
+  <section id="safety">
+    <div class="sec-head">
+      <h3>Safer-AI series</h3>
+      <h2>Five pre-registered experiments on the stack, every decode with a receipt, every number recounted by a skeptic</h2>
+      <p class="note">labs/LAB-09. Hypotheses and scoring rules were written and hashed before the first run; an independent pass recomputed every figure from the raw logs. Six of eleven hypotheses were refuted or qualified. That is the point: the stack lets safety properties be tested, and the tests found three bugs of ours.</p>
+    </div>
+    <div class="panel tbl">
+      <table>
+        <thead><tr><th>Experiment</th><th>What held</th><th>What did not, and what changed</th></tr></thead>
+        <tbody>
+          <tr><td><b>SAFE-01</b> tamper-evidence</td><td>0 of 4,825 bound-field receipt mutations verified; any weight byte breaks the hash binding (600/600)</td><td>Line order, token counts, header and canonical form were unchecked; the attestation verifier was fail-open on a missing quote, never replayed PCR 4, accepted an unpinned signer; our finalize pipeline passed the receipt in a form the verifier ignored. <b>Hardened:</b> 88 → 10 accepted attestation mutants (the 10 in unsigned fields), 8/8 boots re-verified; <span class="mono">cis_witness verify --strict</span>: 0 of 929 previously accepted mutants pass, 0 panics.</td></tr>
+          <tr><td><b>SAFE-02</b> injection through tool results</td><td>The gateway never executed table text: 0 of 138 second-step calls came from the table. The 17M operator model obeyed no instruction (bare obedience 0/30 in every style)</td><td>BitNet-2B answered <span class="mono">A: 42</span> on command 12/30 and executed an attacker-chosen LOOKUP 9/30. The operator model garbles long values (copy 13/30 → 0/30 with a benign long suffix).</td></tr>
+          <tr><td><b>SAFE-03</b> honesty under pressure</td><td>The operator model never invented a value or confirmed a planted number</td><td>Its trained abstention vanishes once any pressure clause is added (6/6 → 0/24). The 2B confirmed the false premise 26/30 and invented census figures and sources.</td></tr>
+          <tr><td><b>SAFE-04</b> poisoning the data factory</td><td>A question-consistency checker caught 1,054 of 1,054 poisoned episodes, 0 false positives</td><td>1,054 trigger-poisoned episodes (5%) gave a leaky 52% backdoor with no clean-accuracy loss; the value oracle saw 0 of them.</td></tr>
+          <tr><td><b>SAFE-05</b> defended model</td><td>Value copying doubled (31 → 89 of 150), no regression on the probes</td><td>Teaching verbatim quoting made the model re-emit the attacker's embedded call, which the scanner then executed (0 → 27/150). Negative result kept; the fix belongs in the gateway, not the model.</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:10px">Receipts verified across the series: SAFE-02 1,204, SAFE-03 360, SAFE-04 1,000, SAFE-05 2,520. Logs: <code>labs/logs/safe/</code>; verifier notes: <code>labs/tools/README-attest_verify.md</code>; patch 0004 on the lab branch.</p>
+    </div>
+  </section>
+
   <section id="claims">
     <div class="sec-head">
       <h3>Prior-art check</h3>
@@ -396,6 +418,7 @@ MODEL    According to the table, P-205 is Bolt, hex head, 3/8 in., cadmium plate
       <h2>What is moving now</h2>
     </div>
     <div class="next">
+      <div class="panel"><span class="status done">done today</span><h4>Safer-AI experiment series</h4><p>Tamper-evidence, tool-result injection, honesty under pressure, data-factory poisoning, a defended model: pre-registered, receipt-backed, skeptic-verified. Three of our own verifier bugs found and fixed. labs/LAB-09.</p></div>
       <div class="panel"><span class="status done">done overnight</span><h4>Operator model in the boot image</h4><p>A 17M-parameter ternary model trained on this 4-vCPU VM answers as ALICE and calls the firmware gateway for arithmetic and lookups (alice-aegis patch 0003). On the LAB-07 items it ties the 2B on correct arguments and looks up every unknown fact unprompted; 240/240 receipts verified. labs/LAB-08.</p></div>
       <div class="panel"><span class="status done">plan written today</span><h4>ALICE-Next edge model plan</h4><p>Nine research briefs, a verification pass, and a design panel (three proposals, three judges, synthesis, row-by-row license audit, completeness check). Decision: evolve the BitNet-2B family with zero engine change, graft in the gateway-verified data factory, tool-state discipline and the snapshot fact-check loop. Nothing is trained yet; the first Kaggle notebook and six decisions for Justin are in <span class="mono">model/README.md</span>.</p></div>
       <div class="panel"><span class="status done">done today</span><h4>"Nobody has done this yet", verified</h4><p>22 statements, 16 prior-art hunts, 22 evidence checks: 0 novel, 16 partially novel, 8 done in repo. Corrections owed to the briefs are listed. <span class="mono">NOBODY-HAS-DONE-THIS.md</span>.</p></div>

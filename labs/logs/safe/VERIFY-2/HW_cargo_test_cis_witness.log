@@ -1,0 +1,12 @@
+For more information about this error, try `rustc --explain E0133`.
+running 9 tests
+test tests::lenient_reader_keeps_legacy_leniency ... ok
+test tests::prefix16_cuts_on_a_character_boundary ... ok
+test tests::reader_key_order_is_the_writer_key_order ... ok
+test tests::strict_accepts_exactly_what_the_writer_emits ... ok
+test tests::strict_helpers_are_canonical_only ... ok
+test tests::strict_accepts_every_golden_and_matches_the_lenient_reader ... ok
+test tests::unhex_lenient_keeps_its_semantics ... ok
+test tests::strict_rejects_every_leniency_the_h1_sweep_found ... ok
+test tests::readers_return_errors_instead_of_panicking ... ok
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out

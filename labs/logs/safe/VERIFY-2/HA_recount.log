@@ -1,0 +1,73 @@
+rows in h3_rerun.tsv: 351 ; ids in SAFE-01 h3_results.tsv: 351
+every h3_rerun id present in SAFE-01 h3_results: True
+mutant_sha256 equals SAFE-01 recorded sha256: 351 of 351
+before_F1/F2 columns equal SAFE-01 F1_verdict/F2_verdict: 351 of 351
+mutants (excl. controls): 349 ; controls: 2
+accepted before F1/F2: 88 87
+accepted after D/T/L: 29 10 8
+controls accepted D/T/L: 2 2 2
+P usage error (exit 2): 349 of 349
+any non-ACCEPT/REJECT/REJECT_USAGE verdict (anomaly): 0
+exit-code/verdict inconsistencies: 0
+SAFE-01 accepted under F1 or F2: 88 = semantic 66 + cosmetic 22
+  of the 66 semantic / 22 cosmetic: D accepts 11 / 18
+  of the 66 semantic / 22 cosmetic: T accepts 10 / 0
+  of the 66 semantic / 22 cosmetic: L accepts 8 / 0
+
+class: n | F1 F2 D T L accepted
+  cosmetic             28 | 22 22 18 0 0
+  event-line           68 | 35 35 2 1 1
+  field-deletion       18 | 2 2 0 0 0
+  measured-line        33 | 1 0 0 0 0
+  pcr-value            48 | 0 0 0 0 0
+  quote-attest         68 | 0 0 0 0 0
+  quote-pubkey         16 | 0 0 0 0 0
+  quote-qualifying     16 | 0 0 0 0 0
+  quote-signature      24 | 0 0 0 0 0
+  sig-malleability      2 | 2 2 2 2 0
+  unread-line          28 | 26 26 7 7 7
+
+finding: n | F1 F2 D T L accepted
+  1 fail-open quote                        4 | 4 4 0 0 0
+  3 PCR4 event edits                      24 | 24 24 2 1 1
+  4 type= of PCR12/13 events              11 | 11 11 0 0 0
+  5 unread quote-* lines                  16 | 16 16 3 3 3
+  6 malleability                           2 | 2 2 2 2 0
+  extra: last measured pcr=13 deleted      3 | 1 0 0 0 0
+
+residual T-accepted mutants:
+   H3event-line-010 event-line pcr4/data | event pcr=4 line 11: data char 88 0->8 | before F1/F2 ACCEPT ACCEPT | L ACCEPT
+   H3unread-line-001 unread-line cpuid | cpuid char 37 P->C | before F1/F2 ACCEPT ACCEPT | L ACCEPT
+   H3unread-line-002 unread-line cpuid | cpuid char 50 5->9 | before F1/F2 ACCEPT ACCEPT | L ACCEPT
+   H3unread-line-009 unread-line quote-retries | quote-retries char 0 1->4 | before F1/F2 ACCEPT ACCEPT | L ACCEPT
+   H3unread-line-010 unread-line quote-retries | quote-retries char 0 1->0 | before F1/F2 ACCEPT ACCEPT | L ACCEPT
+   H3sig-malleability-001 sig-malleability sig-s=n-s | quote-sig-s replaced by n-s (the other valid ECDSA signature) | before F1/F2 ACCEPT ACCEPT | L REJECT
+   H3unread-line-015 unread-line cpuid | cpuid char 27 Q->I | before F1/F2 ACCEPT ACCEPT | L ACCEPT
+   H3unread-line-016 unread-line cpuid | cpuid char 49 .->4 | before F1/F2 ACCEPT ACCEPT | L ACCEPT
+   H3unread-line-024 unread-line quote-retries | quote-retries char 0 1->3 | before F1/F2 ACCEPT ACCEPT | L ACCEPT
+   H3sig-malleability-002 sig-malleability sig-s=n-s | quote-sig-s replaced by n-s (the other valid ECDSA signature) | before F1/F2 ACCEPT ACCEPT | L REJECT
+  by sub-field: {'pcr4/data': 1, 'cpuid': 4, 'quote-retries': 3, 'sig-s=n-s': 2}
+
+S1 rows: 32 ; before F1/F2 accepted: 32 0 ; after P usage: 32 ; D/T accepted: 0 0
+forgery rows: 6
+   S2-pcr13-line-edit D REJECT T REJECT L REJECT P REJECT_USAGE
+   S2-receipt-chain-edit D REJECT T REJECT L REJECT P REJECT_USAGE
+   S3-pcr13-line-edit D ACCEPT T REJECT L REJECT P REJECT_USAGE
+   S3-receipt-chain-edit D ACCEPT T REJECT L REJECT P REJECT_USAGE
+   S4-pcr14-claim-qemu_calc D REJECT T REJECT L REJECT P REJECT_USAGE
+   S4-pcr14-claim-qemu_self D REJECT T REJECT L REJECT P REJECT_USAGE
+
+final boot keys: distinct 8 ; pin==key 8 of 8 ; high-s (saved column) 4
+  own high-s count from sig_s column (> n/2): 4 ; pin string == quote key string: 8
+genuine_all rows: 15 ; D 15 ; strict 15 ; T pinned 10 ; strict+reject-high-s 10 ; high-s 5
+
+byteflip rows: 7895 ; accepted by T: 404 ; verdict values: {'REJECT_USAGE': 32, 'REJECT': 7459, 'ACCEPT': 404}
+  accepted by (base, line): {('qemu_calc', 'cpuid'): 41, ('qemu_calc', 'event pcr=4 #2'): 160, ('qemu_calc', 'quote-retries'): 1, ('qemu_self', 'cpuid'): 41, ('qemu_self', 'event pcr=4 #2'): 160, ('qemu_self', 'quote-retries'): 1}
+  (file, line) pairs total: 60 ; fully rejected pairs: 54
+  bytes per base: {'qemu_calc': 4158, 'qemu_self': 3737}
+   ('qemu_calc', 'cpuid') accepted cols [13, 14, 15, 16, 17, 18] ... 41
+   ('qemu_calc', 'event pcr=4 #2') accepted cols [109, 110, 111, 112, 113, 114] ... 160
+   ('qemu_calc', 'quote-retries') accepted cols [14] ... 1
+
+finalize.sh contains --receipt --strict --expect-pubkey --efi: True
+finalize.sh still contains the old positional call "attest_verify.py $E/ATTEST.TXT $E/RECEIPT.TXT": False

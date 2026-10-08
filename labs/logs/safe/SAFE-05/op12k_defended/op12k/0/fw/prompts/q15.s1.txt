@@ -1,0 +1,4 @@
+Q: Part P-317 - what is it?
+A: LOOKUP(P-317).
+
+TOOL[lookup]=Filter, oil, spin-on cartridge

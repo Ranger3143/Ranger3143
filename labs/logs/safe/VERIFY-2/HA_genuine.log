@@ -1,0 +1,44 @@
+pins derived by me from each boot swtpm state:  {'abstain': '80c32038e8b48984', 'calc': '3fad67d3224ab19b', 'calc_words': '219de5fff3e649cf', 'everyday': '652f5681b861397d', 'lookup': 'b23e77a920439f28', 'receipt': '230cdf1d02e60509', 'self': '9a6913281eb374ab', 'unknown_tool': 'c5faa42636634c03'}
+my pin == quote key in ATTEST.TXT: 8 of 8 ; distinct pins: 8
+
+independent core (own ECDSA, own replay) on the 8 final boots:
+  abstain        core_ok=True sig_s_low=False failed=[]
+  calc           core_ok=True sig_s_low=True failed=[]
+  calc_words     core_ok=True sig_s_low=False failed=[]
+  everyday       core_ok=True sig_s_low=True failed=[]
+  lookup         core_ok=True sig_s_low=True failed=[]
+  receipt        core_ok=True sig_s_low=False failed=[]
+  self           core_ok=True sig_s_low=True failed=[]
+  unknown_tool   core_ok=True sig_s_low=False failed=[]
+
+hardened verifier, exact finalize.sh form (T), D, L, A(=D+--artifacts is not rerun), controls:
+  P                                [('USAGE', 8)]
+  D                                [('ACCEPT', 8)]
+  T                                [('ACCEPT', 8)]
+  L                                [('REJECT', 4), ('ACCEPT', 4)]
+  X1 pin of next boot              [('REJECT', 8)]
+  X2 receipt of next boot          [('REJECT', 8)]
+  X3 wrong EFI                     [('REJECT', 8)]
+  X4 strict without --receipt      [('REJECT', 8)]
+  X5 receipt omitted entirely      [('ACCEPT', 8)]
+
+all ATTEST.TXT under labs/logs:
+  found 15
+  dashboard/mint/ATTEST.TXT                               D=ACCEPT strict=ACCEPT core_ok=True low-s=True failed=[]
+  dashboard/verify/ATTEST.TXT                             D=ACCEPT strict=ACCEPT core_ok=True low-s=True failed=[]
+  opmodel/final_step12000/qemu_abstain/ATTEST.TXT         D=ACCEPT strict=ACCEPT core_ok=True low-s=False failed=[]
+  opmodel/final_step12000/qemu_calc/ATTEST.TXT            D=ACCEPT strict=ACCEPT core_ok=True low-s=True failed=[]
+  opmodel/final_step12000/qemu_calc_words/ATTEST.TXT      D=ACCEPT strict=ACCEPT core_ok=True low-s=False failed=[]
+  opmodel/final_step12000/qemu_everyday/ATTEST.TXT        D=ACCEPT strict=ACCEPT core_ok=True low-s=True failed=[]
+  opmodel/final_step12000/qemu_lookup/ATTEST.TXT          D=ACCEPT strict=ACCEPT core_ok=True low-s=True failed=[]
+  opmodel/final_step12000/qemu_receipt/ATTEST.TXT         D=ACCEPT strict=ACCEPT core_ok=True low-s=False failed=[]
+  opmodel/final_step12000/qemu_self/ATTEST.TXT            D=ACCEPT strict=ACCEPT core_ok=True low-s=True failed=[]
+  opmodel/final_step12000/qemu_unknown_tool/ATTEST.TXT    D=ACCEPT strict=ACCEPT core_ok=True low-s=False failed=[]
+  opmodel/qemu_step2300_gateway_calc/ATTEST.TXT           D=ACCEPT strict=ACCEPT core_ok=True low-s=True failed=[]
+  opmodel/qemu_step2300_gateway_lookup/ATTEST.TXT         D=ACCEPT strict=ACCEPT core_ok=True low-s=True failed=[]
+  opmodel/qemu_step2300_self/ATTEST.TXT                   D=ACCEPT strict=ACCEPT core_ok=True low-s=False failed=[]
+  qemu/run_attest_mint2/ATTEST.TXT                        D=ACCEPT strict=ACCEPT core_ok=True low-s=True failed=[]
+  qemu/run_attest_verify2/ATTEST.TXT                      D=ACCEPT strict=ACCEPT core_ok=True low-s=True failed=[]
+  totals: D 15/15 strict 15/15 core 15/15
+
+FINALIZE.log sha256 now: b02948c4159de5676c815908783ea9be446e43bd940f5b07b6e5229aff21e428

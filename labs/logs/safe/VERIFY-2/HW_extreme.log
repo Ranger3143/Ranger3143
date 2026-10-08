@@ -1,0 +1,34 @@
+  empty file                 default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | FAIL artifact: VOCAB hash mismatch (receipt  vs local a4cafc9649488987
+  single newline             default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | FAIL artifact: VOCAB hash mismatch (receipt  vs local a4cafc9649488987
+  only header                default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | FAIL artifact: VOCAB hash mismatch (receipt  vs local a4cafc9649488987
+  header no newline          default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | FAIL artifact: VOCAB hash mismatch (receipt  vs local a4cafc9649488987
+  NUL x1000                  default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | FAIL artifact: VOCAB hash mismatch (receipt  vs local a4cafc9649488987
+  5MB of a                   default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | FAIL artifact: VOCAB hash mismatch (receipt  vs local a4cafc9649488987
+  200k newlines              default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | FAIL artifact: VOCAB hash mismatch (receipt  vs local a4cafc9649488987
+  CR only                    default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | FAIL artifact: VOCAB hash mismatch (receipt  vs local a4cafc9649488987
+  maxtok u64 max             default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — receipt inputs cannot be replayed: prompt (13) + max_new
+  maxtok 2^64                default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — malformed receipt: maxtok is not an unsigned integer
+  maxtok 2^63                default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — receipt inputs cannot be replayed: prompt (13) + max_new
+  maxtok huge digits         default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — malformed receipt: maxtok is not an unsigned integer
+  maxtok negative            default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — malformed receipt: maxtok is not an unsigned integer
+  maxtok empty               default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — malformed receipt: maxtok is not an unsigned integer
+  maxtok = usize::MAX-1      default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — receipt inputs cannot be replayed: prompt (13) + max_new
+  prompt-hex 1MB             default=None/TIMEOUT/panic=0  strict=None/TIMEOUT/panic=0 | TIMEOUT
+  prompt-hex odd             default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — receipt inputs cannot be replayed: prompt tokenized to n
+  prompt-hex 0xc3 only       default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — malformed receipt: prompt-hex does not decode to UTF-8 t
+  prompt-hex empty           default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — receipt inputs cannot be replayed: prompt tokenized to n
+  prompt-hex plus            default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — replay diverged from the receipt
+  token-ids 100k             default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — replay diverged from the receipt
+  token-ids huge id          default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — malformed receipt: token id "4294967296" is not an unsig
+  token-ids trailing comma   default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — replay diverged from the receipt
+  token-ids double comma     default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — replay diverged from the receipt
+  model 1MB                  default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | FAIL artifact: MODEL hash mismatch (receipt aaaaaaaaaaaaaaaa vs local 
+  chain multibyte            default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — replay diverged from the receipt
+  vocab multibyte at 16      default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | FAIL artifact: VOCAB hash mismatch (receipt aaaaaaaaaaaaaaa vs local a
+  utf8 BOM                   default=0/ACCEPT/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY PASS — replay reproduced 9 tokens, the token digest, and the fu
+  utf16                      default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — malformed receipt: not valid UTF-8
+  all 0xff                   default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY FAIL — malformed receipt: not valid UTF-8
+  duplicate every line       default=0/ACCEPT/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY PASS — replay reproduced 9 tokens, the token digest, and the fu
+  reversed lines             default=0/ACCEPT/panic=0  strict=1/REJECT_CLEAN/panic=0 | VERIFY PASS — replay reproduced 9 tokens, the token digest, and the fu
+  lines joined by space      default=1/REJECT_CLEAN/panic=0  strict=1/REJECT_CLEAN/panic=0 | FAIL artifact: VOCAB hash mismatch (receipt  vs local a4cafc9649488987
+extreme inputs: 33 ; panics default 0 strict 0 ; exit codes default {1: 29, None: 1, 0: 3} strict {1: 32, None: 1}

@@ -1,0 +1,16 @@
+attest	sig_s	D_default	strict_unpinned	T_strict_pinned_swtpm	strict_unpinned_reject_high_s	before_positional_form	before_receipt_form	pin_equals_key
+opmodel/final_step12000/qemu_abstain	high	ACCEPT	ACCEPT	ACCEPT	REJECT	ACCEPT	ACCEPT	1
+opmodel/final_step12000/qemu_calc	low	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	1
+opmodel/final_step12000/qemu_calc_words	high	ACCEPT	ACCEPT	ACCEPT	REJECT	ACCEPT	ACCEPT	1
+opmodel/final_step12000/qemu_everyday	low	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	1
+opmodel/final_step12000/qemu_lookup	low	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	1
+opmodel/final_step12000/qemu_receipt	high	ACCEPT	ACCEPT	ACCEPT	REJECT	ACCEPT	ACCEPT	1
+opmodel/final_step12000/qemu_self	low	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	1
+opmodel/final_step12000/qemu_unknown_tool	high	ACCEPT	ACCEPT	ACCEPT	REJECT	ACCEPT	ACCEPT	1
+dashboard/mint	low	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	1
+dashboard/verify	low	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	ACCEPT	1
+opmodel/qemu_step2300_gateway_calc	low	ACCEPT	ACCEPT	n/a (no swtpm state mapped by name)	ACCEPT	ACCEPT	ACCEPT	
+opmodel/qemu_step2300_gateway_lookup	low	ACCEPT	ACCEPT	n/a (no swtpm state mapped by name)	ACCEPT	ACCEPT	ACCEPT	
+opmodel/qemu_step2300_self	high	ACCEPT	ACCEPT	n/a (no swtpm state mapped by name)	REJECT	ACCEPT	ACCEPT	
+qemu/run_attest_mint2	low	ACCEPT	ACCEPT	n/a (no swtpm state mapped by name)	ACCEPT	ACCEPT	ACCEPT	
+qemu/run_attest_verify2	low	ACCEPT	ACCEPT	n/a (no swtpm state mapped by name)	ACCEPT	ACCEPT	ACCEPT	

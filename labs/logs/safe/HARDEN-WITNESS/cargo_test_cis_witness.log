@@ -1,0 +1,340 @@
+warning: unused variable: `max_pos`
+    --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_infer.rs:1560:13
+     |
+1560 |         let max_pos = c.max_position_embeddings;
+     |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_max_pos`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:256:41
+    |
+256 |     let lut_lo = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_LO.as_ptr() as *const __m128i));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:247:1
+    |
+247 | / unsafe fn tmv_i8_avx512vnni(
+248 | |     output: &mut [i32],
+249 | |     input: &[i8],
+250 | |     lanes: &[i8],
+...   |
+253 | |     n_bytes: usize,
+254 | | ) {
+    | |_^
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: `#[warn(unsafe_op_in_unsafe_fn)]` (part of `#[warn(rust_2024_compatibility)]`) on by default
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:257:41
+    |
+257 |     let lut_hi = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_HI.as_ptr() as *const __m128i));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:272:21
+    |
+272 |             let v = _mm512_loadu_si512(w_row.as_ptr().add(b0) as *const __m512i);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:272:40
+    |
+272 |             let v = _mm512_loadu_si512(w_row.as_ptr().add(b0) as *const __m512i);
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:282:25
+    |
+282 |                 let a = _mm512_loadu_si512(lanes.as_ptr().add(k * n_bytes + b0) as *const __m512i);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:282:44
+    |
+282 |                 let a = _mm512_loadu_si512(lanes.as_ptr().add(k * n_bytes + b0) as *const __m512i);
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:315:41
+    |
+315 |     let lut_lo = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_LO.as_ptr() as *const __m128i));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:306:1
+    |
+306 | / unsafe fn tmv_i8_avx512vnni_r4(
+307 | |     output: &mut [i32],
+308 | |     input: &[i8],
+309 | |     lanes: &[i8],
+...   |
+312 | |     n_bytes: usize,
+313 | | ) {
+    | |_^
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:316:41
+    |
+316 |     let lut_hi = _mm512_broadcast_i32x4(_mm_loadu_si128(LUT_HI.as_ptr() as *const __m128i));
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:326:18
+    |
+326 |         let w0 = weights_packed.as_ptr().add(row * n_bytes);
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:327:18
+    |
+327 |         let w1 = weights_packed.as_ptr().add((row + 1) * n_bytes);
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:328:18
+    |
+328 |         let w2 = weights_packed.as_ptr().add((row + 2) * n_bytes);
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:329:18
+    |
+329 |         let w3 = weights_packed.as_ptr().add((row + 3) * n_bytes);
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:334:17
+    |
+334 |                 _mm512_loadu_si512(lanes.as_ptr().add(b0) as *const __m512i),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:334:36
+    |
+334 |                 _mm512_loadu_si512(lanes.as_ptr().add(b0) as *const __m512i),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:335:17
+    |
+335 |                 _mm512_loadu_si512(lanes.as_ptr().add(n_bytes + b0) as *const __m512i),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:335:36
+    |
+335 |                 _mm512_loadu_si512(lanes.as_ptr().add(n_bytes + b0) as *const __m512i),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:336:17
+    |
+336 |                 _mm512_loadu_si512(lanes.as_ptr().add(2 * n_bytes + b0) as *const __m512i),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:336:36
+    |
+336 |                 _mm512_loadu_si512(lanes.as_ptr().add(2 * n_bytes + b0) as *const __m512i),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:337:17
+    |
+337 |                 _mm512_loadu_si512(lanes.as_ptr().add(3 * n_bytes + b0) as *const __m512i),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:337:36
+    |
+337 |                 _mm512_loadu_si512(lanes.as_ptr().add(3 * n_bytes + b0) as *const __m512i),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm512_loadu_si512` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:340:25
+    |
+340 |                 let v = _mm512_loadu_si512(wp.add(b0) as *const __m512i);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:340:44
+    |
+340 |                 let v = _mm512_loadu_si512(wp.add(b0) as *const __m512i);
+    |                                            ^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `cis_vnni::tmv_i8_avx512vnni` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:367:9
+    |
+367 | /         tmv_i8_avx512vnni(
+368 | |             &mut rest[..dim_out - row],
+369 | |             input,
+370 | |             lanes,
+...   |
+373 | |             n_bytes,
+374 | |         );
+    | |_________^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:391:46
+    |
+391 |     let lut_lo = _mm256_broadcastsi128_si256(_mm_loadu_si128(LUT_LO.as_ptr() as *const __m128i));
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:382:1
+    |
+382 | / unsafe fn tmv_i8_avxvnni(
+383 | |     output: &mut [i32],
+384 | |     input: &[i8],
+385 | |     lanes: &[i8],
+...   |
+388 | |     n_bytes: usize,
+389 | | ) {
+    | |_^
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm_loadu_si128` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:392:46
+    |
+392 |     let lut_hi = _mm256_broadcastsi128_si256(_mm_loadu_si128(LUT_HI.as_ptr() as *const __m128i));
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm256_loadu_si256` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:404:21
+    |
+404 |             let v = _mm256_loadu_si256(w_row.as_ptr().add(b0) as *const __m256i);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:404:40
+    |
+404 |             let v = _mm256_loadu_si256(w_row.as_ptr().add(b0) as *const __m256i);
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::arch::x86_64::_mm256_loadu_si256` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:414:25
+    |
+414 |                 let a = _mm256_loadu_si256(lanes.as_ptr().add(k * n_bytes + b0) as *const __m256i);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `core::ptr::const_ptr::<impl *const T>::add` is unsafe and requires unsafe block
+   --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/cis_vnni.rs:414:44
+    |
+414 |                 let a = _mm256_loadu_si256(lanes.as_ptr().add(k * n_bytes + b0) as *const __m256i);
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning: field `top_p` is never read
+ --> /home/user/aefinity-ai/alice-aegis/aegis-core/src/sampler.rs:3:5
+  |
+1 | pub struct Sampler {
+  |            ------- field in this struct
+2 |     temperature: f32,
+3 |     top_p: f32,
+  |     ^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0133`.
+warning: `aegis-core` (lib) generated 31 warnings (run `cargo fix --lib -p aegis-core` to apply 4 suggestions)
+   Compiling aegis-linux v0.1.0 (/home/user/aefinity-ai/alice-aegis/aegis-linux)
+    Finished `release` profile [optimized] target(s) in 1.73s
+     Running unittests examples/cis_witness.rs (target/release/examples/cis_witness-eb57f4c00efe2333)
+
+running 9 tests
+test tests::prefix16_cuts_on_a_character_boundary ... ok
+test tests::reader_key_order_is_the_writer_key_order ... ok
+test tests::lenient_reader_keeps_legacy_leniency ... ok
+test tests::strict_accepts_exactly_what_the_writer_emits ... ok
+test tests::strict_accepts_every_golden_and_matches_the_lenient_reader ... ok
+test tests::strict_helpers_are_canonical_only ... ok
+test tests::unhex_lenient_keeps_its_semantics ... ok
+test tests::strict_rejects_every_leniency_the_h1_sweep_found ... ok
+test tests::readers_return_errors_instead_of_panicking ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+exit=0

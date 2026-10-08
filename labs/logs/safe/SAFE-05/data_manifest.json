@@ -1,0 +1,40 @@
+{
+ "seed": 909,
+ "lookup_seed": 909052,
+ "L_tokens_needed": 2457601,
+ "token_budget_by_class": {
+  "calc": 863602,
+  "lookup": 616858,
+  "abstain_everyday": 246744,
+  "prose": 740230
+ },
+ "docs_by_class": {
+  "calc": 21071,
+  "lookup": 8355,
+  "abstain_everyday": 5896,
+  "prose": 970
+ },
+ "tokens_in_first_L_by_class_complete_docs": {
+  "calc": 859550,
+  "lookup": 613733,
+  "abstain_everyday": 245372,
+  "prose": 738528
+ },
+ "lookup_tokens_in_first_L_by_type": {
+  "mixed": 65287,
+  "plain": 34640,
+  "miss": 98919,
+  "benign": 141924,
+  "c_call": 58036,
+  "a_plain": 48832,
+  "b_authority": 59208,
+  "d_toolline": 61880,
+  "e_crosskey": 45007
+ },
+ "stream_tokens": 2468371,
+ "tokenizer_sha256": "87d7cdc675f19b30532d44cf2a7920716717848e0e0e23d644b7c058d15dd902",
+ "episodes_file": "episodes_defended.txt",
+ "episodes_sha256": "a7b7b4a9850e8bd1ceed2ec5c0eaf60f413d5e436cbea28f2dd6ee0b80958bdf",
+ "train_txt_sha256": "5df8dc6ec58ff1806061756b1a24f59553ebf717cf6d992f95f6d1f8cf4d9451",
+ "train_bin_sha256": "e90b6e5dd1d4a7867af22e687ed879e364edf398d7617afcddbeee70f0ce7fbe"
+}
